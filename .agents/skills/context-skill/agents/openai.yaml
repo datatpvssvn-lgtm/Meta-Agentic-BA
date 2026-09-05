@@ -1,0 +1,6 @@
+interface:
+  display_name: "Bối cảnh workspace"
+  short_description: "Dựng tri thức, vận hành và evidence gate"
+  default_prompt: "Dùng $context-skill để đọc nguồn, xây Objective Context, mong muốn thực tế và Current Operating Context; ghi rõ evidence, ontology, To be updated và bước được phép làm tiếp."
+policy:
+  allow_implicit_invocation: true

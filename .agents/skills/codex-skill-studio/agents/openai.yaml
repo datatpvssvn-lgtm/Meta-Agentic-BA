@@ -1,0 +1,7 @@
+interface:
+  display_name: "Codex Skill Studio"
+  short_description: "Tạo, kiểm tra và cải thiện skill"
+  default_prompt: "Dùng $codex-skill-studio để thiết kế hoặc cải thiện một Codex skill."
+
+policy:
+  allow_implicit_invocation: false

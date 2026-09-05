@@ -1,0 +1,335 @@
+{
+  "generated_from": {
+    "demo": "03_outputs\\joycat\\JOYCAT_CAMPAIGN_3_THANG_CO_CHI_PHI_OBJECTIVE_DEMO.xlsx",
+    "preferred_campaign_folder": "01_inputs\\joycat\\raw\\meta_ads\\preferred_candidate"
+  },
+  "demo_control": {
+    "2026-03": {
+      "rows": 18,
+      "spend": 50195692.0,
+      "raw_matches": 18,
+      "raw_unmatched": [],
+      "raw_unmatched_near_names": {},
+      "raw_unmatched_details": [],
+      "preferred_campaigns_not_in_demo": [],
+      "matched_spend_differences": []
+    },
+    "2026-04": {
+      "rows": 41,
+      "spend": 64834557.0,
+      "raw_matches": 40,
+      "raw_unmatched": [
+        "9/4/2026 - NA - TOFU Test - 1 - Mess -"
+      ],
+      "raw_unmatched_near_names": {
+        "9/4/2026 - NA - TOFU Test - 1 - Mess -": []
+      },
+      "raw_unmatched_details": [
+        {
+          "demo_row": 63,
+          "campaign_name": "9/4/2026 - NA - TOFU Test - 1 - Mess -",
+          "spend": 5467562.0,
+          "funnel": "MOFU",
+          "objective": "Engagement - Messaging"
+        }
+      ],
+      "preferred_campaigns_not_in_demo": [
+        "9/4/2026 - NA Ver.3 - TOFU Test - NEW 1 - Mess - test Audience 2"
+      ],
+      "matched_spend_differences": [
+        {
+          "demo_row": 24,
+          "campaign_name": "10/11/2025 - MOF - TESTING A/B - 1% - CÁT",
+          "demo_spend": 6533731.0,
+          "preferred_row": 39,
+          "preferred_spend": 6533165,
+          "difference": 566.0
+        },
+        {
+          "demo_row": 26,
+          "campaign_name": "11/3/2026 - NA Ver.3 - TOFU Test",
+          "demo_spend": 821024.0,
+          "preferred_row": 29,
+          "preferred_spend": 820931,
+          "difference": 93.0
+        },
+        {
+          "demo_row": 28,
+          "campaign_name": "20/4/2026 - MNX  - TN 1",
+          "demo_spend": 1157788.0,
+          "preferred_row": 20,
+          "preferred_spend": 1157419,
+          "difference": 369.0
+        },
+        {
+          "demo_row": 30,
+          "campaign_name": "20/4/2026 - MNX  - TN 3",
+          "demo_spend": 1162747.0,
+          "preferred_row": 21,
+          "preferred_spend": 1162501,
+          "difference": 246.0
+        },
+        {
+          "demo_row": 37,
+          "campaign_name": "20/4/2026 - PFX  - TN 2",
+          "demo_spend": 1145113.0,
+          "preferred_row": 8,
+          "preferred_spend": 1144414,
+          "difference": 699.0
+        },
+        {
+          "demo_row": 38,
+          "campaign_name": "20/4/2026 - PFX  - TN 3",
+          "demo_spend": 1166658.0,
+          "preferred_row": 26,
+          "preferred_spend": 1165710,
+          "difference": 948.0
+        },
+        {
+          "demo_row": 40,
+          "campaign_name": "20/4/2026 - PFX  - TN 5",
+          "demo_spend": 1144532.0,
+          "preferred_row": 10,
+          "preferred_spend": 1143892,
+          "difference": 640.0
+        },
+        {
+          "demo_row": 49,
+          "campaign_name": "22/4/2026 - Sale 30.4 - TN 2",
+          "demo_spend": 2860387.0,
+          "preferred_row": 13,
+          "preferred_spend": 2858994,
+          "difference": 1393.0
+        },
+        {
+          "demo_row": 50,
+          "campaign_name": "22/4/2026 - Sale 30.4 - TN 3",
+          "demo_spend": 2844641.0,
+          "preferred_row": 14,
+          "preferred_spend": 2843602,
+          "difference": 1039.0
+        },
+        {
+          "demo_row": 53,
+          "campaign_name": "24/3/2026 - NA Ver.3 - TOFU Test - NEW 1 - Mess",
+          "demo_spend": 7850806.0,
+          "preferred_row": 4,
+          "preferred_spend": 7849910,
+          "difference": 896.0
+        },
+        {
+          "demo_row": 55,
+          "campaign_name": "30/12/2025 - VI SINH MOF - TN",
+          "demo_spend": 3290341.0,
+          "preferred_row": 40,
+          "preferred_spend": 3289717,
+          "difference": 624.0
+        },
+        {
+          "demo_row": 56,
+          "campaign_name": "30/12/2025 - VI SINH MOF - TT - 1",
+          "demo_spend": 815767.0,
+          "preferred_row": 3,
+          "preferred_spend": 815580,
+          "difference": 187.0
+        },
+        {
+          "demo_row": 59,
+          "campaign_name": "4/4 - SALE - POST XANH - MESS 1 - Bản sao",
+          "demo_spend": 418375.0,
+          "preferred_row": 36,
+          "preferred_spend": 443951,
+          "difference": -25576.0
+        },
+        {
+          "demo_row": 62,
+          "campaign_name": "9/1/2026 - VI SINH - TT - 2",
+          "demo_spend": 816568.0,
+          "preferred_row": 28,
+          "preferred_spend": 816366,
+          "difference": 202.0
+        }
+      ]
+    },
+    "2026-05": {
+      "rows": 25,
+      "spend": 63518031.0,
+      "raw_matches": 25,
+      "raw_unmatched": [],
+      "raw_unmatched_near_names": {},
+      "raw_unmatched_details": [],
+      "preferred_campaigns_not_in_demo": [],
+      "matched_spend_differences": []
+    }
+  },
+  "raw_control": {
+    "2026-03": {
+      "file": "CPAS-SHOPEE-Campaigns-1-Mar-2026-31-Mar-2026.xlsx",
+      "sheet": "Worksheet",
+      "positive_campaign_rows": 18,
+      "sum_positive_campaign_spend": 50195692.0,
+      "reported_total_row_spend": 50195692.0,
+      "positive_spend_blank_result_rows": 0
+    },
+    "2026-04": {
+      "file": "CPAS-SHOPEE-Campaigns-1-Apr-2026-30-Apr-2026.xlsx",
+      "sheet": "Worksheet",
+      "positive_campaign_rows": 41,
+      "sum_positive_campaign_spend": 64825305.0,
+      "reported_total_row_spend": 64825305.0,
+      "positive_spend_blank_result_rows": 1
+    },
+    "2026-05": {
+      "file": "CPAS-SHOPEE-Campaigns-1-May-2026-31-May-2026.xlsx",
+      "sheet": "Worksheet",
+      "positive_campaign_rows": 25,
+      "sum_positive_campaign_spend": 63518031.0,
+      "reported_total_row_spend": 63518031.0,
+      "positive_spend_blank_result_rows": 3
+    }
+  },
+  "pair_reconciliation": {
+    "Phễu × Sản phẩm": {
+      "2026-03": {
+        "observed_cells": 9,
+        "mapped_rows": 18,
+        "mapped_spend": 50195692.0,
+        "demo_rows": 18,
+        "demo_spend": 50195692.0
+      },
+      "2026-04": {
+        "observed_cells": 13,
+        "mapped_rows": 41,
+        "mapped_spend": 64834557.0,
+        "demo_rows": 41,
+        "demo_spend": 64834557.0
+      },
+      "2026-05": {
+        "observed_cells": 13,
+        "mapped_rows": 25,
+        "mapped_spend": 63518031.0,
+        "demo_rows": 25,
+        "demo_spend": 63518031.0
+      }
+    },
+    "Sản phẩm × Campaign objective": {
+      "2026-03": {
+        "observed_cells": 7,
+        "mapped_rows": 18,
+        "mapped_spend": 50195692.0,
+        "demo_rows": 18,
+        "demo_spend": 50195692.0
+      },
+      "2026-04": {
+        "observed_cells": 12,
+        "mapped_rows": 41,
+        "mapped_spend": 64834557.0,
+        "demo_rows": 41,
+        "demo_spend": 64834557.0
+      },
+      "2026-05": {
+        "observed_cells": 16,
+        "mapped_rows": 25,
+        "mapped_spend": 63518031.0,
+        "demo_rows": 25,
+        "demo_spend": 63518031.0
+      }
+    },
+    "Phễu × Campaign objective": {
+      "2026-03": {
+        "observed_cells": 3,
+        "mapped_rows": 18,
+        "mapped_spend": 50195692.0,
+        "demo_rows": 18,
+        "demo_spend": 50195692.0
+      },
+      "2026-04": {
+        "observed_cells": 4,
+        "mapped_rows": 41,
+        "mapped_spend": 64834557.0,
+        "demo_rows": 41,
+        "demo_spend": 64834557.0
+      },
+      "2026-05": {
+        "observed_cells": 6,
+        "mapped_rows": 25,
+        "mapped_spend": 63518031.0,
+        "demo_rows": 25,
+        "demo_spend": 63518031.0
+      }
+    }
+  },
+  "coverage_row_count": 279,
+  "observed_values": {
+    "funnels": [
+      "BOFU",
+      "MOFU",
+      "TOFU"
+    ],
+    "objectives": [
+      "Awareness - Ad recall",
+      "Chưa xác định",
+      "Engagement - Messaging",
+      "Engagement - Post engagement",
+      "Sales - Purchase",
+      "Sales - Purchase [Suy luận từ tên Campaign]"
+    ],
+    "objective_row_counts": {
+      "Awareness - Ad recall": 1,
+      "Chưa xác định": 2,
+      "Engagement - Messaging": 49,
+      "Engagement - Post engagement": 26,
+      "Sales - Purchase": 4,
+      "Sales - Purchase [Suy luận từ tên Campaign]": 2
+    },
+    "objective_spend": {
+      "Awareness - Ad recall": 143690.0,
+      "Chưa xác định": 428003.0,
+      "Engagement - Messaging": 143486709.0,
+      "Engagement - Post engagement": 12193747.0,
+      "Sales - Purchase": 14232154.0,
+      "Sales - Purchase [Suy luận từ tên Campaign]": 8063977.0
+    }
+  },
+  "example": {
+    "demo_file": "JOYCAT_CAMPAIGN_3_THANG_CO_CHI_PHI_OBJECTIVE_DEMO.xlsx",
+    "demo_sheet": "Campaign_3_tháng",
+    "demo_row": 6,
+    "raw_file": "CPAS-SHOPEE-Campaigns-1-Mar-2026-31-Mar-2026.xlsx",
+    "raw_sheet": "Worksheet",
+    "raw_row": 15,
+    "period": "2026-03",
+    "campaign_name": "10/11/2025 - MOF - TESTING A/B - 1% - CÁT",
+    "result_indicator": "actions:onsite_conversion.messaging_conversation_started_7d",
+    "results": 96,
+    "cost_per_result": 69161.14583,
+    "amount_spent_vnd": 6639470.0,
+    "impressions": 67455,
+    "reach": 23122,
+    "attribution_setting": "7-day click or 1-day view",
+    "funnel": "MOFU",
+    "objective_inferred": "Engagement - Messaging",
+    "objective_basis": "Result indicator = actions:onsite_conversion.messaging_conversation_started_7d",
+    "product_level": "Ngành hàng",
+    "product_value": "Cát nói chung",
+    "product_basis": "Tên Campaign chỉ nói CÁT; không đủ chọn nhóm/listing"
+  },
+  "comparison_candidate": {
+    "demo_row": 7,
+    "raw_file": "CPAS-SHOPEE-Campaigns-1-Mar-2026-31-Mar-2026.xlsx",
+    "raw_sheet": "Worksheet",
+    "raw_row": 39,
+    "campaign_name": "10/11/2025 - MOF - TESTING A/B - GỐC - CÁT",
+    "result_indicator": "actions:onsite_conversion.messaging_conversation_started_7d",
+    "results": 86,
+    "cost_per_result": 74077.83721,
+    "amount_spent_vnd": 6370694.0,
+    "impressions": 129733,
+    "reach": 56830,
+    "attribution_setting": "7-day click or 1-day view",
+    "funnel": "MOFU",
+    "objective_inferred": "Engagement - Messaging",
+    "product_level": "Ngành hàng",
+    "product_value": "Cát nói chung"
+  }
+}

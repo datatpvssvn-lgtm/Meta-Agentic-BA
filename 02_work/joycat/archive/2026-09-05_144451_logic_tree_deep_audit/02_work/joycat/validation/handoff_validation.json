@@ -1,0 +1,58 @@
+{
+  "required_files": {
+    "context/WORKSPACE_CONTEXT.md": true,
+    "context/CURRENT_INTENT.md": true,
+    "01_inputs/joycat/context.md": true,
+    "03_outputs/joycat/LOGIC_TREE.md": true,
+    "03_outputs/joycat/LOGIC_TREE.mm": true,
+    "03_outputs/joycat/KPI_TREE.md": true,
+    "03_outputs/joycat/KPI_TREE.mm": true,
+    "03_outputs/joycat/METRIC_TREE.md": true,
+    "03_outputs/joycat/METRIC_TREE.mm": true,
+    "03_outputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.md": true,
+    "03_outputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.mm": true,
+    "02_work/joycat/archive/2026-09-05_context_logic_mapping_before_merge/ARCHIVE_MAPPING.md": true
+  },
+  "xml": {
+    "03_outputs/joycat/LOGIC_TREE.mm": {
+      "parse_ok": true,
+      "node_count": 246,
+      "duplicate_ids": []
+    },
+    "03_outputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.mm": {
+      "parse_ok": true,
+      "node_count": 177,
+      "duplicate_ids": []
+    },
+    "03_outputs/joycat/METRIC_TREE.mm": {
+      "parse_ok": true,
+      "node_count": 127,
+      "duplicate_ids": []
+    },
+    "03_outputs/joycat/KPI_TREE.mm": {
+      "parse_ok": true,
+      "node_count": 41,
+      "duplicate_ids": []
+    }
+  },
+  "content_checks": {
+    "four_dimensions_in_logic_md": true,
+    "six_pairs_in_logic_md": true,
+    "logic_md_has_data_gate": true,
+    "logic_md_has_objective_contract": true,
+    "logic_md_has_etl_and_audit": true,
+    "logic_mm_has_15_main_branches": true,
+    "formula_uses_business_gmv": true,
+    "formula_no_unconditional_roas_arrows": true,
+    "context_new_tree_definition": true,
+    "context_points_to_consolidated_logic": true,
+    "no_stale_primary_refs": true
+  },
+  "raw": {
+    "file_count": 33,
+    "xlsx_count": 32,
+    "csv_count": 0,
+    "new_output_files_inside_raw": []
+  },
+  "overall_pass": true
+}

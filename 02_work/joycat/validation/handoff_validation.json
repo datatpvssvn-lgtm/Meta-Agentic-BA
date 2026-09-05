@@ -1,0 +1,85 @@
+{
+  "required_files": {
+    "context/WORKSPACE_CONTEXT.md": true,
+    "context/CURRENT_INTENT.md": true,
+    "01_inputs/joycat/context.md": true,
+    "03_outputs/joycat/KPI_TREE.md": true,
+    "03_outputs/joycat/KPI_TREE.mm": true,
+    "03_outputs/joycat/METRIC_TREE.md": true,
+    "03_outputs/joycat/METRIC_TREE.mm": true,
+    "03_outputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.md": true,
+    "03_outputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.mm": true,
+    "03_outputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.md": true,
+    "03_outputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.mm": true,
+    "03_outputs/joycat/LOGIC_TREE.md": true,
+    "03_outputs/joycat/LOGIC_TREE.mm": true,
+    "02_work/joycat/coverage_audit/coverage_6_pairs_detail.csv": true,
+    "02_work/joycat/coverage_audit/coverage_audit_summary.json": true,
+    "02_work/joycat/archive/2026-09-05_logic_tree_rebuild_before/03_outputs/joycat/KHUNG_PHAN_TICH_CONG_THUC_VA_MAPPING_JOYCAT.md": true
+  },
+  "xml": {
+    "03_outputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.mm": {
+      "parse_ok": true,
+      "node_count": 399,
+      "duplicate_ids": []
+    },
+    "03_outputs/joycat/LOGIC_TREE.mm": {
+      "parse_ok": true,
+      "node_count": 231,
+      "duplicate_ids": []
+    },
+    "03_outputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.mm": {
+      "parse_ok": true,
+      "node_count": 177,
+      "duplicate_ids": []
+    },
+    "03_outputs/joycat/METRIC_TREE.mm": {
+      "parse_ok": true,
+      "node_count": 127,
+      "duplicate_ids": []
+    },
+    "03_outputs/joycat/KPI_TREE.mm": {
+      "parse_ok": true,
+      "node_count": 41,
+      "duplicate_ids": []
+    }
+  },
+  "mapping_coverage": {
+    "md_exact_16_main_headings": true,
+    "mm_exact_16_main_branches": true,
+    "six_pairs_in_both": true,
+    "required_detail_in_both": true,
+    "sp01_to_sp25_in_both": true,
+    "no_banned_shorthand": true
+  },
+  "logic_tree": {
+    "md_exact_9_main_headings": true,
+    "mm_exact_9_main_branches": true,
+    "required_logic_in_both": true,
+    "no_unconditional_roas_arrow": true,
+    "not_formula_inventory": true,
+    "owner_assumptions_not_facts": true
+  },
+  "coverage": {
+    "row_count_279": true,
+    "all_six_pairs_present": true,
+    "platform_rows_blocked_and_blank": true,
+    "mapped_pairs_reconcile_to_demo": true,
+    "april_difference_9252": true
+  },
+  "contexts": {
+    "versions_updated": true,
+    "both_current_artifacts_linked": true,
+    "review_not_production": true,
+    "objective_human_mapping_preserved": true,
+    "april_gap_preserved": true,
+    "old_framework_name_removed": true
+  },
+  "raw": {
+    "file_count": 33,
+    "xlsx_count": 32,
+    "csv_count": 0,
+    "generated_files_inside_raw": []
+  },
+  "overall_pass": true
+}

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Cây KPI"
+  short_description: "Dựng Cây KPI bốn tầng có trạng thái dữ liệu"
+  default_prompt: "Dùng $kpi-tree-skill để cùng tôi dựng KPI Tree bốn tầng từ Context, gắn trạng thái dữ liệu và tạo bản trực quan khi cần."
+
+policy:
+  allow_implicit_invocation: true
