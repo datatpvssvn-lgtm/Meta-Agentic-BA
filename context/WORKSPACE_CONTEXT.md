@@ -34,7 +34,7 @@ Trước yêu cầu nhiều bước hoặc có quyết định kinh doanh, AI ph
 
 Không dùng file này thay dữ liệu gốc hoặc Context chi tiết của Joycat/Truther.
 
-## 2. Danh tính dự án và mục tiêu định hướng
+## 3. Danh tính dự án và mục tiêu định hướng
 
 Tên dự án: **Meta Agentic BA**.
 
@@ -69,7 +69,7 @@ Dự án giúp Duy phát triển hai lĩnh vực riêng nhưng liên kết:
 
 Hai lĩnh vực phải hỗ trợ nhau: Duy không chỉ tạo báo cáo marketing mà còn phải hiểu cách AI đi từ yêu cầu, Context và dữ liệu tới một kết luận có thể kiểm tra.
 
-## 3. Bối cảnh mục tiêu — chuẩn mực thành công
+## 4. Bối cảnh mục tiêu — chuẩn mực thành công
 
 Thành công được đánh giá theo bốn tầng. Cậu Sinh đánh giá tổng thể và quyết định giai đoạn đạt hay chưa; các tiêu chí dưới đây là bằng chứng hỗ trợ, không thay quyền quyết định của cậu.
 
@@ -189,7 +189,7 @@ Không đặt số phút tối thiểu vì lịch học và làm việc của Du
 
 Bảng theo dõi của giai đoạn đang áp dụng nằm trong `CURRENT_INTENT.md`.
 
-## 4. Giá trị Duy nhận được
+## 5. Giá trị Duy nhận được
 
 ### Giá trị hữu hình
 
@@ -214,7 +214,7 @@ Bảng theo dõi của giai đoạn đang áp dụng nằm trong `CURRENT_INTENT
 | Niềm tin | Cậu Sinh nhìn thấy phản hồi được xử lý và đầu ra tiến bộ qua từng phiên bản |
 | Tư duy quản lý | Duy biết đặt mục tiêu, chia giai đoạn, ưu tiên và phối hợp AI với con người |
 
-## 5. Mong muốn thực tế — giai đoạn hiện tại
+## 6. Mong muốn thực tế — giai đoạn hiện tại
 
 ### Nền móng Context đã qua điều kiện chuyển bước
 
@@ -235,7 +235,7 @@ Câu hỏi phân tích / mục tiêu kinh doanh
 
 Hiện tại, `KPI_TREE.md` và `METRIC_TREE.md` giữ vai trò cấu trúc chỉ số và công thức rẽ tới trường gốc. Bộ logic phân tích vận hành gồm `CONG_THUC_5_METRICS_JOYCAT_v3.md` (phương pháp đọc chỉ số, điều kiện dùng, cách tư duy) và `DATA_MAPPING_COVERAGE_JOYCAT.md` (chiều phân tích, mapping, đối soát và khoảng trống dữ liệu). Toàn bộ đang trong quá trình hoàn thiện thiết kế để Duy/cậu Sinh review; chưa chuyển sang chạy pipeline ETL hay báo cáo phân tích hiệu quả.
 
-## 6. Bối cảnh vận hành hiện tại
+## 7. Bối cảnh vận hành hiện tại
 
 Duy là sinh viên năm hai tại HCMIU, đồng thời đang làm việc và học hỏi qua Hebekery và Truther Piece. Duy là người vừa học vừa xây: có trải nghiệm thực tế nhưng không bị giả định phải biết sẵn mô hình dữ liệu, kiến trúc agentic hoặc toàn bộ thuật ngữ chuyên môn trước khi được AI hỗ trợ.
 
@@ -269,7 +269,7 @@ flowchart LR
     H --> D
 ```
 
-## 7. Hợp đồng cộng tác
+## 8. Hợp đồng cộng tác
 
 - Duy muốn Codex làm việc như một cộng sự thân cận và có trách nhiệm: hai bên cùng tìm đúng mục tiêu, không xem prompt ban đầu luôn là yêu cầu hoàn chỉnh.
 - Đọc nguồn trước khi hỏi; không bắt Duy lặp lại điều workspace đã có.
@@ -281,9 +281,9 @@ flowchart LR
 - Không kéo dài việc hỏi đáp khi mục tiêu, nguồn và quyền hành động đã đủ rõ cho bước kế tiếp.
 - Không tối ưu cho “đủ file”; tối ưu cho Duy và AI cùng hiểu để làm đúng bước kế tiếp.
 
-### 7.1. Chuẩn chung của đầu ra phân tích
+### 8.1. Chuẩn chung của đầu ra phân tích
 
-Chuẩn này áp dụng cho các sản phẩm phân tích về sau; chuẩn riêng của ba Tree tại mục 8 bổ sung chứ không thay thế chuẩn chung. Một đầu ra tốt phải cho người đánh giá thấy:
+Chuẩn này áp dụng cho các sản phẩm phân tích về sau; chuẩn riêng của ba Tree tại mục 9 bổ sung chứ không thay thế chuẩn chung. Một đầu ra tốt phải cho người đánh giá thấy:
 
 1. **Câu hỏi kinh doanh:** đang trả lời câu hỏi nào và giúp ai quyết định việc gì.
 2. **Kết quả và phạm vi:** đối tượng, kênh, kỳ dữ liệu và phần bị loại trừ.
@@ -294,14 +294,16 @@ Chuẩn này áp dụng cho các sản phẩm phân tích về sau; chuẩn riê
 7. **Đề xuất:** chỉ đưa ra khi bằng chứng đủ; phải nêu đánh đổi, rủi ro và phần cần phê duyệt.
 8. **Cách trình bày:** có bản ngắn để hành động và phần giải thích để Duy học, trình bày lại và sửa theo phản hồi.
 
-## 8. Chuẩn ba cây v1 và ba skill dùng lại được
+## 9. Chuẩn ba cây v1 và ba skill dùng lại được (Lộ trình tham khảo dài hạn)
 
-“Chuẩn như người có kinh nghiệm” trong giai đoạn gần nhất là tiêu chuẩn của **sản phẩm có thể đánh giá**, không phải chức danh hoặc mức tự chủ hiện tại của Duy. Chuẩn này áp dụng cho sáu sản phẩm:
+> **Lưu ý quan trọng:** Các mục và quy chuẩn về xây ba Tree/ba skill dưới đây là **lộ trình tham khảo dài hạn**, không phải đầu ra hoặc điều kiện hoàn thành của giai đoạn hiện tại. Nhiệm vụ hiện tại thực hiện theo [`context\CURRENT_INTENT.md`](CURRENT_INTENT.md) với trọng tâm là hoàn thiện Context và bộ logic phân tích (Bộ 5 Metrics + Data Mapping/Coverage) trước ETL.
+
+“Chuẩn như người có kinh nghiệm” trong lộ trình dài hạn là tiêu chuẩn của **sản phẩm có thể đánh giá**, không phải chức danh hoặc mức tự chủ hiện tại của Duy. Chuẩn này định hướng cho các sản phẩm:
 
 - `.agents\skills\kpi-tree-skill\` → `03_outputs\joycat\KPI_TREE.md`;
 - `.agents\skills\metric-tree-skill\` → `03_outputs\joycat\METRIC_TREE.md`.
 
-Ba cây của giai đoạn hiện tại là đầu ra cụ thể cho Joycat. Ba skill là bộ hướng dẫn có thể dùng lại; khi chuyển sang trường hợp khác, skill phải đọc mục tiêu và hợp đồng chỉ số từ Context của trường hợp đó, không được giữ lại mục tiêu của Joycat. Kiến thức Meta chỉ là tài liệu tham khảo khi liên quan đến trường hợp đang làm và không được coi là bằng chứng về kết quả kinh doanh.
+Trong lộ trình dài hạn, ba cây là cấu trúc phân tích mở rộng cho Joycat; ba skill là bộ hướng dẫn có thể dùng lại. Khi chuyển sang trường hợp khác, skill phải đọc mục tiêu và hợp đồng chỉ số từ Context của trường hợp đó, không được giữ lại mục tiêu của Joycat. Kiến thức Meta chỉ là tài liệu tham khảo khi liên quan đến trường hợp đang làm và không được coi là bằng chứng về kết quả kinh doanh.
 
 ### 8.1. Đầu vào và đầu ra của bộ cây v1
 
@@ -365,7 +367,7 @@ Sản phẩm giữ chuẩn để đánh giá; năng lực Duy được xem xét 
 
 Cậu Sinh đánh giá tổng thể giai đoạn xây cây. Duy chưa bị giả định phải tự làm hoặc tự bảo vệ toàn bộ phân tích như một người đã có nhiều kinh nghiệm.
 
-## 9. Quy trình phân tích và agentic
+## 10. Quy trình phân tích và agentic
 
 ```mermaid
 flowchart TD
@@ -384,7 +386,7 @@ flowchart TD
 
 Không mặc định mọi yêu cầu phải đi hết quy trình. Mỗi giai đoạn phải có đầu vào, đầu ra, điều kiện sẵn sàng và điểm dừng riêng; chỉ đi tiếp khi bước kế tiếp thực sự cần thiết và được phép.
 
-Giai đoạn gần nhất sau khi Context được duyệt:
+Lộ trình phân tích và xây dựng Tree tham khảo dài hạn (không phải nhiệm vụ bắt buộc của giai đoạn hiện tại; giai đoạn hiện tại thực hiện theo `CURRENT_INTENT.md`):
 
 ```mermaid
 flowchart LR
@@ -400,13 +402,13 @@ flowchart LR
     J --> K[Trả lời KPI 1]
 ```
 
-## 10. Lớp tri thức và Ontology
+## 11. Lớp tri thức và Ontology
 
 Mỗi đối tượng/chỉ số quan trọng cần dần có: định nghĩa, mối quan hệ, cấp dữ liệu/khóa nối, quy tắc nghiệp vụ, nguồn tương ứng, người phụ trách và trạng thái bằng chứng.
 
 Ontology ban đầu có thể gồm thương hiệu, trường hợp phân tích, kênh, Campaign, Ad set, Ad, tệp đối tượng, nội dung quảng cáo, sự kiện chuyển đổi, khách tiềm năng/tin nhắn, khách hàng, đơn hàng, chi phí và doanh thu/GMV. Tên đối tượng không tự chứng minh ý nghĩa nghiệp vụ; định nghĩa cụ thể nằm tại đúng trường hợp.
 
-## 11. Bộ công cụ
+## 12. Bộ công cụ
 
 | Lớp | Hiện tại | Hướng tương lai | Trạng thái |
 |---|---|---|---|
@@ -420,7 +422,7 @@ Ontology ban đầu có thể gồm thương hiệu, trường hợp phân tích
 
 Power BI Desktop chủ yếu dùng để xây mô hình và báo cáo. Việc làm mới theo lịch, chia sẻ và vận hành tự động còn phụ thuộc Power BI Service, loại giấy phép, gateway, connector và quyền truy cập; không coi việc có Power BI Pro là đã có đầy đủ kiến trúc tự động hóa.
 
-## 12. Bản đồ nguồn và trường hợp phân tích
+## 13. Bản đồ nguồn và trường hợp phân tích
 
 | Nguồn/trường hợp | Vai trò | Mức sử dụng |
 |---|---|---|
@@ -438,7 +440,7 @@ Power BI Desktop chủ yếu dùng để xây mô hình và báo cáo. Việc l�
 
 Joycat và Truther độc lập. Chỉ chuyển phương pháp, cách kiểm tra và bài học có điều kiện; không chuyển mục tiêu số, cấu trúc Campaign, hành vi khách hàng hoặc kết luận như thông tin thực tế.
 
-## 13. Điểm còn thiếu, mức sẵn sàng và bước tiếp theo
+## 14. Điểm còn thiếu, mức sẵn sàng và bước tiếp theo
 
 | Điểm còn thiếu | Trạng thái | Người phụ trách/nguồn | Ảnh hưởng | Bước tiếp theo |
 |---|---|---|---|---|
@@ -452,7 +454,7 @@ Joycat và Truther độc lập. Chỉ chuyển phương pháp, cách kiểm tra
 
 Bước tiếp theo hiện tại: Duy/cậu Sinh review `WORKSPACE_CONTEXT.md` → `CURRENT_INTENT.md` → bộ logic (`CONG_THUC_5_METRICS_JOYCAT_v3.md` + `DATA_MAPPING_COVERAGE_JOYCAT.md`), làm rõ yêu cầu dữ liệu trước khi chuyển sang thiết kế ETL. Chưa triển khai ETL/report hoặc kết luận hiệu quả Joycat.
 
-## 14. Quy tắc cập nhật và bằng chứng
+## 15. Quy tắc cập nhật và bằng chứng
 
 - **Đã xác minh từ nguồn:** nêu nguồn, phạm vi, kỳ dữ liệu/phiên bản và giới hạn.
 - **Người phụ trách đã xác nhận:** nêu người/vai trò; không đổi thành bằng chứng dữ liệu.

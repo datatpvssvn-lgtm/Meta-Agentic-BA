@@ -29,7 +29,7 @@ KPI 1 không yêu cầu tái tính hoặc chứng minh chính xác tỷ lệ 5�
 ### 2.1. Vì sao đang hoàn thiện bộ logic phân tích trước ETL
 
 Theo xác nhận của Duy:
-1. **Chuyển từ suy diễn đơn giản sang quan hệ có điều kiện:** Trước đây Duy từng hiểu đơn giản rằng “CPM cao thì ROAS giảm”. Sau đó Duy nhận ra quan hệ thuận/nghịch chỉ đúng khi các biến khác trong công thức giữ nguyên. Tuy nhiên trong môi trường thực tế, không có biến nào tự đứng yên.
+1. **Chuyển từ suy diễn đơn giản sang quan hệ có điều kiện:** Trước đây Duy từng hiểu đơn giản rằng “CPM cao thì ROAS giảm”. Sau đó Duy nhận ra quan hệ thuận/nghịch chỉ đúng khi các biến khác trong công thức giữ nguyên. Trong case thực tế, nhiều yếu tố có thể cùng thay đổi; không được mặc định các yếu tố còn lại giữ nguyên.
 2. **Chuyển từ công thức sang thiết kế kiểm tra theo bối cảnh:** Hiện Duy đã phân tách được nhiều góc nhìn (4 chiều, 6 cặp, 5 nhóm metric). Việc cần làm trước khi đổ dữ liệu vào ETL là làm rõ:
    - Câu hỏi nào cần góc nhìn nào.
    - Vì sao phải chọn góc nhìn đó.
@@ -59,7 +59,7 @@ Việc tạm hoãn tạo file `LOGIC_TREE.md/.mm` riêng không đồng nghĩa v
 - Kỳ phân tích ưu tiên là tháng 03–05/2026; một số tệp Excel chỉ có tháng 03–04.
 - Chưa có quy trình tự động, tích hợp Ads API, mô hình dữ liệu hoặc báo cáo Power BI cho Joycat.
 
-Luồng sau khi Context được duyệt:
+Lộ trình tham khảo dài hạn khi mở rộng hệ thống (không phải đầu ra hoặc điều kiện hoàn thành của giai đoạn hiện tại; nhiệm vụ hiện tại thực hiện theo `CURRENT_INTENT.md`):
 
 ```mermaid
 flowchart LR
@@ -92,6 +92,8 @@ flowchart LR
 
 Các yếu tố trong bảng này được phân luồng tới đúng artefact. Việc một yếu tố “có thể ảnh hưởng” chỉ là giả thuyết, không phải bằng chứng rằng nó đã làm thay đổi hiệu quả Joycat.
 
+| Yếu tố | Vai trò nghiệp vụ / cơ chế tác động | Định vị tài liệu | Trạng thái nguồn / bằng chứng | Mức sẵn sàng | Người phụ trách / nguồn xác nhận | Giới hạn và lưu ý |
+|---|---|---|---|---|---|---|
 | Sản phẩm, giá và quy cách cát mèo | Quyết định nhu cầu, giá trị đơn và chu kỳ mua lại | Context; phân tích chiều Sản phẩm | Duy/cậu Sinh xác nhận sản phẩm là cát mèo; snapshot Shopee 25 listing | Một phần | Người phụ trách Joycat | Đã có catalog snapshot 25 listing (25/08/2026); chưa có bảng mapping nối từng Ad với listing/SKU |
 | Chu kỳ mua lại và lý do chọn Joycat | Ảnh hưởng nhu cầu lặp lại, retention và timing | Context; giả thuyết phân tích | Không có | To be updated | Người phụ trách khách hàng/Joycat | Không được tự giả định từ ngành hàng |
 | Nhóm khách hàng | Ảnh hưởng audience, thông điệp và conversion | Context; bảng ánh xạ Meta | Tên audience/LAL trong export | Một phần | Người thiết kế audience | Tên LAL không chứng minh chân dung hoặc chất lượng khách |

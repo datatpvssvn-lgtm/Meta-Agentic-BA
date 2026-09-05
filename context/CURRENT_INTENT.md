@@ -56,9 +56,11 @@ Cụ thể, Duy cần hiểu rõ và định hình trong tài liệu:
 
 AI tiếp nhận công việc cần:
 1. Đọc đúng Context hiện hành, không tự suy diễn hoặc lấy yêu cầu từ các file archive cũ.
-2. Đối chiếu và sửa những điểm mục tiêu/vai trò chưa rõ giữa các tài liệu.
-3. Bổ sung cầu nối từ **câu hỏi phân tích → góc nhìn → bằng chứng → dữ liệu cần có**, thay vì chỉ liệt kê thêm công thức hoặc metric rời rạc.
-4. Xác định rõ giới hạn dữ liệu hiện tại: phần nào làm được ngay trong thiết kế, phần nào cần xin thêm nguồn từ cậu Sinh/Joycat trước khi ETL.
+2. Nắm rõ các phần **đã được bổ sung hoàn thiện** trong đợt cập nhật này:
+   - Cầu nối từ **câu hỏi phân tích → góc nhìn → bằng chứng → dữ liệu cần có** đã được bổ sung tại bảng mục 1.5 của [`03_outputs\joycat\DATA_MAPPING_COVERAGE_JOYCAT.md`](../03_outputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.md).
+   - Phương pháp bối cảnh đọc chỉ số, 4 tầng nhận thức, nguyên tắc nhóm so sánh và 2 minh họa phương pháp đã có trong [`03_outputs\joycat\CONG_THUC_5_METRICS_JOYCAT_v3.md`](../03_outputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.md).
+3. **Không tự động viết lại từ đầu bộ logic**; tập trung review tính nhất quán, rà soát cách diễn đạt và sửa các điểm mâu thuẫn còn sót lại giữa các tài liệu.
+4. Nắm rõ ranh giới: Chưa triển khai code ETL, chưa chạy pipeline và chưa kết luận hiệu quả Campaign Joycat.
 
 ---
 
@@ -77,21 +79,17 @@ AI tiếp nhận công việc cần:
 
 ---
 
-## 6. Phần nào đã có, phần nào còn thiếu?
+## 6. Trạng thái bàn giao cụ thể và việc tiếp theo
 
-| Hạng mục | Trạng thái | Chi tiết nội dung | Ý nghĩa thực tế |
-|---|---|---|---|
-| Kiểm soát tổng Ads Cost | **Đã kiểm tra** | Khớp tổng spend Campaign tháng 03 (50.195.692 VND) và tháng 05 (63.518.031 VND); tháng 04 lệch 40 VND nguồn | Dùng làm số kiểm soát đối soát tổng ở cấp Campaign |
-| `Objective suy luận` | **Owner đã xác nhận** | Duy gắn cho 84 Campaign có spend để bù việc raw thiếu Campaign objective | ETL được phép dùng làm human mapping; phải giữ metadata nguồn gốc |
-| Bộ 5 Metrics (công thức & bối cảnh) | **Đã có bản làm việc** | 5 nhóm công thức, quan hệ toán học có điều kiện và cách đọc phễu | Cung cấp phương pháp tư duy trước khi kết luận |
-| Data Mapping & Coverage | **Đã có bản làm việc** | 4 chiều, 6 cặp, audit 279 dòng coverage, danh mục 25 sản phẩm | Xác định rõ yêu cầu nối dữ liệu và ranh giới khả thi |
-| Snapshot Catalog Shopee | **Đã có bản làm việc** | 25 Item ID cát mèo và vi sinh chụp ngày 25/08/2026 | Là danh mục listing tham khảo; chưa chứng minh đã chạy Ads trong tháng 03–05 |
-| Hợp đồng mapping Phễu | **Chờ xác nhận** | Cột Phễu có trong file dẫn xuất nhưng chưa khóa rule/grain/version | Phân tích phễu hiện tại chỉ dừng ở mức thăm dò |
-| Mapping Ads → Sản phẩm | **Chờ xác nhận** | Mới suy luận một số nhóm (NA, PFX, MNX, VI SINH) từ tên Campaign | Chưa thể phân bổ Ads Cost xuống SP01–SP25 |
-| Lineage chênh lệch tháng 04 (9.252 VND) | **Chờ xác nhận** | File demo tháng 04 có spend cao hơn preferred Campaign 9.252 VND | Demo chỉ dùng đọc mapping, chưa dùng làm fact spend chính thức |
-| Publisher platform | **Chưa làm / Chưa có** | Raw 32 file không có trường phân tách Facebook, Instagram, Messenger | Ba cặp có chiều Nền tảng bị chặn hoàn toàn |
-| GMV và đơn hàng business | **Chưa làm / Chưa có** | Chưa có số liệu doanh thu thực tế đa nền tảng | Chưa tính được Business ROAS hoặc tỷ lệ Ads Cost/GMV thật |
-| ETL Pipeline / Dashboard | **Chưa làm** | Chưa tạo pipeline tự động hay báo cáo Power BI | Đúng phạm vi: không làm trước khi duyệt data gate |
+| Nội dung | Trạng thái kiểm tra thực tế | Việc tiếp theo |
+|---|---|---|
+| Mục tiêu phase và định nghĩa hai file logic | Đã bổ sung vào tài liệu | Review tính nhất quán giữa các tài liệu. |
+| Phương pháp chọn góc nhìn/nhóm so sánh | Đã có bản cập nhật tại Bộ 5 Metrics §1.2–§1.5 | Kiểm tra nội dung, không viết lại mặc định. |
+| Bảng câu hỏi → yêu cầu dữ liệu | Đã có tại Mapping/Coverage §1.5 | Review từng dòng và cách diễn đạt giới hạn. |
+| Các chỉ dẫn lộ trình cũ | Đã làm sạch và chuyển thành lộ trình tham khảo | Review các vị trí liên kết để tránh hiểu nhầm. |
+| Phép thử AI tiếp nhận độc lập | Chưa thực hiện | Thực hiện sau khi thống nhất toàn bộ tài liệu. |
+
+> **Chốt việc tiếp theo:** Bước tiếp theo là review bản cập nhật và sửa những điểm còn mâu thuẫn; không tự viết lại toàn bộ bộ logic và không chuyển sang ETL.
 
 ---
 
@@ -182,15 +180,17 @@ Ba mức trạng thái phải được tách biệt rõ ràng, không gộp chun
    - Nối liền từ câu hỏi phân tích sang yêu cầu dữ liệu và giới hạn thực hiện.
    - Đạt: Khi Duy và cậu Sinh đọc, đồng ý với cách tiếp cận và các ranh giới đề ra.
 2. **Mức 2 — Sẵn sàng thực hiện bằng dữ liệu (Data Readiness for ETL):**
-   - Nhận được export Meta bổ sung có ID nguyên vẹn dạng text, Publisher platform và cấu hình objective.
-   - Khóa được quy tắc mapping Phễu và Sản phẩm có người chịu trách nhiệm.
-   - Làm rõ lineage chênh lệch 9.252 VND tháng 04.
-   - Đạt: Khi các data gate liên quan được cậu Sinh duyệt mở.
+   - **Nguyên tắc cốt lõi:** Điều kiện dữ liệu được xét theo từng câu hỏi hoặc cặp phân tích, không áp dụng một checklist chung cho toàn bộ dự án.
+   - *Chiều Nền tảng:* Publisher platform chỉ là điều kiện bắt buộc của các phân tích cần chiều publisher (3 cặp có Nền tảng); không chặn các phân tích thuộc 3 cặp còn lại.
+   - *Chiều Sản phẩm:* Mapping sản phẩm chi tiết là điều kiện của các phân tích tới cấp sản phẩm tương ứng (SP01–SP25); phân tích ở cấp nhóm sản phẩm suy luận vẫn được thực hiện theo nhãn human-curated.
+   - *Chiều Objective:* Objective suy luận đã được Duy chấp nhận vẫn được sử dụng theo quy tắc và trạng thái review; Objective Meta gốc bổ sung sau dùng để đối soát, không tự chặn bước ETL đang dùng human mapping.
+   - *Lineage:* Làm rõ lineage chênh lệch 9.252 VND tháng 04 giữa demo và preferred khi xây dựng fact spend chính thức.
+   - Đạt: Khi data gate của từng nhánh phân tích cụ thể được cậu Sinh duyệt mở.
 3. **Mức 3 — Có kết quả phân tích và khuyến nghị (Analysis & Recommendation):**
-   - Đã nạp dữ liệu vào mô hình, đối soát spend khớp 100%.
-   - Có dữ liệu GMV business để tính Business ROAS.
-   - Đủ bằng chứng xác nhận và phản bác cho các giả thuyết.
-   - Đạt: Khi có báo cáo phân tích hoàn chỉnh được đánh giá.
+   - Đã nạp dữ liệu vào mô hình, đối soát spend khớp 100% theo grain được duyệt.
+   - Có dữ liệu GMV business và đơn hàng đa nền tảng: Đây là điều kiện bắt buộc riêng cho **phần kết quả business** (tính Business ROAS và đánh giá tỷ lệ 5–10%), không phải điều kiện bắt buộc để mọi phân tích về phân phối, CTR, engagement hoặc messaging có giá trị.
+   - Đủ bằng chứng xác nhận và phản bác cho các giả thuyết phân tích.
+   - Đạt: Khi có báo cáo phân tích hoàn chỉnh được đánh giá theo từng phạm vi.
 
 ---
 
