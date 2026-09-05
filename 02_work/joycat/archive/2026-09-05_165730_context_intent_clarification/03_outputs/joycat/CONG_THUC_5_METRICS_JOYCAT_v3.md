@@ -1,24 +1,12 @@
-# JOYCAT — Công thức 5 nhóm Metrics và Phương pháp đọc chỉ số
+# JOYCAT — Công thức 5 nhóm Metrics
 
-> Phiên bản: 4.0  
-> Cập nhật: 2026-09-05  
-> Người chịu trách nhiệm nội dung: Duy  
-> Người đánh giá: cậu Sinh  
-> Mục đích: Mô tả công thức toán học giữa các metrics và Business ROAS, đồng thời cung cấp phương pháp tư duy, bối cảnh đọc chỉ số và quy tắc chọn nhóm so sánh trước khi đưa ra kết luận.
+> Phiên bản: 3.1  
+> Cập nhật: 2026-09-04  
+> Mục đích: mô tả công thức toán học giữa các metrics và Business ROAS, đồng thời quy định các góc độ phải phân tích trước khi kết luận từng case.
 
 ---
 
-## 1. Vai trò trong công việc hiện tại
-
-Tài liệu này là **một nửa của bộ logic phân tích marketing Joycat** (đóng vai trò phương pháp tư duy, bối cảnh đọc và công thức toán học).
-
-Tài liệu này **phải được đọc song hành cùng [`DATA_MAPPING_COVERAGE_JOYCAT.md`](DATA_MAPPING_COVERAGE_JOYCAT.md)** (tài liệu quy định bốn chiều, sáu cặp, mapping và khả năng đáp ứng của dữ liệu thực tế).
-- Tài liệu này cho biết: *“Khi có câu hỏi, cần dùng công thức nào, đọc cùng chỉ số nào và tư duy phản biện theo những góc nhìn nào?”*
-- Tài liệu Data Mapping & Coverage cho biết: *“Để trả lời câu hỏi đó, dataset hiện có những trường nào, mapping ra sao, phần nào làm được ngay và phần nào còn thiếu?”*
-
----
-
-## 2. Quy ước chung
+## Quy ước chung
 
 | Ký hiệu | Ý nghĩa |
 |---|---|
@@ -27,7 +15,7 @@ Tài liệu này **phải được đọc song hành cùng [`DATA_MAPPING_COVERA
 | Ads Cost | `Amount Spent` cùng phạm vi và cùng kỳ |
 | GMV | GMV business cùng phạm vi và cùng kỳ với Ads Cost |
 | AOV | Giá trị đơn hàng trung bình = `GMV / Purchases` |
-| Quan hệ thuận/nghịch | Quan hệ toán học logic khi các biến còn lại trong công thức được giữ nguyên |
+| Quan hệ thuận/nghịch | Quan hệ toán học khi các biến còn lại trong công thức được giữ nguyên |
 | Mỗi dòng công thức | Một cách biểu diễn tương đương; không cộng các dòng lại |
 
 ```text
@@ -35,101 +23,30 @@ Business ROAS = GMV / Ads Cost
 Business ROAS = GMV / Amount Spent
 ```
 
-> **Lưu ý cốt lõi:** GMV trong tài liệu này là **GMV business** do doanh nghiệp ghi nhận. Tuyệt đối không lấy giá trị chuyển đổi do Meta attribution ghi nhận (`Purchases conversion value`) để thay thế cho GMV business.
+> GMV trong tài liệu này là GMV business. Không lấy giá trị chuyển đổi do Meta attribution ghi nhận làm GMV business.
 
 ---
 
-## 3. Từ công thức toán học đến câu hỏi phân tích
+## Cách dùng đúng công thức: phải nhìn theo từng case và nhiều chiều
 
-Để không rơi vào cái bẫy nhìn một con số rồi kết luận vội vã, người phân tích phải phân biệt rõ **4 tầng nhận thức**:
-
-```text
-Tầng 1: Quan hệ toán học và điều kiện sử dụng (Logic đại số)
-   ↓
-Tầng 2: Khác biệt quan sát được trong dữ liệu (Hiện tượng)
-   ↓
-Tầng 3: Giả thuyết giải thích sự khác biệt (Cơ chế có thể xảy ra)
-   ↓
-Tầng 4: Bằng chứng cần kiểm tra trước khi kết luận (Dữ liệu xác nhận/bác bỏ)
-```
-
-1. **Quan hệ toán học và điều kiện sử dụng:**
-   - Các công thức thuận/nghịch là đẳng thức toán học chính xác với điều kiện giả định *ceteris paribus* (các yếu tố khác giữ nguyên).
-   - Không xóa bỏ các quan hệ toán học này vì chúng là nền tảng phân rã; nhưng không được nhầm lẫn quan hệ toán học có điều kiện với kết luận nguyên nhân trong thực tế.
-2. **Biến bị triệt tiêu đại số không đồng nghĩa với việc không có vai trò:**
-   - Khi rút gọn công thức ROAS, biến `Impressions` có thể bị triệt tiêu ở cả tử và mẫu. Điều này chỉ có nghĩa là tỷ số ROAS không phụ thuộc trực tiếp vào độ lớn tuyệt đối của Impression nếu các tỷ lệ chuyển đổi giữ nguyên.
-   - Nhưng tuyệt đối **không coi đây là bằng chứng rằng Impression không có vai trò nhân quả**. Không có Impression thì không thể có Reach, Clicks hay Purchases.
-3. **Tỷ số tổng hợp không tự đồng nghĩa với hành trình người dùng (Cohort Conversion):**
-   - Khi lấy `Tổng Purchases / Tổng Link Clicks` trong một tháng, con số này là một **tỷ số tổng hợp cùng phạm vi thời gian**.
-   - Chưa được gọi đây là "tỷ lệ chuyển đổi của cùng một đoàn hệ người dùng" nếu hệ thống chưa có tracking ID định danh người dùng xuyên suốt từ click đến mua hàng.
-4. **Phân biệt rạch ròi Meta Purchases và Business Orders:**
-   - `Purchases` trong báo cáo Meta là số lượng sự kiện chuyển đổi được Meta phân bổ (attribution) theo cửa sổ thiết lập (ví dụ 7-day click, 1-day view).
-   - `Orders` của doanh nghiệp là đơn hàng thực tế phát sinh trên hệ thống bán hàng (Shopee, TikTok, Website, POS), có tính đến việc hủy đơn, hoàn hàng, trùng đơn. Không bao giờ đồng nhất hai đại lượng này.
-
----
-
-## 4. Cách chọn góc nhìn và nhóm so sánh tương đồng
-
-Không đọc CPM, CTR, CPC, Mess, Purchase hoặc ROAS đứng một mình. Phân tích chỉ có giá trị khi đặt vào một case cụ thể và so sánh với nhóm đối chứng phù hợp.
-
-### 4.1. Một case phân tích cụ thể gồm những gì?
+Không đọc CPM, CTR, CPC, Mess, Purchase hoặc ROAS đứng một mình. Trước tiên phải xác định một case cụ thể:
 
 ```text
 Một case phân tích
-= một kỳ dữ liệu (tháng/tuần)
+= một kỳ dữ liệu
 + một sản phẩm hoặc nhóm sản phẩm
-+ một Campaign objective / Optimization goal
-+ một tầng phễu (TOFU/MOFU/BOFU/Shared)
-+ một nền tảng hiển thị (Publisher platform)
-+ một cấp quảng cáo (Campaign / Ad set / Ad)
-+ một nhóm đối tượng (Audience / LAL / Retargeting)
-+ một định dạng nội dung (Creative format / Placement)
-+ một thiết lập quy gán (Attribution setting)
++ một Campaign objective
++ một tầng phễu
++ một nền tảng
++ một cấp Campaign / Ad set / Ad
++ một nhóm audience
++ một creative / format / placement
++ một attribution setting
 ```
 
-### 4.2. Nguyên tắc so sánh đối chứng
+Không bắt buộc case nào cũng có đủ mọi chiều. Chiều nào chưa có dữ liệu thì phải ghi rõ, không tự gán.
 
-1. **Chiều muốn so sánh thì phải khác nhau, các chiều còn lại phải kiểm soát:**
-   - Khi muốn so sánh hiệu quả giữa 2 sản phẩm (ví dụ Cát Sắn NA vs Cát Khoáng MNX), chiều Sản phẩm đương nhiên khác nhau.
-   - Nhưng để phép so sánh có ý nghĩa, ta phải kiểm soát để các chiều còn lại tương đồng nhất có thể: cùng nền tảng Facebook, cùng mục tiêu Messaging, cùng kỳ tháng 04, cùng loại định dạng.
-   - Nếu hai chiến dịch khác nhau ở cả Sản phẩm, cả Objective, cả Format và chạy ở hai tháng khác nhau, ta không thể quy chênh lệch hiệu quả cho riêng yếu tố sản phẩm.
-2. **Không máy móc nhân mọi metric với mọi chiều:**
-   - Không ép mọi nhánh quảng cáo phân phối nhận biết phải lập tức giải trình Business ROAS. Mỗi nhánh đảm nhiệm một vai trò trong phễu.
-   - Các chiến dịch TOFU tập trung vào độ phủ chất lượng (Reach, CPM, Video View).
-   - Các chiến dịch MOFU tập trung vào tương tác sâu và hội thoại (CTR, Messaging, Cost per Mess).
-   - Các chiến dịch BOFU mới trực tiếp tối ưu cho hành động mua hàng (Cost per Purchase, ROAS).
-3. **Không ép mọi khách hàng đi qua cùng một chuỗi hành trình tuần tự:**
-   - Chuỗi `Impression → Click → Mess → Purchase` là một khung tư duy phân tích, không phải là con đường duy nhất của mọi khách hàng.
-   - Có khách hàng thấy quảng cáo nhận biết trên Facebook (Impression), không bấm vào quảng cáo nhưng sau đó tự mở app Shopee tìm kiếm thương hiệu Joycat để mua hàng trực tiếp.
-4. **Kết luận được phép khi thiếu thông tin:**
-   - Khi chưa có Publisher platform: Chỉ được kết luận về tổng hiệu quả trên toàn bộ vị trí Meta, không suy diễn cho riêng Instagram hay Facebook.
-   - Khi chưa có GMV business: Chỉ được kết luận về hiệu quả kỹ thuật quảng cáo (CPM rẻ hay đắt, CPR tối ưu hay không), tuyệt đối không kết luận chiến dịch đó "tạo ra lợi nhuận cao hay thấp".
-
----
-
-## 5. Hai minh họa phương pháp tư duy (Không dùng số liệu)
-
-> **Lưu ý:** Hai trường hợp dưới đây là **ví dụ minh họa về phương pháp tư duy phân tích**, không phải là kết luận hay số liệu thực tế của Joycat.
-
-### Minh họa 1: Đọc CPM trong bối cảnh nhiệm vụ quảng cáo
-
-Khi quan sát thấy Campaign A có CPM cao gấp đôi Campaign B, người phân tích chưa được phép vội kết luận "Campaign A chạy kém và lãng phí tiền".
-- **Câu hỏi đúng cần đặt ra:** Campaign A và B đang phục vụ nhiệm vụ gì và nhắm vào ai?
-- **Phân tích bối cảnh:** Nếu Campaign A đang nhắm vào tệp Lookalike 1% của những người mua hàng thường xuyên (tệp đối tượng hẹp, giá thầu đấu giá cao vì nhiều nhà quảng cáo cùng tranh chấp, nhưng tệp khách có túi tiền tốt và tỷ lệ chuyển đổi cao), việc CPM cao là cơ chế phân phối hoàn toàn hợp lý.
-- **Bằng chứng cần kiểm tra:** Kiểm tra xem tỷ lệ chuyển đổi ra đơn và giá trị đơn hàng (AOV) của Campaign A có đủ cao để bù đắp chi phí CPM cao đó hay không. Nếu Cost per Purchase cuối cùng của Campaign A vẫn thấp hơn và ROAS tốt hơn, thì Campaign A là một chiến dịch hiệu quả dù CPM rất cao.
-- **Ngược lại:** Nếu một chiến dịch Awareness với mục tiêu tiếp cận rộng (Broad) mà CPM lại tăng vọt bất thường, đó mới là hiện tượng cảnh báo (creative bị nhàm chán, cạnh tranh phiên đấu giá tăng đột biến hoặc tần suất phân phối bị lặp quá nhiều).
-
-### Minh họa 2: Đánh giá chất lượng Messaging và ý nghĩa của CTR
-
-Khi thấy một mẫu quảng cáo có CTR (tỷ lệ nhấp) rất cao và Cost per Messaging Conversation (chi phí trên mỗi tin nhắn) cực kỳ rẻ, người phân tích không được vội mừng rằng quảng cáo "thành công rực rỡ".
-- **Câu hỏi đúng cần đặt ra:** Những người bấm vào nhắn tin đó có phải là khách hàng tiềm năng thực sự hay chỉ là tò mò / bấm nhầm?
-- **Phân tích bối cảnh:** Một creative giật tít, gây sốc hoặc hứa hẹn ưu đãi không có thật có thể thu hút lượng click khổng lồ và kéo theo hàng trăm tin nhắn với chi phí rất rẻ. Nhưng khi đội ngũ bán hàng tiếp nhận, khách hàng có thể chỉ hỏi bâng quơ hoặc lập tức rời đi vì thất vọng.
-- **Bằng chứng cần kiểm tra:** Đọc chỉ số chi phí tin nhắn cùng với các chỉ số tiếp theo: Tỷ lệ khách phản hồi lại (Messaging Replied), Tỷ lệ nhắn tin chuyển thành đơn (Mess → Order), và Doanh thu thực tế tạo ra từ kênh chat.
-- **Nguyên tắc:** Một chỉ số trung gian (CTR, Clicks, Tin nhắn) có rẻ đến đâu cũng không có giá trị nếu chất lượng đầu ra cuối cùng của hành trình không được bảo đảm.
-
----
-
-## 6. Các góc độ phân tích chi tiết
+### Các góc độ phải nhìn
 
 | Góc độ | Cần tách cụ thể | Câu hỏi cần trả lời |
 |---|---|---|
@@ -200,7 +117,7 @@ Quan hệ toán học:
 
 ---
 
-## 7. Năm nhóm Metrics chi tiết
+## 1. Impressions
 
 ```text
 Impressions = Reach × Frequency

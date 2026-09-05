@@ -1,4 +1,3 @@
-<?xml version='1.0' encoding='utf-8'?>
 <map version="1.0.1">
   <node ID="jm5v3-0001" TEXT="JOYCAT — CÔNG THỨC 5 NHÓM METRICS v3" STYLE="bubble">
     <node ID="jm5v3-0002" TEXT="CÔNG THỨC GỐC" STYLE="bubble" POSITION="left">
@@ -221,5 +220,5 @@
       <node ID="jm5v3-0605" TEXT="Thuận/nghịch chỉ đúng khi các biến còn lại được giữ nguyên" STYLE="fork" />
       <node ID="jm5v3-0606" TEXT="File chỉ mô tả công thức và quan hệ; chưa kết luận case Joycat" STYLE="fork" />
     </node>
-  <node ID="jm5v3-0900" TEXT="PHƯƠNG PHÁP TƯ DUY &amp; CHỌN NHÓM SO SÁNH (v4.0)" POSITION="right"><node ID="jm5v3-0901" TEXT="1. Vai trò: Một nửa bộ logic; đọc song hành cùng DATA_MAPPING_COVERAGE_JOYCAT" /><node ID="jm5v3-0902" TEXT="2. Bốn tầng nhận thức: Toán học &amp; điều kiện → Khác biệt quan sát → Giả thuyết → Bằng chứng" /><node ID="jm5v3-0903" TEXT="3. Biến triệt tiêu đại số không chứng minh vai trò nhân quả (Impression vẫn là điều kiện tiên quyết)" /><node ID="jm5v3-0904" TEXT="4. Tỷ số tổng hợp không tự đồng nghĩa với conversion của cùng hành trình (Cohort)" /><node ID="jm5v3-0905" TEXT="5. Phân biệt rạch ròi: Meta Purchases (quy gán) vs Business Orders (đơn thực tế sau hủy/hoàn)" /><node ID="jm5v3-0906" TEXT="6. Nguyên tắc so sánh: Chiều muốn so thì khác nhau, các chiều còn lại phải kiểm soát tương đồng" /><node ID="jm5v3-0907" TEXT="7. Không máy móc nhân mọi metric với mọi chiều; không ép mọi nhánh phải giải trình ROAS" /><node ID="jm5v3-0908" TEXT="8. Minh họa 1: Đọc CPM theo nhiệm vụ quảng cáo (LAL hẹp CPM cao là bình thường nếu AOV/CVR bù đắp)" /><node ID="jm5v3-0909" TEXT="9. Minh họa 2: CTR cao và Mess rẻ chưa chắc tốt nếu chất lượng chuyển đổi đơn cuối phễu kém" /></node></node>
+  </node>
 </map>

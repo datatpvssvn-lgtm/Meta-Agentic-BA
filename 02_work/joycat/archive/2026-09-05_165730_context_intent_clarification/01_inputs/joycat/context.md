@@ -1,8 +1,8 @@
 # Context Joycat
 
-> Phiên bản: 13.0  
+> Phiên bản: 12.0  
 > Cập nhật: 2026-09-05  
-> Trạng thái: Đang hoàn thiện Context và bộ logic phân tích Joycat trước ETL; chưa kết luận hiệu quả Joycat và chưa chuyển sang chạy pipeline ETL/report production
+> Trạng thái: Đã tách Metric, Data Mapping/Coverage và Logic Tree đúng nghĩa để review; chưa kết luận hiệu quả Joycat và chưa chuyển ETL/report production
 
 ## 1. AI dùng context này như thế nào
 
@@ -26,30 +26,13 @@ Joycat là trường hợp học để Duy cùng AI:
 
 KPI 1 không yêu cầu tái tính hoặc chứng minh chính xác tỷ lệ 5–10% khi chưa có GMV/đơn hàng đa nền tảng cùng kỳ.
 
-### 2.1. Vì sao đang hoàn thiện bộ logic phân tích trước ETL
-
-Theo xác nhận của Duy:
-1. **Chuyển từ suy diễn đơn giản sang quan hệ có điều kiện:** Trước đây Duy từng hiểu đơn giản rằng “CPM cao thì ROAS giảm”. Sau đó Duy nhận ra quan hệ thuận/nghịch chỉ đúng khi các biến khác trong công thức giữ nguyên. Tuy nhiên trong môi trường thực tế, không có biến nào tự đứng yên.
-2. **Chuyển từ công thức sang thiết kế kiểm tra theo bối cảnh:** Hiện Duy đã phân tách được nhiều góc nhìn (4 chiều, 6 cặp, 5 nhóm metric). Việc cần làm trước khi đổ dữ liệu vào ETL là làm rõ:
-   - Câu hỏi nào cần góc nhìn nào.
-   - Vì sao phải chọn góc nhìn đó.
-   - So sánh với nhóm đối chứng nào.
-   - Đọc các chỉ số nào đi cùng nhau.
-   - Dùng nguồn/bằng chứng nào để kiểm tra giả thuyết.
-   - Khi nào chỉ dừng ở mô tả hiện tượng, khi nào mới đủ cơ sở để kết luận.
-3. **Bộ logic hiện hành gồm hai tài liệu phối hợp:**
-   - [`CONG_THUC_5_METRICS_JOYCAT_v3.md`](../../03_outputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.md): Công thức, điều kiện dùng, bối cảnh đọc metric và cách tư duy trước khi kết luận.
-   - [`DATA_MAPPING_COVERAGE_JOYCAT.md`](../../03_outputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.md): Bốn chiều, sáu cặp, mapping, quan hệ nối và khả năng đáp ứng của dataset.
-
-Việc tạm hoãn tạo file `LOGIC_TREE.md/.mm` riêng không đồng nghĩa với việc hoãn tư duy phân tích. Hai tài liệu trên đảm nhiệm trọn vẹn vai trò logic phân tích cho phase này.
-
 ## 3. Mong muốn thực tế của giai đoạn hiện tại
 
-- Làm rõ mục tiêu, câu hỏi phân tích, bốn chiều (Nền tảng, Sản phẩm, Phễu, Objective) và sáu cặp phân tích đủ để AI thiết kế ETL đúng grain và nhận diện chính xác phần dataset chưa đáp ứng.
-- Hoàn thiện phương pháp đọc chỉ số, đối chiếu toán học và điều kiện kiểm chứng trong [`CONG_THUC_5_METRICS_JOYCAT_v3.md`](../../03_outputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.md).
-- Nối liền câu hỏi phân tích với yêu cầu dữ liệu và audit coverage trong [`DATA_MAPPING_COVERAGE_JOYCAT.md`](../../03_outputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.md).
-- Bàn giao Context và bộ logic ở trạng thái đủ rõ ràng để Duy và cậu Sinh review.
-- Chưa triển khai ETL/report production, chưa phân bổ chi phí dùng chung và chưa kết luận nguyên nhân/hiệu quả thực tế của Joycat.
+- Nối KPI cần xem → công thức Metric Tree → bốn chiều/sáu cặp/coverage → đường đi Logic Tree trong một bộ đọc chính.
+- Làm rõ Nền tảng, Sản phẩm, Phễu và Campaign objective đủ để AI sau này thiết kế ETL đúng grain và báo phần dataset chưa đáp ứng.
+- Giữ Logic Duy đã làm làm nền, bổ sung data gate, lát cắt, bằng chứng xác nhận/phản bác và giới hạn.
+- Dừng ở `03_outputs\joycat\LOGIC_TREE.md/.mm` và `DATA_MAPPING_COVERAGE_JOYCAT.md/.mm` để Duy/cậu Sinh review.
+- Chưa triển khai ETL/report production, chưa phân bổ chi phí dùng chung và chưa kết luận nguyên nhân/hiệu quả.
 
 ## 4. Bối cảnh vận hành hiện tại (Current Operating Context)
 
@@ -92,8 +75,10 @@ flowchart LR
 
 Các yếu tố trong bảng này được phân luồng tới đúng artefact. Việc một yếu tố “có thể ảnh hưởng” chỉ là giả thuyết, không phải bằng chứng rằng nó đã làm thay đổi hiệu quả Joycat.
 
-| Sản phẩm, giá và quy cách cát mèo | Quyết định nhu cầu, giá trị đơn và chu kỳ mua lại | Context; phân tích chiều Sản phẩm | Duy/cậu Sinh xác nhận sản phẩm là cát mèo; snapshot Shopee 25 listing | Một phần | Người phụ trách Joycat | Đã có catalog snapshot 25 listing (25/08/2026); chưa có bảng mapping nối từng Ad với listing/SKU |
-| Chu kỳ mua lại và lý do chọn Joycat | Ảnh hưởng nhu cầu lặp lại, retention và timing | Context; giả thuyết phân tích | Không có | To be updated | Người phụ trách khách hàng/Joycat | Không được tự giả định từ ngành hàng |
+| Yếu tố | Ảnh hưởng có thể có | Nơi sử dụng | Nguồn hiện có | Trạng thái | Owner/nguồn cần hỏi | Giới hạn |
+|---|---|---|---|---|---|---|
+| Sản phẩm, giá và quy cách cát mèo | Quyết định nhu cầu, giá trị đơn và chu kỳ mua lại | Context; KPI/Logic Tree khi liên quan | Duy/cậu Sinh xác nhận sản phẩm là cát mèo | Một phần | Người phụ trách Joycat | Chưa có danh mục, giá hoặc quy cách trong workspace |
+| Chu kỳ mua lại và lý do chọn Joycat | Ảnh hưởng nhu cầu lặp lại, retention và timing | Context; Logic Tree | Không có | To be updated | Người phụ trách khách hàng/Joycat | Không được tự giả định từ ngành hàng |
 | Nhóm khách hàng | Ảnh hưởng audience, thông điệp và conversion | Context; bảng ánh xạ Meta | Tên audience/LAL trong export | Một phần | Người thiết kế audience | Tên LAL không chứng minh chân dung hoặc chất lượng khách |
 | Các kênh tạo GMV | Xác định mẫu số GMV toàn nền tảng | KPI/Metric Tree; source contract | Owner xác nhận có sàn, Meta và điểm bán | Một phần | Cậu Sinh/người phụ trách dữ liệu | Chưa khóa đầy đủ danh sách kênh và rule cộng GMV |
 | Giá, voucher, trợ giá, miễn phí vận chuyển | Có thể thay đổi conversion và GMV | Context; Logic Tree | Không có nguồn trực tiếp | To be updated | Joycat hoặc owner nền tảng | Không suy ra từ biến động Ads |
@@ -172,15 +157,16 @@ Ba đầu ra là Tree cụ thể cho Joycat và chỉ dùng kiến thức Meta l
 - Điều kiện đạt: ghi rõ công thức, đơn vị, source, grain, kỳ, attribution, trạng thái và điểm dừng.
 - Không trộn số liệu ở cấp Campaign, Ad set và Ad; không dùng Meta Purchase Value thay GMV thật của doanh nghiệp.
 
-### Bộ logic phân tích (Bộ 5 Metrics & Data Mapping/Coverage)
+### Logic Tree
 
-- Tài liệu phương pháp: `03_outputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.md/.mm`.
-- Tài liệu dữ liệu & mapping: `03_outputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.md/.mm`.
-- Phải trả lời: cần đi qua câu hỏi nào, lát cắt nào, so sánh với nhóm nào và cần dữ liệu gì để phân tích từng case?
-- Nút gốc đi từ Ads Cost/metrics theo bốn chiều; có data gate, kiểm soát tổng, phân tích phễu và giả thuyết kiểm tra.
+- Skill dự kiến: `.agents/skills/logic-tree-skill/`.
+- Đầu ra hiện hành: `03_outputs/joycat/LOGIC_TREE.md/.mm`. Cây được dựng lại từ Logic Tree cũ theo TOFU–MOFU–BOFU và chỉ giữ đường câu hỏi, comparator, giả thuyết, bằng chứng, drill-down và decision gate.
+- Phải trả lời: cần đi qua câu hỏi, lát cắt, phép so sánh và bằng chứng nào để phân tích đúng từng case?
+- Nút gốc đi từ Ads Cost/metrics theo bốn chiều; có data gate, kiểm soát tổng, funnel/journey, drill-down và giả thuyết kiểm tra.
 - Mỗi giả thuyết phải nêu dữ liệu xác nhận và dữ liệu có thể bác bỏ; chưa đủ dữ liệu thì dừng ở trạng thái tương ứng.
 - Không biến mối liên hệ quan sát được hoặc tên Campaign thành kết luận nhân quả.
-- *(Lưu ý: File `LOGIC_TREE.md/.mm` là định hướng đóng gói sau này, tạm hoãn trong phase hiện tại; hai tài liệu logic trên đảm nhiệm toàn bộ vai trò này).*
+
+Ba Tree dùng chung hợp đồng chỉ số và nguồn; không tự định nghĩa lại KPI hoặc thay giới hạn bằng chứng của Context này.
 
 ### Các lỗi khiến Tree không đạt
 
@@ -193,18 +179,20 @@ Giai đoạn xây Tree chưa đạt nếu:
 - xóa KPI hoặc chỉ số chỉ vì dữ liệu chưa sẵn có;
 - có Mermaid nhưng thiếu phần kiểm định bắt buộc.
 
-## 9. Điều kiện hoàn thành giai đoạn thiết kế logic phân tích
+## 9. Điều kiện hoàn thành Tree v1
 
-Giai đoạn thiết kế logic phân tích chỉ được trình cậu Sinh đánh giá khi:
+Giai đoạn xây Tree chỉ được trình cậu Sinh đánh giá khi:
 
-- [ ] Context Joycat và CURRENT_INTENT thống nhất về mục tiêu, ranh giới và vai trò tài liệu.
-- [ ] KPI Tree lượng hóa đúng các chỉ số cụ thể cần xem và nối được sang công thức Metric Tree.
+- [ ] Ba skill đọc Workspace Context và Joycat Context trước khi tạo đầu ra.
+- [ ] Ba đầu ra tồn tại đúng đường dẫn; mỗi file có một Mermaid chính và phần kiểm định tương ứng.
+- [ ] KPI Tree lượng hóa đúng các chỉ số cụ thể cần xem và nối được sang công thức Metric Tree; không bắt buộc bốn tầng ROKS.
 - [ ] Metric Tree ghi rõ công thức, nguồn, cấp dữ liệu và tình trạng của các chỉ số quan trọng.
-- [ ] Bộ 5 Metrics (`CONG_THUC_5_METRICS_JOYCAT_v3.md`) thể hiện rõ bối cảnh đọc chỉ số, điều kiện toán học và phương pháp tư duy phản biện trước khi kết luận.
-- [ ] Data Mapping & Coverage (`DATA_MAPPING_COVERAGE_JOYCAT.md`) nối liền câu hỏi phân tích sang 4 chiều, 6 cặp, audit coverage và ranh giới khả thi của dataset.
-- [ ] Các khoảng trống dữ liệu (thiếu publisher platform, thiếu mapping listing SP01-SP25, thiếu GMV business) được phân loại rõ ràng và không biến giả định thành fact.
-- [ ] Duy trình bày được mục đích, cách tiếp cận, ít nhất một giới hạn dữ liệu và bước tiếp theo của bộ logic.
-- [ ] Cậu Sinh đánh giá tổng thể và chấp nhận thiết kế tư duy phân tích trước khi chuyển sang chuẩn bị ETL.
+- [ ] Logic Tree thể hiện đường đi phân tích, data gate, lát cắt và bằng chứng xác nhận/phản bác; bản mới phải được Duy/cậu Sinh review trước khi coi là đã duyệt.
+- [ ] Không cần sửa tay nút gốc, tầng, quan hệ hoặc giới hạn bằng chứng sau khi skill tạo đầu ra; được phép chỉnh câu chữ và cách trình bày.
+- [ ] Duy trình bày được mục đích, nút gốc, nhánh chính, ít nhất một giới hạn và bước tiếp theo của từng Tree.
+- [ ] Cậu Sinh đánh giá tổng thể và chấp nhận giai đoạn xây Tree.
+
+Hoàn thành giai đoạn xây Tree không đồng nghĩa KPI 1 đã hoàn thành.
 
 ## 10. Điều kiện hoàn thành KPI 1
 
@@ -253,7 +241,7 @@ Câu hỏi tiếp theo: Bộ `preferred_candidate` có phải nguồn làm việ
 - Coverage thăm dò của ba cặp còn lại theo tháng 03/04/05: Phễu × nhóm/ngành hàng có 9/13/13 ô quan sát; nhóm/ngành hàng × Objective suy luận có 7/12/16 ô; Phễu × Objective suy luận có 3/4/6 ô.
 - Ô không quan sát, ô trống và số 0 có nguồn xác nhận là ba trạng thái khác nhau. Audit hiện chỉ dùng Campaign có `Amount spent (VND) > 0`, nên không xác nhận được tổ hợp có chi phí bằng 0.
 
-Nguồn mapping/coverage hiện hành: `03_outputs\joycat\DATA_MAPPING_COVERAGE_JOYCAT.md/.mm`. Nguồn phương pháp và bối cảnh đọc chỉ số: `03_outputs\joycat\CONG_THUC_5_METRICS_JOYCAT_v3.md/.mm`. Cấu trúc chỉ số cấp cao thuộc `KPI_TREE.md` và `METRIC_TREE.md`. Các file cũ nằm trong archive để truy vết.
+Nguồn mapping/coverage hiện hành: `03_outputs\joycat\DATA_MAPPING_COVERAGE_JOYCAT.md/.mm`. Nguồn đường phân tích hiện hành: `03_outputs\joycat\LOGIC_TREE.md/.mm`. Công thức chi tiết thuộc Metric Tree và bộ 5 metrics. Các file cũ nằm trong archive để truy vết.
 
 ### GMV/đơn hàng đa nền tảng
 
@@ -279,6 +267,6 @@ Câu hỏi tiếp theo: Quy tắc nào có tài liệu hoặc có thể được
 - Không biến lời xác nhận của người phụ trách thành thông tin đã được dữ liệu chứng minh.
 - Dữ liệu được tạo thêm trong tương lai phải nằm ngoài `raw` và truy được nguồn gốc.
 
-Bước hiện tại (2026-09-05): Đang hoàn thiện Context và bộ logic phân tích trước ETL gồm `CONG_THUC_5_METRICS_JOYCAT_v3.md` và `DATA_MAPPING_COVERAGE_JOYCAT.md`. Cả hai đang **chờ review**. Nội dung này không mở quyền kết luận nguyên nhân, triển khai ETL/report production hoặc thay đổi Ads.
+Bước hiện tại (2026-09-05): Logic Tree đã được dựng lại từ cây cũ; mapping/coverage được tách sang `DATA_MAPPING_COVERAGE_JOYCAT.md/.mm`. Cả hai đang **chờ review**. Nội dung này không mở quyền kết luận nguyên nhân, triển khai ETL/report production hoặc thay đổi Ads.
 
 > **Business rules mới xác nhận 2026-08-26/27:** Purchase = Order; ROAS Meta ≠ ROAS business; Joycat chỉ chạy Ads trên Meta; Joycat bán đa sàn + shop trực tiếp. Xem §5 để biết trạng thái và giới hạn từng phát biểu.

@@ -18,12 +18,12 @@
   "xml": {
     "03_outputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.mm": {
       "parse_ok": true,
-      "node_count": 399,
+      "node_count": 428,
       "duplicate_ids": []
     },
     "03_outputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.mm": {
       "parse_ok": true,
-      "node_count": 177,
+      "node_count": 187,
       "duplicate_ids": []
     },
     "03_outputs/joycat/METRIC_TREE.mm": {

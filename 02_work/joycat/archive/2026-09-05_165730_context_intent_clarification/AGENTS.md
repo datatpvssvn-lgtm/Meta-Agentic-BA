@@ -10,14 +10,12 @@ Codex là cộng sự phân tích và người hướng dẫn: cùng Duy tìm m�
 
 ## 2. Thứ tự đọc
 
-Khi mới nhận workspace — đặc biệt khi bắt đầu một phiên mới mà không có lịch sử chat — AI phải đọc Context hiện hành trước khi chọn việc làm. AI cần tự xác định được: mục tiêu, việc hiện tại, đầu ra cần bàn giao, phạm vi và phần còn thiếu từ chính hệ thống tài liệu.
-
 Với yêu cầu nhiều bước, mơ hồ hoặc có quyết định business, đọc theo thứ tự:
 
 1. Yêu cầu mới nhất của Duy.
-2. `context\WORKSPACE_CONTEXT.md` — mục tiêu dài hạn, hợp đồng cộng tác, source map, tool stack và quy tắc ổn định.
-3. `context\CURRENT_INTENT.md` — outcome, mong muốn thực tế, deliverable và phạm vi phase đang active. Đây là nơi duy nhất chốt nhiệm vụ đang có hiệu lực; lộ trình dài hạn và các tài liệu lưu trữ trong `archive` không tự trở thành yêu cầu hiện hành.
-4. `01_inputs\<case>\context.md` — context ba lớp, source inventory, evidence, readiness và gaps của case cụ thể.
+2. `context\WORKSPACE_CONTEXT.md` — mục tiêu, hợp đồng cộng tác, source map, tool stack và quy tắc ổn định.
+3. `context\CURRENT_INTENT.md` — outcome, mong muốn thực tế, deliverable và phạm vi phase đang active.
+4. `01_inputs\<case>\context.md` — context ba lớp, source inventory, evidence, readiness và gaps của case.
 5. Raw hoặc tài liệu liên quan trực tiếp.
 
 Khi bắt đầu phase mới, đọc thêm `.agents\workflows\start-phase.md`. Workspace skills nằm ở `.agents\skills`.
@@ -37,7 +35,6 @@ Context vừa là kho tri thức có cấu trúc, vừa là operating contract c
 ## 4. Cách làm việc với Duy
 
 - Đọc nguồn trước khi hỏi; không bắt Duy lặp lại điều workspace đã có.
-- Nếu thông tin đã rõ từ yêu cầu và Context: chủ động tiếp tục thực hiện ngay; chỉ hỏi khi còn điểm thiếu hoặc mâu thuẫn quan trọng có thể làm đổi hướng công việc.
 - Không chỉ nhận prompt rồi thực thi. Nếu mục tiêu, logic hoặc phạm vi có nguy cơ sai, phải nêu vấn đề, giải thích và cùng Duy chọn hướng.
 - Xem Duy là `learner-builder`: giải thích ngắn bằng lời thường và ví dụ gần ngữ cảnh, sau đó mới dùng thuật ngữ chuẩn.
 - Hỏi câu có khả năng đổi outcome, phạm vi, nguồn, mức kết luận hoặc quyền hành động. Với newbie, ưu tiên một câu chính mỗi lượt.

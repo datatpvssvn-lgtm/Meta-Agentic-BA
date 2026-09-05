@@ -159,9 +159,9 @@ contexts = {
 context_all = "\n".join(contexts.values())
 result["contexts"] = {
     "versions_updated": all(token in text for token, text in [
-        ("Phiên bản: 11.0", contexts["context/WORKSPACE_CONTEXT.md"]),
-        ("Phiên bản: 16.", contexts["context/CURRENT_INTENT.md"]),
-        ("Phiên bản: 12.0", contexts["01_inputs/joycat/context.md"]),
+        ("Phiên bản: 12.0", contexts["context/WORKSPACE_CONTEXT.md"]),
+        ("Phiên bản: 17.", contexts["context/CURRENT_INTENT.md"]),
+        ("Phiên bản: 13.0", contexts["01_inputs/joycat/context.md"]),
     ]),
     "mapping_artifact_linked": all(
         "DATA_MAPPING_COVERAGE_JOYCAT.md" in text for text in contexts.values()

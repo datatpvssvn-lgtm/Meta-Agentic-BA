@@ -1,31 +1,33 @@
 # JOYCAT — Data Mapping & Coverage cho Ads Cost
 
-> Phiên bản: 4.0  
+> Phiên bản: 3.0  
 > Cập nhật: 2026-09-05  
 > Owner nội dung: Duy  
 > Reviewer: cậu Sinh  
-> Trạng thái: Đã hoàn thiện thiết kế tư duy và cầu nối dữ liệu để review; chưa phải kết luận hiệu quả và chưa phải ETL/report production  
+> Trạng thái: Đã hoàn thiện để review; chưa phải kết luận hiệu quả và chưa phải ETL/report production  
 > Phạm vi đã kiểm tra: Meta Ads Joycat tháng 03–05/2026; catalog Shopee chụp ngày 25/08/2026
 
-> **Vai trò tài liệu:** Cầu nối trực tiếp giữa tư duy phân tích và yêu cầu dữ liệu; quy định bốn chiều, sáu cặp, mapping, coverage và hợp đồng dữ liệu cho ETL. Tài liệu này được sử dụng **song hành cùng [Bộ 5 Metrics (CONG_THUC_5_METRICS_JOYCAT_v3.md)](CONG_THUC_5_METRICS_JOYCAT_v3.md)** để trả lời: *“Để giải quyết câu hỏi phân tích, cần cấu trúc dữ liệu nào, trường nào trong raw hỗ trợ, dataset đáp ứng tới đâu và thiếu gì?”* — tuyệt đối không chuyển phần đặt câu hỏi sang một Logic Tree đang tạm hoãn.
+> **Vai trò tài liệu:** định nghĩa bốn chiều, sáu cặp, mapping, coverage và data contract. Công thức metric chi tiết nằm trong Metric Tree; đường đặt câu hỏi và ra quyết định nằm trong Logic Tree.
 
 ## 1. Đọc nhanh cho Duy và cậu Sinh
 
 ### 1.1. Tài liệu này giúp làm gì?
 
-Tài liệu này nối liền chuỗi làm việc từ tư duy phân tích sang yêu cầu kỹ thuật:
+Tài liệu này nối liền toàn bộ đường làm việc:
 
 ```text
-Mục tiêu phân tích / Câu hỏi kinh doanh
-→ công thức và bối cảnh đọc (Bộ 5 Metrics)
-→ bốn chiều và sáu cặp phân tích (Tài liệu này)
-→ nguồn dữ liệu gốc và bảng ánh xạ (Mapping)
-→ đánh giá độ phủ (Coverage) và nhận diện khoảng trống
-→ điều kiện nối (Join integrity) và data gate
-→ thiết kế hợp đồng ETL khi dữ liệu sẵn sàng
+Mục tiêu phân tích
+→ KPI cần lượng hóa
+→ công thức Metric Tree
+→ bốn chiều và sáu cặp phân tích
+→ nguồn dữ liệu và mapping
+→ phần dataset tính được hoặc còn thiếu
+→ phép so sánh
+→ giả thuyết và bằng chứng
+→ recommendation khi đủ điều kiện
 ```
 
-Nói đơn giản: Trước khi hỏi “Campaign nào tốt?”, ta phải biết câu hỏi đó cần tách theo chiều nào (sản phẩm, nhiệm vụ, phễu hay nền tảng), so với nhóm đối chứng nào, raw data hiện tại có trường dữ liệu đó không, và nếu chưa có thì ranh giới kết luận phải dừng ở đâu.
+Nói đơn giản: trước khi hỏi “Campaign nào tốt?”, ta phải biết đang so cùng sản phẩm, cùng nhiệm vụ, cùng tầng phễu, cùng nơi hiển thị và cùng kỳ hay chưa. Sau đó mới đọc các chỉ số liên quan, đi sâu từ Campaign xuống Ad set và Ad, rồi kiểm tra cách giải thích nào phù hợp với dữ liệu.
 
 ### 1.2. Kết quả quan trọng nhất
 
@@ -39,14 +41,13 @@ Nói đơn giản: Trước khi hỏi “Campaign nào tốt?”, ta phải bi�
 | GMV business | Không có | Chưa tính được Business ROAS hoặc Ads Cost/GMV thật |
 | File Objective demo tháng 04 | 64.834.557 VND, cao hơn preferred Campaign 9.252 VND | Dùng để đọc mapping; chưa dùng làm fact spend chính tháng 04 |
 
-### 1.3. Phân công vai trò trong bộ tài liệu phân tích Joycat
+### 1.3. Ba Tree giữ ba vai trò riêng
 
-| Tài liệu | Câu hỏi tài liệu trả lời | Vai trò trong hệ thống |
+| Tree | Câu hỏi nó trả lời | Ví dụ |
 |---|---|---|
-| [`KPI_TREE.md`](KPI_TREE.md) | Cần lượng hóa những chỉ số cấp cao nào? | Cấu trúc chỉ số mục tiêu |
-| [`METRIC_TREE.md`](METRIC_TREE.md) | Chỉ số được tính thế nào và rẽ tới field gốc nào? | Công thức rẽ nhánh toán học |
-| [`CONG_THUC_5_METRICS_JOYCAT_v3.md`](CONG_THUC_5_METRICS_JOYCAT_v3.md) | Chỉ số này có ý nghĩa gì, đọc trong bối cảnh nào và tư duy phản biện ra sao? | Phương pháp đọc, bối cảnh & tư duy phân tích |
-| [`DATA_MAPPING_COVERAGE_JOYCAT.md`](DATA_MAPPING_COVERAGE_JOYCAT.md) (Tài liệu này) | Cần tách theo đầu mục nào, trường raw nào hỗ trợ và dữ liệu đáp ứng tới đâu? | Cầu nối câu hỏi sang dữ liệu, mapping & coverage ETL |
+| KPI Tree | Cần lượng hóa những chỉ số nào? | Ads Cost, CPM, CPC, Cost per Messaging Conversation, Purchase |
+| Metric Tree | Chỉ số được tính thế nào và rẽ tới field nào? | `CPM = Amount Spent / Impressions × 1.000` |
+| Logic Tree | Khi phân tích một case, phải kiểm tra và so sánh theo đường nào? | Chọn đúng chiều → qua data gate → đọc nhóm metric → drill-down → kiểm chứng giả thuyết |
 
 ### 1.4. Sáu cặp dataset hiện làm được tới đâu?
 
@@ -61,23 +62,6 @@ Nói đơn giản: Trước khi hỏi “Campaign nào tốt?”, ta phải bi�
 
 “Tính được” ở đây nói về cấu trúc Ads Cost. Nó không tự chứng minh hiệu quả, nguyên nhân hoặc Business ROAS.
 
-### 1.5. Bảng từ câu hỏi phân tích đến yêu cầu dữ liệu (4 chiều & 6 cặp)
-
-| Phân loại | Câu hỏi phục vụ | Vì sao cần tách | Đầu mục & mức chi tiết | Trường nguồn / Mapping liên quan | Điều kiện nối / tổng hợp cần kiểm tra | Dữ liệu hiện tại hỗ trợ tới đâu | Phần thiếu & Giới hạn kết luận |
-|---|---|---|---|---|---|---|---|
-| **Chiều 1: Nền tảng** | Quảng cáo Joycat hiển thị ở đâu và từng nơi chi bao nhiêu? | Chi phí hiển thị và hành vi click trên Facebook khác Instagram, Messenger | Facebook, Instagram, Messenger, Audience Network | Cần trường Meta export: `publisher_platform`, `platform_position` | Grain phân tách theo platform; tổng spend các platform = Tổng Ads Cost | **Chưa hỗ trợ** trong 32 file raw | Thiếu trường platform. Không suy đoán platform từ tên Campaign hay `CPAS-SHOPEE` |
-| **Chiều 2: Sản phẩm** | Tiền quảng cáo chi cho dòng sản phẩm hay quy cách nào? | Mỗi dòng sản phẩm (Cát sắn, Cát khoáng, Vi sinh) có biên lợi nhuận và nhu cầu khác nhau | 3 cấp: Nhóm sản phẩm (NA, PFX, MNX, Vi sinh) → Listing (SP01–SP25) → SKU | Catalog snapshot 25 listing; tiền tố tên Campaign (`NA`, `PFX`, `MNX`, `VI SINH`) | 1 Ad có thể quảng cáo nhiều listing (multi-product); không nhân đôi spend khi join | **Thăm dò cấp nhóm** qua tên Campaign; có catalog 25 listing | Thiếu bảng mapping Ads→Item ID. Chưa phân bổ được spend xuống SP01–SP25 |
-| **Chiều 3: Phễu** | Ngân sách đang phân bổ bao nhiêu cho nhận biết, hội thoại và chuyển đổi? | Phễu giúp kiểm soát kỳ vọng: không đòi hỏi TOFU sinh đơn ngay, không để BOFU bị đói ngân sách | TOFU (độ phủ/view), MOFU (tương tác/chat), BOFU (chuyển đổi đơn), Shared | Cột `Phễu` trong file dẫn xuất; tên Campaign có chứa `TOFU`, `MOFU`, `BOFU` | Gắn đúng grain; tổng spend 3 tầng + Shared = Tổng Ads Cost | **Thăm dò theo file dẫn xuất** (47 MOFU, 27 TOFU, 10 BOFU) | Chưa có quy tắc khóa grain, version và owner duyệt mapping phễu |
-| **Chiều 4: Objective** | Meta đang được chỉ định tối ưu hóa cho hành động nào? | Kết quả đo lường (`Results`) mang ý nghĩa hoàn toàn khác nhau tùy mục tiêu | Engagement - Messaging, Post Engagement, Sales - Purchase, Ad Recall | Cột `Objective suy luận` do Duy gắn; `Result indicator` trong raw | Không cộng gộp `Results` khác indicator; giữ nguyên spend dòng không result | **Đã có bản làm việc** trên 84 Campaign có spend (human mapping) | Raw thiếu Campaign objective gốc. Phải ghi rõ nguồn human-curated |
-| **Cặp 1: Nền tảng × Sản phẩm** | Trên từng nền tảng, tiền chi cho sản phẩm nào? | Đánh giá sản phẩm nào phù hợp bán qua kênh nào (ví dụ Instagram chuộng visual) | Cấp Platform × Cấp nhóm/listing sản phẩm | `publisher_platform` + Bảng mapping Ads → listing | Join bằng ID text; tổng mọi ô = Tổng Ads Cost | **Chưa tính được** | Thiếu cả trường platform và khóa mapping Ads → listing |
-| **Cặp 2: Nền tảng × Phễu** | Trên từng nền tảng, ngân sách chia cho các tầng phễu ra sao? | Kiểm tra nền tảng nào đóng vai trò kéo phễu đầu, nền tảng nào chốt đơn | Cấp Platform × Tầng phễu (TOFU/MOFU/BOFU) | `publisher_platform` + Bảng `map_funnel` | Không suy từ tổng platform và tổng phễu riêng rẽ | **Chưa tính được** | Thiếu trường platform; phễu chưa khóa hợp đồng mapping |
-| **Cặp 3: Nền tảng × Objective** | Mỗi nền tảng phục vụ mục tiêu gì chủ yếu? | Kiểm tra xem Meta có phân bổ tin nhắn sang Messenger và post engagement sang Feed không | Cấp Platform × Nhãn `Objective suy luận` | `publisher_platform` + `Objective suy luận` | Giữ metadata version của objective mapping | **Chưa tính được** | Bị chặn bởi thiếu trường platform |
-| **Cặp 4: Phễu × Sản phẩm** | Trong từng tầng phễu, tiền chi cho sản phẩm nào? | Xem sản phẩm nào đang được đầu tư làm nhận biết, sản phẩm nào chỉ chạy chốt đơn | Tầng phễu × Nhóm sản phẩm (NA, PFX, MNX, Vi sinh) | Cột `Phễu` + Tên Campaign có mã sản phẩm | Tổng các ô trong một tầng = Spend của tầng phễu đó | **Thăm dò cấp nhóm sản phẩm** (9 ô T3, 13 ô T4, 13 ô T5) | Chưa xuống được 25 listing; phụ thuộc human mapping trên tên Campaign |
-| **Cặp 5: Sản phẩm × Objective** | Mỗi sản phẩm nhận bao nhiêu ngân sách cho từng mục tiêu? | Đánh giá chiến lược marketing của từng dòng: dòng nào đẩy mạnh chat tư vấn, dòng nào chạy sales | Nhóm sản phẩm × Nhãn `Objective suy luận` | Mã sản phẩm từ tên Campaign + `Objective suy luận` | Tổng spend các objective của một nhóm = Spend nhóm sản phẩm đó | **Thăm dò cấp nhóm sản phẩm** (7 ô T3, 12 ô T4, 16 ô T5) | Dừng ở cấp nhóm; chưa xác minh cho từng listing Shopee cụ thể |
-| **Cặp 6: Phễu × Objective** | Trong từng tầng phễu, tiền đang phục vụ objective nào? | Đối soát tính hợp lý: TOFU có đúng là Post Engagement/Recall không, MOFU có đúng là Messaging không | Tầng phễu × Nhãn `Objective suy luận` | Cột `Phễu` + Cột `Objective suy luận` trên 84 Campaign | Tổng các ô = Tổng spend 84 Campaign có chi phí | **Tính được trên file demo** (3 ô T3, 4 ô T4, 6 ô T5) | Phụ thuộc hoàn toàn vào 2 cột human mapping; tháng 04 còn lệch 9.252 VND |
-
----
-
 ## 2. Hợp đồng Context và bằng chứng
 
 ### 2.1. Ba lớp context
@@ -85,7 +69,7 @@ Nói đơn giản: Trước khi hỏi “Campaign nào tốt?”, ta phải bi�
 | Lớp | Nội dung Joycat |
 |---|---|
 | Objective Context | Xây hệ thống hỗ trợ phân tích marketing đa nguồn, bắt đầu từ Meta Ads Joycat |
-| Mong muốn thực tế của phase | Hoàn thiện Context và thiết kế tư duy phân tích marketing Joycat trước ETL |
+| Mong muốn thực tế của phase | Hoàn thiện Context và Logic Tree đủ rõ để review và chuẩn bị ETL/modeling |
 | Current Operating Context | Có Meta Ads export tháng 03–05, file mapping thủ công và catalog; chưa có publisher breakdown, khóa sản phẩm đầy đủ hoặc GMV business |
 
 ### 2.2. Bốn nhãn bằng chứng
@@ -97,27 +81,7 @@ Nói đơn giản: Trước khi hỏi “Campaign nào tốt?”, ta phải bi�
 | Suy luận | Có cơ sở hợp lý nhưng cần kiểm tra thêm |
 | To be updated | Chưa có nguồn đủ mạnh; phải ghi điều thiếu, owner và ảnh hưởng |
 
-### 2.3. Ba loại phát biểu trong tài liệu
-
-Để không gây hiểu nhầm cho người đọc và AI kế thừa, tài liệu phân biệt rõ **3 loại phát biểu**:
-1. **Loại 1 — Công thức hoặc cấu trúc mô hình có thể thiết kế trước:** Là các công thức toán học, cấu trúc 4 chiều, 6 cặp và schema bảng ETL. Các mục này có thể thiết kế hoàn chỉnh ngay cả khi chưa có dữ liệu.
-2. **Loại 2 — Khả năng dữ liệu đã được ghi nhận trong nguồn/audit hiện có:** Là các trạng thái số liệu đã qua kiểm tra trực tiếp từ 32 file raw hoặc file demo (ví dụ: tổng spend preferred Campaign, sự tồn tại của 84 Campaign có spend, 25 Item ID trong catalog Shopee).
-3. **Loại 3 — Khả năng chỉ được xác nhận sau khi kiểm định dữ liệu thực tế:** Là các giả thuyết cần nguồn mới để mở khóa (ví dụ: chia spend theo Facebook/Instagram chỉ khả thi sau khi export được trường publisher; tính Business ROAS chỉ khả thi sau khi nhận được file đơn hàng business).
-
-### 2.4. Quy ước đặt tên và giới hạn phát ngôn trong báo cáo tương lai
-
-Khi xây dựng báo cáo hoặc tài liệu phân tích về sau, bắt buộc tuân thủ quy tắc phát ngôn:
-- **Được phép gọi:**
-  * “Chi phí quảng cáo phân bổ theo nhóm sản phẩm suy luận (human mapping)”.
-  * “Tỷ trọng chi phí theo tầng phễu (thăm dò theo nhãn file dẫn xuất)”.
-  * “Chi phí trên mỗi kết quả quảng cáo Meta (Cost per Result)”.
-- **Tuyệt đối chưa được gọi:**
-  * Không gọi chi phí nhóm sản phẩm là “Chi phí thực tế của listing Shopee SP01–SP25” hoặc “Chi phí SKU đã xác minh”.
-  * Không gọi `Objective suy luận` là “Cấu hình Campaign objective do Meta ghi nhận”.
-  * Không gọi `Purchases conversion value` của Meta là “Doanh thu / GMV thực tế của Joycat”.
-  * Khi thiếu GMV business: Không được phát ngôn về “ROAS thực tế của chiến dịch” hay “quảng cáo đang sinh lời bao nhiêu”.
-
-### 2.5. Data gate trước mọi phép so sánh
+### 2.3. Data gate trước mọi phép so sánh
 
 Chỉ so hai case khi trả lời được:
 
