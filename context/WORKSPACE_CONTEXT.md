@@ -128,12 +128,11 @@ Sản phẩm chuyên môn gần nhất sau khi Context được duyệt:
 ```text
 .agents/skills/kpi-tree-skill/
 .agents/skills/metric-tree-skill/
-.agents/skills/logic-tree-skill/
 
 03_outputs/joycat/KPI_TREE.md
 03_outputs/joycat/METRIC_TREE.md
-03_outputs/joycat/LOGIC_TREE.md
 ```
+*(Logic Tree tạm thời chưa tạo trong phase này).*
 
 Ba skill phải nêu rõ khi nào dùng, đầu vào, các bước làm, đầu ra, giới hạn và cách kiểm tra; phải đọc Context/bằng chứng trước khi dựng Tree; không gắn cứng Joycat; dùng lại được cho Truther sau khi Truther đủ Context/dữ liệu; đồng thời giúp Duy hiểu cách tạo Tree, không chỉ sinh file.
 
@@ -216,11 +215,11 @@ Giai đoạn hiện tại đã nối lại các artefact Joycat theo chuỗi ph�
 KPI cần xem
 → công thức Metric Tree
 → bốn chiều, sáu cặp và coverage
-→ Logic Tree hợp nhất: đường đi phân tích + hợp đồng ETL
+→ hợp đồng ETL
 → ETL/report sau khi data gate liên quan được duyệt
 ```
 
-KPI Tree và Metric Tree đã có bản làm việc. Bốn chiều, sáu cặp, source/mapping, coverage và ETL contract nằm tại `03_outputs\joycat\DATA_MAPPING_COVERAGE_JOYCAT.md/.mm`. Logic Tree đúng nghĩa đã được dựng lại từ cây cũ tại `03_outputs\joycat\LOGIC_TREE.md/.mm`, theo TOFU–MOFU–BOFU và đường câu hỏi → comparator → giả thuyết → bằng chứng → decision gate. Các file đang chờ review; có tài liệu không đồng nghĩa dataset đã đủ hoặc ETL/report production được phép triển khai.
+KPI Tree và Metric Tree đã có bản làm việc. Bốn chiều, sáu cặp, source/mapping, coverage và ETL contract nằm tại `03_outputs\joycat\DATA_MAPPING_COVERAGE_JOYCAT.md/.mm`. Logic Tree tạm thời chưa tạo trong phase này. Các file đang chờ review; có tài liệu không đồng nghĩa dataset đã đủ hoặc ETL/report production được phép triển khai.
 
 ## 6. Bối cảnh vận hành hiện tại
 
@@ -286,8 +285,7 @@ Chuẩn này áp dụng cho các sản phẩm phân tích về sau; chuẩn riê
 “Chuẩn như người có kinh nghiệm” trong giai đoạn gần nhất là tiêu chuẩn của **sản phẩm có thể đánh giá**, không phải chức danh hoặc mức tự chủ hiện tại của Duy. Chuẩn này áp dụng cho sáu sản phẩm:
 
 - `.agents\skills\kpi-tree-skill\` → `03_outputs\joycat\KPI_TREE.md`;
-- `.agents\skills\metric-tree-skill\` → `03_outputs\joycat\METRIC_TREE.md`;
-- `.agents\skills\logic-tree-skill\` → `03_outputs\joycat\LOGIC_TREE.md`.
+- `.agents\skills\metric-tree-skill\` → `03_outputs\joycat\METRIC_TREE.md`.
 
 Ba cây của giai đoạn hiện tại là đầu ra cụ thể cho Joycat. Ba skill là bộ hướng dẫn có thể dùng lại; khi chuyển sang trường hợp khác, skill phải đọc mục tiêu và hợp đồng chỉ số từ Context của trường hợp đó, không được giữ lại mục tiêu của Joycat. Kiến thức Meta chỉ là tài liệu tham khảo khi liên quan đến trường hợp đang làm và không được coi là bằng chứng về kết quả kinh doanh.
 
@@ -413,8 +411,7 @@ Power BI Desktop chủ yếu dùng để xây mô hình và báo cáo. Việc l�
 | Nguồn/trường hợp | Vai trò | Mức sử dụng |
 |---|---|---|
 | `context\WORKSPACE_CONTEXT.md` | Cửa vào: mục tiêu, operating contract và thứ tự đọc | Đọc đầu tiên |
-| `03_outputs\joycat\LOGIC_TREE.md/.mm` | Đường phân tích TOFU–MOFU–BOFU: câu hỏi, comparator, giả thuyết, bằng chứng, drill-down và decision gate | Dùng để điều tra case; không chứa toàn bộ công thức/mapping |
-| `03_outputs\joycat\DATA_MAPPING_COVERAGE_JOYCAT.md/.mm` | Bốn chiều, sáu cặp, source/mapping, coverage, ETL/report contract và gaps | Bộ đọc chi tiết cho data/ETL; không dùng thay Logic Tree |
+| `03_outputs\joycat\DATA_MAPPING_COVERAGE_JOYCAT.md/.mm` | Bốn chiều, sáu cặp, source/mapping, coverage, ETL/report contract và gaps | Bộ đọc chi tiết cho data/ETL |
 | `01_inputs\joycat\context.md` | Context KPI 1 và trường hợp học có dữ liệu gốc Meta Ads | Đọc khi Joycat đang được xử lý |
 | `01_inputs\joycat\raw` | Nguồn gốc Joycat | Chỉ đọc |
 | `01_inputs\truther\context.md` | Context KPI 2 và trường hợp ứng dụng | Đọc khi Truther đang được xử lý |
@@ -430,13 +427,13 @@ Joycat và Truther độc lập. Chỉ chuyển phương pháp, cách kiểm tra
 | KPI và điều kiện hoàn thành dài hạn của toàn hệ thống agentic | To be updated | Duy + cậu Sinh | Chặn tuyên bố toàn dự án hoàn thành và đo hiệu quả tự động hóa | Chốt sau khi nền móng Context được đánh giá |
 | Nền móng Context | Đã đồng bộ và gộp bộ đọc chính ngày 05/09/2026 | Duy + Codex; cậu Sinh review | Chưa có phê duyệt cuối của reviewer | Dùng Current Intent và Logic Tree hợp nhất |
 | KPI Tree và Metric Tree | Có bản làm việc | Duy + Codex; cậu Sinh review | Công thức/mapping vẫn cần đối soát nguồn | Giữ bản hiện hành, chỉ patch xung đột trực tiếp |
-| Logic Tree Joycat | Có bản v1.0 dựng lại từ cây cũ; chờ duyệt | Duy + Codex; cậu Sinh review | Owner intent, threshold và gate chuyển tầng còn cần xác nhận | Review `03_outputs\joycat\LOGIC_TREE.md/.mm` |
+| Logic Tree Joycat | Tạm thời chưa tạo trong phase này | Duy + Codex | Sẽ phát triển ở phase sau | Tạm hoãn |
 | Bốn chiều, sáu cặp và coverage | Có source/mapping contract và coverage theo tổ hợp | `03_outputs\joycat\DATA_MAPPING_COVERAGE_JOYCAT.md`; working audit trong `02_work\joycat\coverage_audit` | Ba cặp có platform bị chặn; ba cặp còn lại mới human mapping/một phần; nguồn demo tháng 04 còn lệch preferred Campaign | Xin source/mapping còn thiếu và xử lý lineage trước ETL production |
 | GMV đa nền tảng Joycat | Chưa sẵn có | Joycat/người phụ trách nghiệp vụ | Chặn tái tính 5–10% | Chỉ giải thích cơ chế và giới hạn |
 | Dữ liệu gốc, hợp đồng KPI và quy tắc nối Truther | Chưa sẵn có | Duy + nhóm Truther | Chặn xác minh KPI 2 bằng dữ liệu | Kiểm kê khi Truther được xử lý |
 | Kiến trúc/giấy phép Power BI | To be updated | Duy + người đánh giá kỹ thuật/nghiệp vụ | Chặn vận hành BI và tự động hóa | Đánh giá ở giai đoạn sau |
 
-Bước tiếp theo hiện tại: Duy/cậu Sinh review `WORKSPACE_CONTEXT.md` → `LOGIC_TREE.md/.mm` → `DATA_MAPPING_COVERAGE_JOYCAT.md/.mm`, rồi phản hồi nhiệm vụ/gate từng tầng và mapping/data gate. Chưa triển khai ETL/report hoặc kết luận hiệu quả Joycat.
+Bước tiếp theo hiện tại: Duy/cậu Sinh review `WORKSPACE_CONTEXT.md` → `DATA_MAPPING_COVERAGE_JOYCAT.md/.mm`, rồi phản hồi mapping/data gate. Chưa triển khai ETL/report hoặc kết luận hiệu quả Joycat.
 
 ## 14. Quy tắc cập nhật và bằng chứng
 

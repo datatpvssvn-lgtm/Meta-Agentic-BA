@@ -1,8 +1,8 @@
-# Ý định hiện tại — Review bộ KPI, Metric, Mapping/Coverage và Logic Tree Joycat
+# Ý định hiện tại — Review bộ KPI, Metric và Mapping/Coverage Joycat
 
-> Phiên bản: 16.0  
+> Phiên bản: 16.1  
 > Cập nhật: 2026-09-05  
-> Trạng thái: Đã dựng lại Logic Tree đúng nghĩa từ cây cũ và tách Mapping/Coverage; đang chờ Duy/cậu Sinh review, chưa chuyển sang ETL/report production
+> Trạng thái: Đã tách Mapping/Coverage; Logic Tree tạm thời chưa tạo; đang chờ Duy/cậu Sinh review, chưa chuyển sang ETL/report production
 
 ## 1. Outcome của phase
 
@@ -14,19 +14,17 @@ KPI cần xem
 → bốn chiều và sáu cặp
 → coverage dữ liệu
 → Data Mapping/Coverage
-→ Logic Tree: câu hỏi, giả thuyết, bằng chứng và decision gate
 → thiết kế ETL sau khi data gate liên quan được duyệt
 ```
 
-Vai trò đã được tách lại: Metric Tree/bộ 5 metrics giữ công thức; Data Mapping & Coverage giữ bốn chiều, sáu cặp, source/mapping và ETL contract; Logic Tree giữ đường TOFU–MOFU–BOFU, comparator, giả thuyết, bằng chứng, drill-down và decision gate. Phase này chưa kết luận quảng cáo tốt/xấu và chưa triển khai pipeline/report.
+Vai trò đã được tách lại: Metric Tree/bộ 5 metrics giữ công thức; Data Mapping & Coverage giữ bốn chiều, sáu cặp, source/mapping và ETL contract. Logic Tree tạm thời chưa tạo trong phase này. Phase này chưa kết luận quảng cáo tốt/xấu và chưa triển khai pipeline/report.
 
 ## 2. Bộ đọc chính
 
 Đọc theo thứ tự:
 
 1. `context\WORKSPACE_CONTEXT.md` — cửa vào, mục tiêu và quy tắc vận hành.
-2. `03_outputs\joycat\LOGIC_TREE.md/.mm` — đường phân tích đúng nghĩa: mục tiêu tầng phễu → câu hỏi → comparator → giả thuyết → bằng chứng → decision gate.
-3. `03_outputs\joycat\DATA_MAPPING_COVERAGE_JOYCAT.md/.mm` — bốn chiều, sáu cặp, source, mapping, coverage và ETL/report contract.
+2. `03_outputs\joycat\DATA_MAPPING_COVERAGE_JOYCAT.md/.mm` — bốn chiều, sáu cặp, source, mapping, coverage và ETL/report contract.
 
 File vận hành bổ trợ:
 
@@ -45,7 +43,7 @@ Các bản bị thay thế được lưu tại `02_work\joycat\archive\2026-09-0
 
 - KPI Tree: lượng hóa các chỉ số cụ thể cần xem.
 - Metric Tree: công thức của KPI, rẽ tới field gốc hoặc điểm không thể rẽ tiếp.
-- Logic Tree: đường đi cần phân tích gì, theo góc nào, so gì và cần bằng chứng nào.
+- Logic Tree: tạm thời chưa tạo trong phase này.
 - Bốn chiều: Nền tảng, Sản phẩm, Phễu, Campaign objective.
 - Sáu cặp: Nền tảng × Sản phẩm; Nền tảng × Phễu; Nền tảng × Objective; Phễu × Sản phẩm; Sản phẩm × Objective; Phễu × Objective.
 - `Business ROAS = GMV business / Ads Cost`; không đổi `Purchases conversion value` thành GMV business.
@@ -85,9 +83,9 @@ Ba cặp đầu bị chặn bởi thiếu Publisher platform. Ba cặp còn lạ
 
 Trong phạm vi hiện tại:
 
-- Duy/cậu Sinh review Logic Tree hợp nhất.
+- Duy/cậu Sinh review bộ Metric Tree và Data Mapping/Coverage.
 - Xác nhận hoặc sửa định nghĩa, mapping rule, coverage và owner questions.
-- Upload `LOGIC_TREE.mm` và `DATA_MAPPING_COVERAGE_JOYCAT.mm` lên Lark/MindManager để kiểm tra hiển thị.
+- Upload `DATA_MAPPING_COVERAGE_JOYCAT.mm` lên Lark/MindManager để kiểm tra hiển thị.
 - Bổ sung source/mapping khi được cung cấp rồi cập nhật coverage.
 
 Ngoài phạm vi:
@@ -96,7 +94,7 @@ Ngoài phạm vi:
 - Dùng Meta Purchase/value thay đơn và GMV business.
 - Kết luận nguyên nhân/hiệu quả từ mapping hoặc công thức.
 - Triển khai ETL/report/dashboard production trước khi data gate liên quan được duyệt.
-- Gộp AHP, catalog Excel hoặc toàn bộ thư viện metrics vào Logic Tree.
+- Gộp AHP, catalog Excel hoặc toàn bộ thư viện metrics vào tài liệu chung.
 
 ## 7. Câu hỏi đang chờ
 
@@ -108,10 +106,10 @@ Ngoài phạm vi:
 
 ## 8. Điều kiện kết thúc phase
 
-- Duy/cậu Sinh xác nhận Logic Tree mới giữ đúng intent TOFU–MOFU–BOFU của cây cũ và không biến giả định thành fact.
-- Lark/MindManager mở `LOGIC_TREE.mm` và `DATA_MAPPING_COVERAGE_JOYCAT.mm` đúng cấu trúc.
+- Duy/cậu Sinh xác nhận Metric Tree và Data Mapping & Coverage không biến giả định thành fact.
+- Lark/MindManager mở `DATA_MAPPING_COVERAGE_JOYCAT.mm` đúng cấu trúc.
 - Các chỉnh sửa từ review được ghi vào đúng artefact theo vai trò, không tạo thêm bản v2/v3 song song.
 - Câu hỏi owner/data còn thiếu được gắn owner và mức ảnh hưởng.
 - Chỉ những cặp qua data gate mới được mở trong ETL/report.
 
-Chỉ sau khi Logic Tree, mapping và data gate liên quan được duyệt mới chuyển sang ETL/modeling hoặc phân tích case thực tế.
+Chỉ sau khi mapping và data gate liên quan được duyệt mới chuyển sang ETL/modeling hoặc phân tích case thực tế.

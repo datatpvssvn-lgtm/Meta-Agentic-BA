@@ -3,13 +3,13 @@
 > Phiên bản: 3.1  
 > Cập nhật: 2026-09-05  
 > Trạng thái: Bản Metric Tree để Duy kiểm tra  
-> Phạm vi: Viết công thức cho các KPI trong `KPI_TREE.md`; định nghĩa bốn chiều và coverage sáu cặp nằm tại `DATA_MAPPING_COVERAGE_JOYCAT.md`; đường đặt câu hỏi nằm tại `LOGIC_TREE.md`. Chưa phân tích nguyên nhân và chưa kết luận tỷ lệ 5–10%.
+> Phạm vi: Viết công thức cho các KPI trong `KPI_TREE.md`; định nghĩa bốn chiều và coverage sáu cặp nằm tại `DATA_MAPPING_COVERAGE_JOYCAT.md`. Chưa phân tích nguyên nhân và chưa kết luận tỷ lệ 5–10%.
 
 ## 1. Metric Tree này trả lời gì?
 
 > Mỗi KPI trong `KPI_TREE.md` được tính từ những đại lượng nào, các đại lượng đó lấy từ đâu và phải dừng phân rã tại điểm nào?
 
-Metric Tree chỉ thể hiện quan hệ tính toán. Đường đi `Impression → Click → Mess → Purchase` không nằm trong Tree này vì đó là quan hệ quy trình, không phải đẳng thức toán học; phần đó thuộc Logic Tree.
+Metric Tree chỉ thể hiện quan hệ tính toán. Đường đi `Impression → Click → Mess → Purchase` không nằm trong Tree này vì đó là quan hệ quy trình, không phải đẳng thức toán học.
 
 ## 2. Quy tắc rẽ và quy tắc dừng
 
