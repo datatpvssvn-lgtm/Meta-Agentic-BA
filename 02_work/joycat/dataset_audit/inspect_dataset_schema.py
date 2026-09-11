@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 import json
+import argparse
 from pathlib import Path
 from typing import Any
 
 from openpyxl import load_workbook
 
 
-RAW_ROOT = Path(r"D:\Meta Agentic BA\01_inputs\joycat\raw")
-OUTPUT = Path(r"D:\Meta Agentic BA\02_work\joycat\dataset_audit\schema_inventory.json")
+WORKSPACE = Path(__file__).resolve().parents[3]
+RAW_ROOT = WORKSPACE / "01_inputs" / "joycat" / "raw"
+OUTPUT = WORKSPACE / "02_work" / "joycat" / "dataset_audit" / "schema_inventory.json"
 
 
 def clean(value: Any) -> str | None:
@@ -80,6 +82,15 @@ def inspect_workbook(path: Path) -> dict[str, Any]:
 
 
 def main() -> None:
+    global WORKSPACE, RAW_ROOT, OUTPUT
+    parser = argparse.ArgumentParser(description="Inspect Joycat schema from a portable workspace root.")
+    parser.add_argument("--root", type=Path, default=WORKSPACE)
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+    WORKSPACE = args.root.expanduser().resolve()
+    RAW_ROOT = WORKSPACE / "01_inputs" / "joycat" / "raw"
+    OUTPUT = (args.output or WORKSPACE / "02_work" / "joycat" / "dataset_audit" / "schema_inventory.json").resolve()
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     files = sorted(
         [
             path

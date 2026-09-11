@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from pathlib import Path
+import argparse
 import csv
 import json
 import re
@@ -12,10 +13,10 @@ import openpyxl
 
 sys.stdout.reconfigure(encoding="utf-8")
 
-ROOT = Path(r"D:\Meta Agentic BA")
+ROOT = Path(__file__).resolve().parents[3]
 WORK = ROOT / "02_work" / "joycat" / "coverage_audit"
 PREFERRED = ROOT / "01_inputs" / "joycat" / "raw" / "meta_ads" / "preferred_candidate"
-DEMO = ROOT / "03_outputs" / "joycat" / "JOYCAT_CAMPAIGN_3_THANG_CO_CHI_PHI_OBJECTIVE_DEMO.xlsx"
+DEMO = ROOT / "01_inputs" / "joycat" / "JOYCAT_CAMPAIGN_3_THANG_CO_CHI_PHI_OBJECTIVE_DEMO.xlsx"
 OUT_CSV = WORK / "coverage_6_pairs_detail.csv"
 OUT_JSON = WORK / "coverage_audit_summary.json"
 
@@ -78,6 +79,21 @@ def product_bucket(campaign_name: str) -> tuple[str, str, str]:
     return "Shared/Unmapped", "Shared/Unmapped", "Tên Campaign không đủ căn cứ gắn sản phẩm"
 
 
+def configure_paths() -> None:
+    global ROOT, WORK, PREFERRED, DEMO, OUT_CSV, OUT_JSON
+    parser = argparse.ArgumentParser(description="Build Joycat coverage audit from a portable workspace root.")
+    parser.add_argument("--root", type=Path, default=ROOT)
+    parser.add_argument("--output-dir", type=Path)
+    args = parser.parse_args()
+    ROOT = args.root.expanduser().resolve()
+    WORK = (args.output_dir or ROOT / "02_work" / "joycat" / "coverage_audit").resolve()
+    PREFERRED = ROOT / "01_inputs" / "joycat" / "raw" / "meta_ads" / "preferred_candidate"
+    DEMO = ROOT / "01_inputs" / "joycat" / "JOYCAT_CAMPAIGN_3_THANG_CO_CHI_PHI_OBJECTIVE_DEMO.xlsx"
+    OUT_CSV = WORK / "coverage_6_pairs_detail.csv"
+    OUT_JSON = WORK / "coverage_audit_summary.json"
+
+
+configure_paths()
 demo_sheet, demo_records = sheet_rows(DEMO, "Campaign_3_tháng", 5)
 rows = []
 for source_row, record in demo_records:

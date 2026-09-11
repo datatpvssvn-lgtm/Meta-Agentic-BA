@@ -1,5 +1,7 @@
 # Format đầu ra và điều kiện duyệt bộ trọng số AHP
 
+> **Vị trí trong workspace:** Đây là hợp đồng đầu ra cho bài toán trọng số, không phải kết luận phân bổ đã được duyệt. Đọc [Workspace Context](../../context/WORKSPACE_CONTEXT.md), [Current Intent](../../context/CURRENT_INTENT.md) và [Context Joycat](../../01_inputs/joycat/context.md) trước. Đầu vào được thu qua [bộ câu hỏi](AHP_01_BO_CAU_HOI_XAC_NHAN_VOI_CAU_SINH.md) và [form](AHP_02_FORM_THU_THAP_DAU_VAO_TU_CAU_SINH.md).
+
 ## 1. Đầu ra cuối phải trả lời được gì?
 
 Người đọc phải trả lời được tám câu:

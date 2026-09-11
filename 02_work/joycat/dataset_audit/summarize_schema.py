@@ -1,15 +1,23 @@
 from __future__ import annotations
 
 import json
+import argparse
 from collections import defaultdict
 from pathlib import Path
 
 
-INVENTORY = Path(r"D:\Meta Agentic BA\02_work\joycat\dataset_audit\schema_inventory.json")
+WORKSPACE = Path(__file__).resolve().parents[3]
+INVENTORY = WORKSPACE / "02_work" / "joycat" / "dataset_audit" / "schema_inventory.json"
 
 
 def main() -> None:
-    data = json.loads(INVENTORY.read_text(encoding="utf-8"))
+    parser = argparse.ArgumentParser(description="Summarize a portable Joycat schema inventory.")
+    parser.add_argument("--root", type=Path, default=WORKSPACE)
+    parser.add_argument("--inventory", type=Path)
+    args = parser.parse_args()
+    root = args.root.expanduser().resolve()
+    inventory = (args.inventory or root / "02_work" / "joycat" / "dataset_audit" / "schema_inventory.json").resolve()
+    data = json.loads(inventory.read_text(encoding="utf-8"))
     preferred = [f for f in data["files"] if f["relative_path"].startswith("meta_ads\\preferred_candidate\\")]
     print("=== PREFERRED CANDIDATE ===")
     level_fields: dict[str, list[set[str]]] = defaultdict(list)

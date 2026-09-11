@@ -1,5 +1,7 @@
 # Trọng số phân bổ Ads Cost theo nền tảng
 
+> **Vị trí trong workspace:** Đây là mô hình hỗ trợ quyết định phân bổ, không phải chi phí thực tế hoặc kết luận nền tảng nào tốt hơn. Đọc [Workspace Context](../../context/WORKSPACE_CONTEXT.md), [Current Intent](../../context/CURRENT_INTENT.md) và [Context Joycat](../../01_inputs/joycat/context.md) trước. KPI hiện hành nằm tại [Ad_Cost_GMV_all_platform v3](Ad_Cost_GMV_all_platform%20v3.md); cách xác lập trọng số nằm tại [AHP/MAHP](AHP_VA_MAHP_DE_TINH_TRONG_SO_UU_TIEN.md).
+
 ## 1. Bài toán mình đang cần giải quyết
 
 Joycat có một tổng ngân sách quảng cáo và có thể phân bổ ngân sách đó cho ba nền tảng:
@@ -571,4 +573,3 @@ So sánh trọng số ban đầu với hiệu quả thực tế của từng n�
 → Kết quả thực tế
 → Kiểm tra và điều chỉnh trọng số
 ```
-

@@ -1,5 +1,7 @@
 # Form thu thập đầu vào AHP từ cậu Sinh
 
+> **Vị trí trong workspace:** Đây là form hỗ trợ lấy ý kiến owner, không phải raw Meta hoặc KPI Tree. Đọc [Workspace Context](../../context/WORKSPACE_CONTEXT.md), [Current Intent](../../context/CURRENT_INTENT.md) và [Context Joycat](../../01_inputs/joycat/context.md) trước. Xem [bộ câu hỏi](AHP_01_BO_CAU_HOI_XAC_NHAN_VOI_CAU_SINH.md), [phương pháp AHP/MAHP](AHP_VA_MAHP_DE_TINH_TRONG_SO_UU_TIEN.md) và [điều kiện duyệt](AHP_03_FORMAT_DAU_RA_VA_DIEU_KIEN_DUYET.md).
+
 > Cách dùng: Duy có thể gửi file này cho cậu Sinh điền, hoặc dùng làm biên bản khi hỏi trực tiếp. Không cần điền công thức; chỉ cần trả lời bằng lời thường và đưa nguồn nếu có.
 
 ## A. Thông tin phiên làm việc

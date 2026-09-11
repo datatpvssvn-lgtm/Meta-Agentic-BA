@@ -1,37 +1,10 @@
 # Workspace Context — Meta Agentic BA
 
-> Phiên bản: 16.0  
-> Cập nhật: 2026-09-11  
+> Phiên bản: 12.0  
+> Cập nhật: 2026-09-05  
 > Người chịu trách nhiệm nội dung: Duy  
 > Người đánh giá và quyết định chuyển bước: cậu Sinh  
 > Vai trò: kho tri thức có cấu trúc + hợp đồng vận hành cho AI
-
-## Nguồn phương pháp K60 và phase lập kế hoạch — 09/09/2026
-
-- Nguồn K60 đầy đủ đã hợp nhất từ ba archive Duy đã tải: `D:\AI_Agentic_Analytics_K60_20260909_FULL\AI Agentic Analytics K60`. Snapshot tài liệu gốc ngày 11/09/2026 có 1.277 file, 5.873.080.087 byte; sau khi thêm hai sidecar `AGENTS.md` và `context.md` để AI định tuyến thì folder có 1.279 file. Bản chỉ dẫn đồng bộ trong workspace nằm tại `04_reference\AI_Agentic_Analytics_K60`.
-- Kho K60 là **nguồn phương pháp học và thiết kế phân tích**, không tự trở thành bằng chứng về cách Joycat vận hành hay kết quả kinh doanh Joycat.
-- Plan hiện hành: [`00_PLAN_HOAN_THIEN_WORKSPACE_THEO_K60_VA_REVIEW_CAU_SINH.md`](../02_work/joycat/00_PLAN_HOAN_THIEN_WORKSPACE_THEO_K60_VA_REVIEW_CAU_SINH.md).
-- Theo yêu cầu mới của Duy, việc tải/hợp nhất folder K60 đã xong. [`AGENTS.md`](../04_reference/AI_Agentic_Analytics_K60/AGENTS.md), [`context.md`](../04_reference/AI_Agentic_Analytics_K60/context.md) và [`SOURCE_INVENTORY.md`](../04_reference/AI_Agentic_Analytics_K60/SOURCE_INVENTORY.md) phải trỏ về bộ đầy đủ này.
-- Sáu PDF reader đã tạo trước đây chỉ bao phủ snapshot cũ một phần; không được hiểu là toàn bộ 1.277 tài liệu gốc đã được chuyển thành PDF. Việc tạo thêm PDF không nằm trong lượt sửa Context/Data Dictionary hiện tại.
-- K60 cung cấp phương pháp kiểm tra cặp biến: `Categorical × Numerical` dùng thống kê theo nhóm; `Numerical × Numerical` mới xét scatter/correlation; cả hai đều phải khóa grain, kỳ, scope và chất lượng dữ liệu trước. Workspace Joycat vẫn chưa chạy ETL/correlation và chưa được xác nhận pass Gate 2.
-
-## Cập nhật trực tiếp từ cậu Sinh — 09/09/2026
-
-- Joycat là **case dữ liệu mẫu để Duy học và xây phương pháp**, không phải đích cuối của dự án.
-- Mốc `Ads Cost / GMV = 5–10%` chỉ là giả định thử cách phân tích trong case Joycat; không phải mục tiêu gốc và không cần dùng dữ liệu hiện tại để cố chứng minh đúng.
-- **Duy xác nhận ngày 09/09:** bắt đầu bằng KPI Tree `Ads Cost / GMV = 5–10%` là chủ đích đúng của bài học. Tree này là bài thực hành đầu tiên để học cách phân rã KPI, nối Metric, cấu trúc Meta và bằng chứng; không phải toàn bộ KPI thành công của dự án.
-- Đường đi cần đạt: **hiểu cấu trúc chuẩn Meta → tái dựng cách Joycat thực tế tổ chức Campaign → Ad set → Ad → phân tích bằng dữ liệu → kiểm chứng bằng Power BI → tách phần dùng chung và phần riêng của Joycat → thử áp dụng sang case khác**.
-- Không dùng tên Campaign hoặc Result indicator để khẳng định cấu hình thật. Phải tách: field trực tiếp từ Meta; cách làm được người vận hành Joycat xác nhận; nhãn/quy tắc do Duy hoặc AI suy luận.
-- Power BI là lớp kiểm tra và lưu bằng chứng; mỗi số liệu quan trọng phải truy về công thức, bảng và file nguồn.
-- Nguồn trực tiếp: [Review Gate 2 ngày 09/09/2026](../01_inputs/joycat/reviews/2026-09-09_GATE-2_TREES_MAPPING_REVIEW.md). Trạng thái: **Chưa pass Gate 2; chưa mở ETL/Power BI**.
-
-## Cập nhật theo phản hồi Duy/cậu Sinh — 08/09/2026
-
-- **Hai Tree phải tách:** [KPI Tree dự án](../01_inputs/project/KPI_TREE.md) đo chất lượng phương pháp/bằng chứng; [cây chỉ số kinh doanh Joycat](../01_inputs/joycat/Ad_Cost_GMV_all_platform%20v3.md) giữ tỷ lệ Ads Cost/GMV và mốc giả định 5–10% cho bài thực hành. Hai file không thay thế nhau.
-- **Data dictionary đặt ở input:** [DATA_DICTIONARY_JOYCAT.md](../01_inputs/joycat/DATA_DICTIONARY_JOYCAT.md). “Một case phân tích” là lựa chọn phạm vi, không phải phép cộng các trường. Objective/Optimization goal, Format/Placement và Publisher/Destination được định nghĩa riêng.
-- **Đọc theo chuỗi:** [Context Joycat](../01_inputs/joycat/context.md) → Dictionary → KPI → [Metric Tree](../01_inputs/joycat/METRIC_TREE.md) → [Bộ 5 Metrics](../01_inputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.md) ↔ [Mapping/Coverage](../01_inputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.md). Mapping quản lý nguồn và cặp dữ liệu thực hiện được; không thay Dictionary hay KPI.
-- **Phạm vi lượt sửa:** xử lý ba lỗi tài liệu này, chưa chạy ETL, chưa audit lại toàn bộ Excel, chưa kết luận hiệu quả. Objective suy luận vẫn được Duy cho phép làm human input; không biến nó thành objective Meta gốc.
-- **Bằng chứng:** Duy chỉ định đúng file v3 và yêu cầu sửa qua chat ngày 08/09. KPI 5–10% là giả định đã chốt, GMV thực tế còn thiếu. Bản sửa để Duy/cậu Sinh review, không giả lập phê duyệt.
 
 ## 1. Đọc nhanh cho người mới và AI mới nhận workspace
 
@@ -41,9 +14,9 @@
   * *Nhiệm vụ hiện tại:* Hoàn thiện Context và thiết kế tư duy phân tích marketing Joycat trước ETL; làm rõ mục tiêu, câu hỏi, các chiều phân tích và yêu cầu dữ liệu cần có.
 - **Muốn biết “bây giờ phải làm gì”:** Đọc trực tiếp [`context\CURRENT_INTENT.md`](CURRENT_INTENT.md) — đây là nơi duy nhất chốt nhiệm vụ và phạm vi đang có hiệu lực.
 - **Bối cảnh Joycat nằm ở đâu:** [`01_inputs\joycat\context.md`](../01_inputs/joycat/context.md).
-- **Bộ logic phân tích hiện hành gồm những gì:** Hai tài liệu phối hợp trong `01_inputs\joycat\`:
-  1. [`CONG_THUC_5_METRICS_JOYCAT_v3.md`](../01_inputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.md): Công thức, điều kiện sử dụng, bối cảnh đọc metric và phương pháp tư duy trước khi kết luận.
-  2. [`DATA_MAPPING_COVERAGE_JOYCAT.md`](../01_inputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.md): Bốn chiều, sáu cặp, nguồn, mapping, quan hệ nối và khả năng đáp ứng của dataset.
+- **Bộ logic phân tích hiện hành gồm những gì:** Hai tài liệu phối hợp trong `03_outputs\joycat\`:
+  1. [`CONG_THUC_5_METRICS_JOYCAT_v3.md`](../03_outputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.md): Công thức, điều kiện sử dụng, bối cảnh đọc metric và phương pháp tư duy trước khi kết luận.
+  2. [`DATA_MAPPING_COVERAGE_JOYCAT.md`](../03_outputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.md): Bốn chiều, sáu cặp, nguồn, mapping, quan hệ nối và khả năng đáp ứng của dataset.
 
 ## 2. AI phải dùng file này như thế nào
 
@@ -100,13 +73,13 @@ Hai lĩnh vực phải hỗ trợ nhau: Duy không chỉ tạo báo cáo marketi
 
 Thành công được đánh giá theo bốn tầng. Cậu Sinh đánh giá tổng thể và quyết định giai đoạn đạt hay chưa; các tiêu chí dưới đây là bằng chứng hỗ trợ, không thay quyền quyết định của cậu.
 
-### 4.1. Thành công của case học Joycat
+### 3.1. Thành công về kết quả kinh doanh
 
-#### Chỉ số thực hành — Joycat
+#### KPI 1 — Joycat
 
-Duy dùng dữ liệu Meta Ads tháng 03–05/2026 để học cách tái dựng cấu trúc Campaign → Ad set → Ad, kiểm tra nguồn và phân tích đa chiều. Tỷ lệ `Ads Cost / GMV toàn nền tảng khoảng 5–10%` chỉ là một giả định thực hành; không phải kết quả phải chứng minh bằng dataset hiện tại.
+Duy dùng dữ liệu Meta Ads tháng 03–05/2026 để giải thích bằng con số, bộ chỉ số, cấu trúc Campaign → Ad set → Ad, phễu/LAL và ba Tree rằng phát biểu `Ads Cost / GMV toàn nền tảng khoảng 5–10%` có thể phù hợp về mặt cơ chế.
 
-Case Joycat đủ điều kiện review khi:
+KPI 1 hoàn thành khi:
 
 - số liệu có nguồn, cấp dữ liệu, kỳ dữ liệu và giới hạn;
 - không cộng hoặc so sánh sai Campaign, Ad set và Ad;
@@ -115,11 +88,7 @@ Case Joycat đủ điều kiện review khi:
 - Duy giải thích được logic và giới hạn bằng lời của mình;
 - cậu Sinh đánh giá tổng thể và chấp nhận.
 
-Thiếu GMV không chặn việc tìm hiểu setup quảng cáo; chỉ chặn tính Business ROAS và kiểm nghiệm tỷ lệ 5–10%.
-
-#### KPI thành công của toàn dự án
-
-KPI thành công của dự án được quản lý riêng tại [`01_inputs\project\KPI_TREE.md`](../01_inputs/project/KPI_TREE.md). Tree này đo bốn kết quả: bám đúng cấu trúc Meta; hiểu đúng case Joycat; kiểm chứng được số liệu/kết luận; và thử dùng lại được trên case khác. Mọi target số chưa được cậu Sinh duyệt đều ghi `Chưa chốt`.
+KPI 1 không yêu cầu tái tính chính xác 5–10% khi chưa có GMV/đơn hàng đa nền tảng cùng kỳ.
 
 #### KPI 2 — Truther Piece
 
@@ -136,7 +105,7 @@ KPI 2 chỉ hoàn thành khi:
 
 Duy chịu trách nhiệm phần Ads và đo lường. Sale, ghi nhận đơn hàng, sản phẩm, giá và yếu tố ngoài Ads cần người phụ trách khác phối hợp; không quy toàn bộ kết quả cho Ads.
 
-### 4.2. Thành công về hệ thống
+### 3.2. Thành công về hệ thống
 
 Duy có thể cùng AI thiết kế, giải thích, vận hành và duy trì toàn bộ workspace agentic, gồm:
 
@@ -174,8 +143,8 @@ Lộ trình đóng gói kỹ năng tái sử dụng:
 .agents/skills/metric-tree-skill/
 
 Tài liệu thể hiện cấu trúc chỉ số:
-01_inputs/joycat/Ad_Cost_GMV_all_platform v3.md
-01_inputs/joycat/METRIC_TREE.md
+03_outputs/joycat/KPI_TREE.md
+03_outputs/joycat/METRIC_TREE.md
 ```
 *(Chuỗi “ba Tree / ba skill” là định hướng kiến trúc dài hạn, không phải điều kiện bắt buộc chặn phase làm rõ tư duy hiện tại).*
 
@@ -208,7 +177,7 @@ Mục tiêu phát triển:
 | Trí nhớ | Nhớ khái niệm cốt lõi và truy xuất đúng nguồn/Context khi cần | Duy trì bộ nhớ ngoài/ontology để con người và AI dùng lại |
 | Tư duy quản lý | Theo dõi được giai đoạn, sản phẩm và phản hồi | Đặt mục tiêu, ưu tiên, phối hợp AI/người, quản lý rủi ro và duy trì hệ thống |
 
-### 4.4. Thành công về kỷ luật
+### 3.4. Thành công về kỷ luật
 
 Không đặt số phút tối thiểu vì lịch học và làm việc của Duy thay đổi. Kỷ luật được chứng minh bằng:
 
@@ -247,12 +216,12 @@ Bảng theo dõi của giai đoạn đang áp dụng nằm trong `CURRENT_INTENT
 
 ## 6. Mong muốn thực tế — giai đoạn hiện tại
 
-### Trạng thái chuyển bước đang chờ xác nhận
+### Nền móng Context đã qua điều kiện chuyển bước
 
-Trạng thái: **Owner statement ngày 21/08 — đã bị bằng chứng trực tiếp ngày 09/09 thay thế cho quyết định Gate 2**  
-Nội dung cũ: Duy từng thuật lại rằng có thể chuẩn bị chuyển sang xây Tree cho Joycat.  
-Nguồn mới nhất: Review trực tiếp của cậu Sinh ngày 09/09 kết luận **Chưa pass Gate 2**.  
-Giới hạn: Không coi lời thuật lại cũ là phê duyệt chuyển bước; chưa chạy ETL hoặc Power BI cho tới khi các blocker được sửa và cậu Sinh duyệt lại.
+Trạng thái: **Người phụ trách đã xác nhận qua Duy**  
+Nội dung xác nhận: Cậu Sinh cho biết dự án có thể chuẩn bị chuyển sang xây Tree cho Joycat; vì vậy nền móng Context được coi là đủ để mở giai đoạn Tree.  
+Nguồn: Duy thuật lại phản hồi của cậu Sinh ngày 2026-08-21; chưa có biên bản hoặc phản hồi trực tiếp trong workspace.  
+Giới hạn: Đây là phê duyệt chuyển giai đoạn, không có nghĩa mọi dữ liệu, giả thuyết hoặc định nghĩa nghiệp vụ đã được xác minh và không có nghĩa KPI 1 đã hoàn thành.
 
 Giai đoạn hiện tại tập trung làm rõ tư duy phân tích và nối với yêu cầu dữ liệu trước ETL:
 
@@ -264,7 +233,7 @@ Câu hỏi phân tích / mục tiêu kinh doanh
 → thiết kế hợp đồng ETL khi dữ liệu sẵn sàng
 ```
 
-Hiện tại có hai Tree độc lập: `01_inputs/project/KPI_TREE.md/.mm` là KPI Tree của dự án; `01_inputs/joycat/Ad_Cost_GMV_all_platform v3.md/.mm` là cây chỉ số kinh doanh của case Joycat. `METRIC_TREE.md` rẽ công thức tới trường gốc. Bộ logic phân tích gồm `CONG_THUC_5_METRICS_JOYCAT_v3.md` và `DATA_MAPPING_COVERAGE_JOYCAT.md`. Toàn bộ đang chờ cậu Sinh review; chưa chuyển sang ETL hoặc báo cáo hiệu quả.
+Hiện tại, `KPI_TREE.md` và `METRIC_TREE.md` giữ vai trò cấu trúc chỉ số và công thức rẽ tới trường gốc. Bộ logic phân tích vận hành gồm `CONG_THUC_5_METRICS_JOYCAT_v3.md` (phương pháp đọc chỉ số, điều kiện dùng, cách tư duy) và `DATA_MAPPING_COVERAGE_JOYCAT.md` (chiều phân tích, mapping, đối soát và khoảng trống dữ liệu). Toàn bộ đang trong quá trình hoàn thiện thiết kế để Duy/cậu Sinh review; chưa chuyển sang chạy pipeline ETL hay báo cáo phân tích hiệu quả.
 
 ## 7. Bối cảnh vận hành hiện tại
 
@@ -331,8 +300,8 @@ Chuẩn này áp dụng cho các sản phẩm phân tích về sau; chuẩn riê
 
 “Chuẩn như người có kinh nghiệm” trong lộ trình dài hạn là tiêu chuẩn của **sản phẩm có thể đánh giá**, không phải chức danh hoặc mức tự chủ hiện tại của Duy. Chuẩn này định hướng cho các sản phẩm:
 
-- `.agents\skills\kpi-tree-skill\` → `01_inputs\joycat\Ad_Cost_GMV_all_platform v3.md`;
-- `.agents\skills\metric-tree-skill\` → `01_inputs\joycat\METRIC_TREE.md`.
+- `.agents\skills\kpi-tree-skill\` → `03_outputs\joycat\KPI_TREE.md`;
+- `.agents\skills\metric-tree-skill\` → `03_outputs\joycat\METRIC_TREE.md`.
 
 Trong lộ trình dài hạn, ba cây là cấu trúc phân tích mở rộng cho Joycat; ba skill là bộ hướng dẫn có thể dùng lại. Khi chuyển sang trường hợp khác, skill phải đọc mục tiêu và hợp đồng chỉ số từ Context của trường hợp đó, không được giữ lại mục tiêu của Joycat. Kiến thức Meta chỉ là tài liệu tham khảo khi liên quan đến trường hợp đang làm và không được coi là bằng chứng về kết quả kinh doanh.
 
@@ -459,18 +428,14 @@ Power BI Desktop chủ yếu dùng để xây mô hình và báo cáo. Việc l�
 |---|---|---|
 | `context\WORKSPACE_CONTEXT.md` | Cửa vào: mục tiêu dài hạn, operating contract và thứ tự đọc | Đọc đầu tiên |
 | `context\CURRENT_INTENT.md` | Khóa nhiệm vụ hiện tại, phạm vi, deliverable và tiêu chí hoàn thành | Đọc ngay sau Workspace Context |
-| `01_inputs\project\KPI_TREE.md/.mm` | KPI thành công của toàn dự án | Đo chất lượng phương pháp, bằng chứng và khả năng chuyển giao |
-| `01_inputs\joycat\CONG_THUC_5_METRICS_JOYCAT_v3.md/.mm` | Công thức 5 nhóm metrics, điều kiện sử dụng, bối cảnh đọc chỉ số và phương pháp tư duy trước khi kết luận | Bộ logic phân tích (phần phương pháp & bối cảnh) |
-| `01_inputs\joycat\DATA_MAPPING_COVERAGE_JOYCAT.md/.mm` | Bốn chiều, sáu cặp, source/mapping, coverage, ETL contract và cầu nối từ câu hỏi sang yêu cầu dữ liệu | Bộ logic phân tích (phần dữ liệu & mapping) |
-| `01_inputs\joycat\Ad_Cost_GMV_all_platform v3.md/.mm` | Tỷ lệ Ads Cost/GMV, mốc giả định và metric hỗ trợ | Cây chỉ số kinh doanh của case học Joycat; không phải KPI dự án |
-| `01_inputs\joycat\METRIC_TREE.md/.mm` | Công thức chi tiết rẽ tới field gốc Meta/business | Tham chiếu công thức gốc |
-| `01_inputs\joycat\AHP_*.md` và `TRONG_SO_PHAN_BO_ADS_COST_THEO_NEN_TANG.md` | Bộ hỗ trợ hỏi owner, tính và duyệt trọng số | Nhánh tham khảo; không phải KPI thực tế hoặc kết luận phân bổ |
-| `01_inputs\joycat\JOYCAT_*.xlsx` | Bảng nguồn phụ/catalog hiện được giữ cùng bộ input | Không coi là raw Meta chính; nguồn gốc và lineage phải tra trong Mapping/Coverage |
+| `03_outputs\joycat\CONG_THUC_5_METRICS_JOYCAT_v3.md/.mm` | Công thức 5 nhóm metrics, điều kiện sử dụng, bối cảnh đọc chỉ số và phương pháp tư duy trước khi kết luận | Bộ logic phân tích (phần phương pháp & bối cảnh) |
+| `03_outputs\joycat\DATA_MAPPING_COVERAGE_JOYCAT.md/.mm` | Bốn chiều, sáu cặp, source/mapping, coverage, ETL contract và cầu nối từ câu hỏi sang yêu cầu dữ liệu | Bộ logic phân tích (phần dữ liệu & mapping) |
+| `03_outputs\joycat\KPI_TREE.md/.mm` | Các chỉ số cụ thể cần lượng hóa | Tham chiếu vai trò chỉ số |
+| `03_outputs\joycat\METRIC_TREE.md/.mm` | Công thức chi tiết rẽ tới field gốc Meta/business | Tham chiếu công thức gốc |
 | `01_inputs\joycat\context.md` | Context KPI 1 và trường hợp học có dữ liệu gốc Meta Ads | Đọc khi Joycat đang được xử lý |
 | `01_inputs\joycat\raw` | Nguồn gốc Joycat | Chỉ đọc |
 | `01_inputs\truther\context.md` | Context KPI 2 và trường hợp ứng dụng | Đọc khi Truther đang được xử lý |
 | `04_reference\ai-first-roadmap-2026.md` | Tài liệu tham khảo về AI-first, Knowledge Hub và Ontology | Chỉ học phương pháp |
-| `04_reference\META_ALL_METRICS.mm` và `META_METRIC_TREE_REFERENCE_LINKS.md` | Catalog và link kiến thức metric Meta | Tham khảo tên/định nghĩa; không phải output hoặc bằng chứng Joycat |
 | `D:\BA_library\04_knowledge_images` | Tài liệu tham khảo về phân tích nghiệp vụ | Không dùng làm bằng chứng hiệu quả kinh doanh |
 
 Joycat và Truther độc lập. Chỉ chuyển phương pháp, cách kiểm tra và bài học có điều kiện; không chuyển mục tiêu số, cấu trúc Campaign, hành vi khách hàng hoặc kết luận như thông tin thực tế.
@@ -481,13 +446,13 @@ Joycat và Truther độc lập. Chỉ chuyển phương pháp, cách kiểm tra
 |---|---|---|---|---|
 | KPI và điều kiện hoàn thành dài hạn của toàn hệ thống agentic | To be updated | Duy + cậu Sinh | Chặn tuyên bố toàn dự án hoàn thành và đo hiệu quả tự động hóa | Chốt sau khi nền móng Context được đánh giá |
 | Nền móng Context và bộ logic phân tích Joycat | Đang hoàn thiện làm rõ thiết kế tư duy trước ETL | Duy + Codex; cậu Sinh review | Cần rà soát tính nhất quán giữa câu hỏi và dữ liệu | Hoàn thiện tài liệu theo yêu cầu và trình review |
-| KPI Tree dự án và cây chỉ số Joycat | Đã tách thành hai bộ | Duy + Codex; cậu Sinh review | Target dự án chưa được duyệt | Review `01_inputs/project/KPI_TREE.md` và cây Joycat riêng |
-| Bốn chiều, sáu cặp và coverage | Có source/mapping contract và coverage theo tổ hợp | `01_inputs\joycat\DATA_MAPPING_COVERAGE_JOYCAT.md`; working audit trong `02_work\joycat\coverage_audit` | Ba cặp có platform bị chặn; ba cặp còn lại mới human mapping/một phần; nguồn demo tháng 04 còn lệch preferred Campaign | Xin source/mapping còn thiếu và xử lý lineage trước ETL production |
+| KPI Tree và Metric Tree | Có bản làm việc | Duy + Codex; cậu Sinh review | Công thức/mapping vẫn cần đối soát nguồn | Giữ bản hiện hành, chỉ patch xung đột trực tiếp |
+| Bốn chiều, sáu cặp và coverage | Có source/mapping contract và coverage theo tổ hợp | `03_outputs\joycat\DATA_MAPPING_COVERAGE_JOYCAT.md`; working audit trong `02_work\joycat\coverage_audit` | Ba cặp có platform bị chặn; ba cặp còn lại mới human mapping/một phần; nguồn demo tháng 04 còn lệch preferred Campaign | Xin source/mapping còn thiếu và xử lý lineage trước ETL production |
 | GMV đa nền tảng Joycat | Chưa sẵn có | Joycat/người phụ trách nghiệp vụ | Chặn tái tính 5–10% | Chỉ giải thích cơ chế và giới hạn |
 | Dữ liệu gốc, hợp đồng KPI và quy tắc nối Truther | Chưa sẵn có | Duy + nhóm Truther | Chặn xác minh KPI 2 bằng dữ liệu | Kiểm kê khi Truther được xử lý |
 | Kiến trúc/giấy phép Power BI | To be updated | Duy + người đánh giá kỹ thuật/nghiệp vụ | Chặn vận hành BI và tự động hóa | Đánh giá ở giai đoạn sau |
 
-Bước tiếp theo hiện tại: hoàn tất 7 lỗi trong review, chạy validator có thể tái tạo và trình cậu Sinh duyệt Gate 2. Chưa triển khai ETL/report hoặc kết luận hiệu quả Joycat.
+Bước tiếp theo hiện tại: Duy/cậu Sinh review `WORKSPACE_CONTEXT.md` → `CURRENT_INTENT.md` → bộ logic (`CONG_THUC_5_METRICS_JOYCAT_v3.md` + `DATA_MAPPING_COVERAGE_JOYCAT.md`), làm rõ yêu cầu dữ liệu trước khi chuyển sang thiết kế ETL. Chưa triển khai ETL/report hoặc kết luận hiệu quả Joycat.
 
 ## 15. Quy tắc cập nhật và bằng chứng
 

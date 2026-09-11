@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Cleansing Data & Data Blending trong Power BI — Interactive</title>
+<style>
+  :root{
+    --blue:#2E5AAC; --blue-light:#DCE6F7; --blue-mid:#7FA6E0;
+    --orange:#D97B29; --orange-light:#FBE7D1; --orange-mid:#EBAE72;
+    --green:#2E8B57; --green-light:#DFF3E7; --green-mid:#7FC79E;
+    --gray:#9195a0; --gray-light:#EFEFF1;
+    --ink:#1f2430; --sub:#5b6270; --line:#e2e5ea;
+    --bg:#ffffff; --purple:#7C5CD6; --purple-light:#EDE7FB;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:40px 8vw 90px; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;
+  }
+  h1{font-size:28px; margin:0 0 4px;}
+  .subtitle{color:var(--sub); font-style:italic; margin:0 0 40px; font-size:14px;}
+  h2{font-size:21px; color:var(--blue); border-bottom:2px solid var(--blue); padding-bottom:6px; margin:50px 0 18px; display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  h3{font-size:16px; margin:22px 0 10px;}
+  p{margin:0 0 12px; font-size:14.5px;}
+  .note{color:var(--sub); font-size:13px; font-style:italic;}
+  table{border-collapse:collapse; width:100%; margin:10px 0 20px; font-size:13.5px;}
+  th,td{border:1px solid var(--line); padding:7px 10px; text-align:left;}
+  th{background:var(--blue); color:#fff; font-weight:600;}
+  tr:nth-child(even) td{background:#F7F9FC;}
+  code{background:#F1F2F5; padding:1px 6px; border-radius:4px; font-family:Consolas,Menlo,monospace; font-size:12.5px;}
+
+  button{font-family:inherit; cursor:pointer; border:none; outline:none;}
+  button:active{transform:scale(.96);}
+
+  /* ---------- WORKFLOW JOURNEY ---------- */
+  .wf-toolbar{display:flex; align-items:center; gap:10px; margin-bottom:22px; flex-wrap:wrap;}
+  .btn-primary{background:var(--blue); color:#fff; padding:9px 18px; border-radius:24px; font-size:13.5px; font-weight:600; transition:background .15s, box-shadow .15s;}
+  .btn-primary:hover{background:#1f4586; box-shadow:0 3px 10px rgba(46,90,172,.35);}
+  .btn-primary:disabled{opacity:.5; cursor:default; box-shadow:none;}
+  .btn-ghost{background:transparent; color:var(--blue); padding:9px 16px; border:1.5px solid var(--blue); border-radius:24px; font-size:13.5px; font-weight:600; transition:background .15s;}
+  .btn-ghost:hover{background:var(--blue-light);}
+  .wf-progress-text{font-size:13px; color:var(--sub); margin-left:auto;}
+
+  .wf-track{position:relative; padding:6px 0 30px;}
+  .wf-line-bg{position:absolute; top:24px; left:24px; right:24px; height:4px; background:var(--gray-light); border-radius:2px; z-index:0;}
+  .wf-line-fill{position:absolute; top:24px; left:24px; height:4px; background:linear-gradient(90deg,var(--blue),var(--purple)); border-radius:2px; z-index:1; width:0%; transition:width .5s cubic-bezier(.4,0,.2,1);}
+  .wf-steps{position:relative; z-index:2; display:flex; justify-content:space-between; gap:4px;}
+  .wf-step{display:flex; flex-direction:column; align-items:center; flex:1; min-width:0;}
+  .wf-dot{
+    width:48px; height:48px; border-radius:50%; background:#fff; border:3px solid var(--gray-light);
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; color:var(--gray);
+    transition:all .35s cubic-bezier(.4,0,.2,1); cursor:pointer; flex-shrink:0;
+  }
+  .wf-step:hover .wf-dot{border-color:var(--blue-mid); transform:translateY(-2px);}
+  .wf-step.done .wf-dot{background:var(--blue-light); border-color:var(--blue-mid); color:var(--blue);}
+  .wf-step.active .wf-dot{background:var(--blue); border-color:var(--blue); color:#fff; transform:scale(1.18); box-shadow:0 4px 14px rgba(46,90,172,.4);}
+  .wf-step-label{margin-top:10px; font-size:11.5px; text-align:center; color:var(--sub); font-weight:600; max-width:90px; transition:color .3s;}
+  .wf-step.active .wf-step-label{color:var(--blue);}
+
+  .wf-panel{
+    margin-top:26px; border:1px solid var(--line); border-radius:14px; padding:22px 26px; background:#fbfbfd;
+    opacity:0; transform:translateY(10px); animation:panelIn .4s forwards;
+  }
+  @keyframes panelIn{to{opacity:1; transform:translateY(0);}}
+  .wf-panel-head{display:flex; align-items:center; gap:12px; margin-bottom:10px;}
+  .wf-panel-num{width:34px; height:34px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex-shrink:0;}
+  .wf-panel-title{font-size:17px; font-weight:700; margin:0;}
+  .wf-panel-desc{font-size:14px; color:var(--ink); margin:0;}
+
+  /* ---------- COMPARE CARDS ---------- */
+  .compare-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:16px 0 30px;}
+  .compare-card{border:1px solid var(--line); border-radius:12px; padding:16px 18px; background:#fbfbfd; transition:transform .2s, box-shadow .2s, border-color .2s; cursor:default;}
+  .compare-card:hover{transform:translateY(-4px); box-shadow:0 8px 20px rgba(30,40,60,.1); border-color:var(--blue-mid);}
+  .compare-card h4{margin:0 0 10px; display:flex; align-items:center; gap:8px; font-size:14.5px;}
+  .tag{display:inline-block; font-size:11px; font-weight:700; letter-spacing:.3px; padding:2px 9px; border-radius:10px;}
+  .tag-blue{background:var(--blue-light); color:var(--blue);}
+  .tag-orange{background:var(--orange-light); color:var(--orange);}
+  .tag-green{background:var(--green-light); color:var(--green);}
+  .compare-card ul{margin:0; padding-left:18px; font-size:13px;}
+  .compare-card li{margin-bottom:6px;}
+
+  /* ---------- APPEND / FOLDER DEMO ---------- */
+  .demo-box{border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin:14px 0 30px; background:#fcfcfd;}
+  .demo-row{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:14px;}
+  .mini-tables{display:flex; gap:16px; flex-wrap:wrap; margin-bottom:10px;}
+  .mini-table{border:1px solid var(--line); border-radius:8px; overflow:hidden; opacity:1; transition:opacity .4s, transform .4s;}
+  .mini-table.flying{opacity:0; transform:translateY(-16px) scale(.9);}
+  .mini-table table{margin:0; font-size:12px;}
+  .mini-table th{background:var(--blue-mid); font-size:11px; padding:5px 8px;}
+  .mini-table td{padding:5px 8px;}
+  .result-wrap{min-height:40px;}
+  .row-in{animation:rowIn .35s forwards; opacity:0;}
+  @keyframes rowIn{from{opacity:0; transform:translateX(-8px);} to{opacity:1; transform:translateX(0);}}
+  .row-new{background:var(--green-light) !important;}
+  .row-in.row-new{animation:rowIn .35s forwards, flashNew 1.4s .35s ease;}
+  @keyframes flashNew{0%{background:var(--green-mid);} 100%{background:var(--green-light);}}
+
+  /* ---------- JOIN VISUALIZER ---------- */
+  .src-tables{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin:14px 0 20px;}
+  .row-orphan td{background:#FDECEC !important;}
+  .row-nosales td{background:#EAF1FB !important;}
+  .row-dupkey td{background:#FDF3D9 !important;}
+  .flag{font-size:11px; font-weight:700; padding:1px 6px; border-radius:6px; margin-left:6px;}
+  .flag-red{background:#FBD9D9; color:#B23A3A;}
+  .flag-blue{background:#D7E4F9; color:var(--blue);}
+  .flag-amber{background:#F7DFA0; color:#8A5A00;}
+
+  .join-btn-row{display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 8px;}
+  .join-btn{
+    padding:10px 16px; border-radius:10px; border:1.5px solid var(--line); background:#fff;
+    font-size:13px; font-weight:600; color:var(--sub); transition:all .2s;
+  }
+  .join-btn:hover{border-color:var(--blue-mid); color:var(--blue); transform:translateY(-2px);}
+  .join-btn.active{background:var(--blue); border-color:var(--blue); color:#fff; box-shadow:0 4px 12px rgba(46,90,172,.35);}
+
+  .legend{display:flex; gap:18px; flex-wrap:wrap; font-size:12px; color:var(--sub); margin:14px 0 20px;}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .dot{width:11px; height:11px; border-radius:3px; display:inline-block;}
+
+  .join-card{border:1px solid var(--line); border-radius:14px; padding:20px 24px; margin:18px 0; background:#fcfcfd;}
+  .join-head{display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:6px;}
+  .join-head h3{margin:0;}
+  .pq-label{font-size:12px; color:#fff; background:var(--ink); padding:3px 10px; border-radius:6px; font-family:Consolas,Menlo,monospace; transition:opacity .2s;}
+  .join-desc{font-size:13.5px; color:var(--sub); margin-bottom:16px; min-height:36px; transition:opacity .2s;}
+
+  .venn-row{display:flex; align-items:center; gap:24px; flex-wrap:wrap; margin:14px 0 18px; padding:14px 18px; background:#fff; border:1px solid var(--line); border-radius:12px;}
+  .venn-wrap{flex-shrink:0; width:220px;}
+  .venn-wrap svg{width:100%; height:auto; display:block; transition:opacity .25s;}
+  .venn-legend{display:flex; flex-direction:column; gap:8px; font-size:12.5px; color:var(--sub);}
+  .venn-legend span{display:flex; align-items:center; gap:8px;}
+  .block-diagram{display:grid; grid-template-columns:1fr 70px 1fr; align-items:center; gap:6px; margin:14px 0 18px;}
+  .block-col{display:flex; flex-direction:column; gap:6px;}
+  .block-col .col-title{font-size:11.5px; font-weight:700; color:var(--sub); text-transform:uppercase; letter-spacing:.4px; margin-bottom:2px;}
+  .block{
+    border-radius:7px; padding:7px 12px; font-size:12.5px; font-family:Consolas,Menlo,monospace;
+    border:1.5px solid var(--line); display:flex; justify-content:space-between; gap:8px;
+    background:#fff; color:var(--sub);
+    transition:background .35s, border-color .35s, color .35s, opacity .35s, transform .35s, text-decoration .35s;
+  }
+  .block.left-in{background:var(--blue-light); border-color:var(--blue-mid); color:var(--blue); font-weight:600; transform:scale(1.03);}
+  .block.left-out{background:var(--gray-light); border-color:var(--line); color:var(--gray); text-decoration:line-through; opacity:.55; transform:scale(.96);}
+  .block.right-in{background:var(--orange-light); border-color:var(--orange-mid); color:var(--orange); font-weight:600; transform:scale(1.03);}
+  .block.right-out{background:var(--gray-light); border-color:var(--line); color:var(--gray); text-decoration:line-through; opacity:.55; transform:scale(.96);}
+  .arrow-col{display:flex; align-items:center; justify-content:center; font-size:26px; color:var(--green); font-weight:700; transition:transform .3s;}
+  .arrow-col.pulse{animation:arrowPulse .5s;}
+  @keyframes arrowPulse{0%{transform:scale(1);} 40%{transform:scale(1.5);} 100%{transform:scale(1);}}
+
+  .result-count{display:inline-block; background:var(--green-light); color:var(--green); font-weight:700; font-size:12.5px; padding:4px 12px; border-radius:8px; margin-bottom:10px; transition:transform .3s;}
+  .result-count.bump{animation:bump .4s;}
+  @keyframes bump{0%{transform:scale(1);} 50%{transform:scale(1.15);} 100%{transform:scale(1);}}
+  .result-table-wrap table{opacity:1;}
+
+  /* ---------- VLOOKUP vs MERGE ---------- */
+  .vlk-toggle-row{display:flex; gap:8px; margin:14px 0 16px;}
+  .vlk-panel{border:1px solid var(--line); border-radius:12px; padding:20px 24px; margin-bottom:20px; background:#fcfcfd; min-height:120px;}
+  .vlk-formula{background:#1f2430; color:#d7e4f9; font-family:Consolas,Menlo,monospace; font-size:12.5px; padding:10px 14px; border-radius:8px; margin:8px 0; overflow-x:auto;}
+  .vlk-steps{margin:8px 0 0; padding-left:20px; font-size:13.5px;}
+  .vlk-steps li{margin-bottom:6px;}
+  .cell-error{color:#B23A3A; font-weight:700;}
+  .vlk-fade{animation:panelIn .35s forwards;}
+
+  /* ---------- FUZZY MATCHING ---------- */
+  .fuzzy-box{border:1px solid var(--line); border-radius:14px; padding:20px 24px; margin:16px 0 30px; background:#fcfcfd;}
+  .fuzzy-slider-row{display:flex; align-items:center; gap:12px; margin-bottom:20px;}
+  .fuzzy-slider-row label{font-size:13px; color:var(--sub); font-weight:600; white-space:nowrap;}
+  .fuzzy-slider-row input[type=range]{flex:1;}
+  .fuzzy-slider-row span{font-weight:700; font-size:14px; min-width:44px; text-align:right;}
+  .fuzzy-bar-row{display:flex; align-items:center; gap:10px; margin-bottom:11px;}
+  .fuzzy-bar-label{width:250px; font-size:12.5px; flex-shrink:0; color:var(--ink);}
+  .fuzzy-bar-track{flex:1; height:20px; background:var(--gray-light); border-radius:10px; overflow:hidden; position:relative;}
+  .fuzzy-bar-fill{height:100%; border-radius:10px; transition:width .4s, background .3s;}
+  .fuzzy-bar-score{width:56px; text-align:right; font-size:12.5px; font-weight:700;}
+  .fuzzy-live{margin-top:22px; padding-top:18px; border-top:1px solid var(--line);}
+  .fuzzy-live-row{display:flex; gap:10px; margin:10px 0; flex-wrap:wrap;}
+  .fuzzy-live-row input{flex:1; min-width:180px; padding:9px 12px; border:1px solid var(--line); border-radius:8px; font-size:13.5px; font-family:inherit;}
+  .fuzzy-live-result{font-size:14.5px; font-weight:700; margin-top:8px;}
+
+  /* ---------- SPATIAL MATCHING ---------- */
+  .spatial-box{border:1px solid var(--line); border-radius:14px; padding:20px 24px; margin:16px 0 30px; background:#fcfcfd;}
+  .spatial-legend{display:flex; gap:18px; margin:14px 0 4px; font-size:12.5px; flex-wrap:wrap; color:var(--sub);}
+  .spatial-svg-wrap{margin:16px 0;}
+  #spatialResultList{margin-top:14px;}
+  .sp-row{display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--line); font-size:13px;}
+  .sp-row:last-child{border-bottom:none;}
+  .sp-tag-ok{color:var(--green); font-weight:700;}
+  .sp-tag-no{color:#B23A3A; font-weight:700;}
+
+  /* ---------- AI / POWER BI CARDS ---------- */
+  .ai-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:16px 0 30px;}
+  .ai-card{border:1px solid var(--line); border-radius:12px; padding:16px 18px; background:#fbfbfd; transition:transform .2s, box-shadow .2s;}
+  .ai-card:hover{transform:translateY(-4px); box-shadow:0 8px 20px rgba(30,40,60,.1); border-color:var(--purple);}
+  .ai-card h4{margin:0 0 8px; font-size:14.5px; color:var(--purple);}
+  .ai-card p{margin:0; font-size:13px; color:var(--ink);}
+
+  /* ---------- CHECKLIST ---------- */
+  .checklist-box{border:1px solid var(--line); border-radius:14px; padding:20px 24px; margin:16px 0 30px; background:#fcfcfd;}
+  .cl-progress-bar-bg{height:8px; background:var(--gray-light); border-radius:4px; overflow:hidden; margin-bottom:18px;}
+  .cl-progress-bar-fill{height:100%; width:0%; background:linear-gradient(90deg,var(--blue),var(--green)); border-radius:4px; transition:width .4s cubic-bezier(.4,0,.2,1);}
+  .cl-item{display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-bottom:1px solid var(--line); cursor:pointer;}
+  .cl-item:last-child{border-bottom:none;}
+  .cl-check{
+    width:20px; height:20px; border-radius:6px; border:2px solid var(--line); flex-shrink:0; margin-top:1px;
+    display:flex; align-items:center; justify-content:center; transition:all .2s; font-size:13px; color:#fff;
+  }
+  .cl-item.checked .cl-check{background:var(--green); border-color:var(--green);}
+  .cl-item.checked .cl-text{color:var(--sub); text-decoration:line-through;}
+  .cl-text{font-size:14px; transition:color .2s;}
+  .cl-done-msg{display:none; margin-top:14px; padding:12px 16px; background:var(--green-light); color:var(--green); border-radius:10px; font-size:13.5px; font-weight:600; opacity:0; transform:translateY(6px); transition:opacity .4s, transform .4s;}
+  .cl-done-msg.show{display:block; opacity:1; transform:translateY(0);}
+
+  ul.plain{margin:0 0 14px; padding-left:20px; font-size:14px;}
+  ul.plain li{margin-bottom:8px;}
+  .footer-note{margin-top:50px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--sub);}
+
+  @media (max-width:760px){
+    .compare-grid{grid-template-columns:1fr;}
+    .src-tables{grid-template-columns:1fr;}
+    .block-diagram{grid-template-columns:1fr;}
+    .arrow-col{transform:rotate(90deg); padding:6px 0;}
+    .wf-step-label{max-width:60px; font-size:10px;}
+    .ai-grid{grid-template-columns:1fr;}
+    .fuzzy-bar-label{width:140px;}
+    .venn-row{flex-direction:column; align-items:stretch;}
+    .venn-wrap{width:100%; max-width:260px; margin:0 auto;}
+  }
+</style>
+</head>
+<body>
+
+<h1>Cleansing Data & Data Blending trong Power BI</h1>
+<p class="subtitle">Phiên bản tương tác — bấm để xem workflow chạy như 1 hành trình, và thử từng kiểu Join trực tiếp</p>
+
+<h2>1. Workflow Cleansing Data — hành trình 10 bước</h2>
+<div class="wf-toolbar">
+  <button class="btn-primary" id="wfPlayBtn">▶ Chạy hành trình</button>
+  <button class="btn-ghost" id="wfResetBtn">Reset</button>
+  <span class="wf-progress-text" id="wfProgressText">Bước 1 / 10</span>
+</div>
+
+<div class="wf-track">
+  <div class="wf-line-bg"></div>
+  <div class="wf-line-fill" id="wfLineFill"></div>
+  <div class="wf-steps" id="wfSteps"></div>
+</div>
+
+<div class="wf-panel" id="wfPanel"></div>
+
+<h2>2. Ba kỹ thuật Data Blending</h2>
+<p>Cách phân biệt dễ nhớ: <b>Append/Union</b> cộng THEO DÒNG, <b>Merge</b> cộng THEO CỘT, còn <b>Combine from Folder</b> là Append tự động hoá cho cả folder.</p>
+
+<div class="compare-grid">
+  <div class="compare-card">
+    <h4><span class="tag tag-blue">APPEND</span> Union Query</h4>
+    <ul>
+      <li>Gộp theo <b>DÒNG</b> — xếp chồng bảng</li>
+      <li>Điều kiện: các bảng phải cùng cấu trúc cột</li>
+      <li>Kết quả: số dòng tăng, số cột giữ nguyên</li>
+      <li>Tương đương SQL: <code>UNION ALL</code></li>
+    </ul>
+  </div>
+  <div class="compare-card">
+    <h4><span class="tag tag-orange">MERGE</span> Join Query</h4>
+    <ul>
+      <li>Gộp theo <b>CỘT</b> — nối thêm cột</li>
+      <li>Điều kiện: cần 1 cột khoá chung (Key)</li>
+      <li>Kết quả: số cột tăng, số dòng tuỳ kiểu Join</li>
+      <li>Tương đương SQL: <code>JOIN</code></li>
+    </ul>
+  </div>
+  <div class="compare-card">
+    <h4><span class="tag tag-green">FOLDER</span> Combine Files</h4>
+    <ul>
+      <li>Gộp theo <b>DÒNG</b>, tự động cho cả folder</li>
+      <li>Điều kiện: file cùng định dạng & cấu trúc</li>
+      <li>Kết quả: tự thêm cột <code>Source.Name</code></li>
+      <li>Tương đương SQL: <code>UNION ALL</code> qua vòng lặp</li>
+    </ul>
+  </div>
+</div>
+
+<h3>2.1 Thử Append — bấm nút để gộp 3 bảng Sales theo tháng</h3>
+<div class="demo-box">
+  <div class="mini-tables" id="appendMiniTables"></div>
+  <div class="demo-row">
+    <button class="btn-primary" id="appendRunBtn">⚡ Append 3 bảng</button>
+    <button class="btn-ghost" id="appendResetBtn">Reset</button>
+  </div>
+  <div class="result-wrap" id="appendResultWrap"></div>
+</div>
+
+<h3>2.2 Thử Combine from Folder — bấm Refresh khi có file mới</h3>
+<div class="demo-box">
+  <p class="note">Folder "Sales_2026" đang có sẵn Sales_Jan, Sales_Feb, Sales_Mar. Giả sử vừa có thêm Sales_Apr.xlsx được thả vào folder — bấm Refresh để xem Power BI tự nạp thêm.</p>
+  <div class="demo-row">
+    <button class="btn-primary" id="folderRefreshBtn">🔄 Refresh Folder</button>
+    <button class="btn-ghost" id="folderResetBtn">Reset</button>
+  </div>
+  <div class="result-wrap" id="folderResultWrap"></div>
+</div>
+
+<h2>3. Merge / Join — bấm thử cả 6 kiểu Join</h2>
+<p>Dữ liệu thực tế: <b>O4</b> là đơn hàng có mã khách hàng <b>không tồn tại</b> (nhập sai / khách đã xoá), <b>C04</b> là khách hàng <b>mới, chưa từng mua hàng</b>. Bấm từng nút bên dưới để xem kiểu Join đó giữ/loại dòng nào.</p>
+
+<div class="src-tables">
+  <div>
+    <h4 style="margin:0 0 6px;"><span class="tag tag-blue">Sales</span> (5 dòng)</h4>
+    <table>
+      <tr><th>OrderID</th><th>CustomerID</th><th>Amount</th></tr>
+      <tr><td>O1</td><td>C01</td><td>500,000</td></tr>
+      <tr><td>O2</td><td>C02</td><td>300,000</td></tr>
+      <tr><td>O3</td><td>C03</td><td>700,000</td></tr>
+      <tr class="row-orphan"><td>O4</td><td>C05</td><td>200,000 <span class="flag flag-red">không có KH</span></td></tr>
+      <tr><td>O5</td><td>C01</td><td>150,000</td></tr>
+    </table>
+  </div>
+  <div>
+    <h4 style="margin:0 0 6px;"><span class="tag tag-orange">Customer</span> (4 dòng)</h4>
+    <table>
+      <tr><th>CustomerID</th><th>CustomerName</th><th>City</th></tr>
+      <tr><td>C01</td><td>Nguyễn Văn A</td><td>Hà Nội</td></tr>
+      <tr><td>C02</td><td>Trần Thị B</td><td>TP.HCM</td></tr>
+      <tr><td>C03</td><td>Lê Văn C</td><td>Đà Nẵng</td></tr>
+      <tr class="row-nosales"><td>C04</td><td>Phạm Thị D <span class="flag flag-blue">chưa mua hàng</span></td><td>Cần Thơ</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="legend">
+  <span><i class="dot" style="background:var(--blue-light);border:1px solid var(--blue-mid)"></i> Sales — được giữ</span>
+  <span><i class="dot" style="background:var(--orange-light);border:1px solid var(--orange-mid)"></i> Customer — được giữ</span>
+  <span><i class="dot" style="background:var(--gray-light);border:1px solid var(--line)"></i> Bị loại khỏi kết quả</span>
+</div>
+
+<div class="join-btn-row" id="joinBtnRow"></div>
+
+<div class="join-card">
+  <div class="join-head"><h3 id="joinTitle"></h3><span class="pq-label" id="joinPqLabel"></span></div>
+  <p class="join-desc" id="joinDesc"></p>
+
+  <div class="venn-row">
+    <div class="venn-wrap" id="joinVennWrap"></div>
+    <div class="venn-legend">
+      <span><i class="dot" style="background:#2E5AAC"></i> Chỉ Sales</span>
+      <span><i class="dot" style="background:#2E8B57"></i> Khớp cả 2 (giao nhau)</span>
+      <span><i class="dot" style="background:#D97B29"></i> Chỉ Customer</span>
+      <span><i class="dot" style="background:#dfe2e8;border:1px solid #b9bec9"></i> Bị loại</span>
+    </div>
+  </div>
+
+  <div class="block-diagram">
+    <div class="block-col">
+      <div class="col-title">Sales</div>
+      <div id="leftBlocks"></div>
+    </div>
+    <div class="arrow-col" id="joinArrow">→</div>
+    <div class="block-col">
+      <div class="col-title">Customer</div>
+      <div id="rightBlocks"></div>
+    </div>
+  </div>
+
+  <span class="result-count" id="joinResultCount"></span>
+  <div class="result-table-wrap" id="joinResultTable"></div>
+</div>
+
+<h2>4. Merge (Power Query) khác VLOOKUP (Excel) như thế nào?</h2>
+<p>Khác biệt rõ nhất lộ ra khi khoá <code>CustomerID</code> <b>C01</b> bị lặp lại ở <b>CẢ HAI</b> bảng: Sales có 2 đơn hàng của C01 (bình thường — khách mua nhiều lần), còn Customer lại có 2 bản ghi cho C01 (bất thường — lỗi nhập liệu 2 lần). Khi 1 khoá lặp ở cả 2 bên, Merge sẽ <b>nhân chéo</b> — đây là lúc thấy rõ nhất VLOOKUP và Merge lệch nhau.</p>
+
+<div class="src-tables">
+  <div>
+    <h4 style="margin:0 0 6px;"><span class="tag tag-blue">Sales</span> (5 dòng — C01 lặp 2 lần, bình thường)</h4>
+    <table>
+      <tr><th>OrderID</th><th>CustomerID</th><th>Amount</th></tr>
+      <tr class="row-dupkey"><td>O1</td><td>C01</td><td>500,000 <span class="flag flag-amber">khoá lặp</span></td></tr>
+      <tr><td>O2</td><td>C02</td><td>300,000</td></tr>
+      <tr><td>O3</td><td>C03</td><td>700,000</td></tr>
+      <tr class="row-orphan"><td>O4</td><td>C05</td><td>200,000 <span class="flag flag-red">không có KH</span></td></tr>
+      <tr class="row-dupkey"><td>O5</td><td>C01</td><td>150,000 <span class="flag flag-amber">khoá lặp</span></td></tr>
+    </table>
+  </div>
+  <div>
+    <h4 style="margin:0 0 6px;"><span class="tag tag-orange">Customer</span> (5 dòng — C01 lặp 2 lần, do lỗi nhập liệu)</h4>
+    <table>
+      <tr><th>CustomerID</th><th>CustomerName</th><th>City</th></tr>
+      <tr class="row-dupkey"><td>C01</td><td>Nguyễn Văn A</td><td>Hà Nội <span class="flag flag-amber">khoá lặp</span></td></tr>
+      <tr class="row-dupkey"><td>C01</td><td>Nguyễn Văn A - CN2</td><td>Hải Phòng <span class="flag flag-amber">khoá lặp</span></td></tr>
+      <tr><td>C02</td><td>Trần Thị B</td><td>TP.HCM</td></tr>
+      <tr><td>C03</td><td>Lê Văn C</td><td>Đà Nẵng</td></tr>
+      <tr class="row-nosales"><td>C04</td><td>Phạm Thị D <span class="flag flag-blue">chưa mua hàng</span></td><td>Cần Thơ</td></tr>
+    </table>
+  </div>
+</div>
+<p class="note"><b>C01 xuất hiện 2 lần ở Sales × 2 lần ở Customer → Merge sẽ tạo ra 2 × 2 = 4 dòng chỉ riêng cho C01.</b> Bấm nút bên dưới để xem VLOOKUP và Merge xử lý tình huống này khác nhau ra sao.</p>
+
+<div class="vlk-toggle-row">
+  <button class="join-btn active" id="vlkBtnVlookup" data-mode="vlookup">Xem theo VLOOKUP (Excel)</button>
+  <button class="join-btn" id="vlkBtnMerge" data-mode="merge">Xem theo Merge (Power Query)</button>
+</div>
+<div class="vlk-panel" id="vlkPanel"></div>
+
+<table>
+  <tr><th style="width:22%">Tiêu chí</th><th>VLOOKUP (Excel)</th><th>Merge (Power Query)</th></tr>
+  <tr><td>Cách hoạt động</td><td>Công thức viết trên từng ô, phải kéo (fill) xuống toàn cột</td><td>1 bước xử lý áp dụng cho toàn bảng cùng lúc</td></tr>
+  <tr><td>Vị trí cột khoá</td><td>Bắt buộc là cột đầu tiên bên trái vùng tra cứu</td><td>Chọn cột khoá bất kỳ, không quan trọng thứ tự</td></tr>
+  <tr><td>Lấy nhiều cột 1 lúc</td><td>Phải viết riêng 1 công thức cho mỗi cột cần lấy</td><td>Chọn nhiều cột cần lấy ngay trong 1 lần Merge</td></tr>
+  <tr><td>Khi khoá C01 lặp ở cả 2 bảng (2 Sales × 2 Customer)</td><td>Vẫn giữ đúng 5 dòng, chỉ lấy 1 kết quả đầu tiên cho mỗi lần tra — <b>âm thầm bỏ sót</b> bản ghi trùng, không cảnh báo</td><td>Tự nhân chéo 2×2 = <b>4 dòng riêng cho C01</b>, tổng kết quả nhảy lên <b>7 dòng</b> — <b>phơi bày ngay</b> lỗi trùng khoá</td></tr>
+  <tr><td>Khi không tìm thấy khoá khớp</td><td>Trả về lỗi <code>#N/A</code>, phải bọc thêm <code>IFERROR</code></td><td>Trả về <i>null</i>, không phát sinh lỗi công thức</td></tr>
+  <tr><td>Có dữ liệu mới</td><td>Phải kéo lại công thức thủ công cho các dòng mới</td><td>Chỉ cần bấm Refresh, tự chạy lại toàn bộ</td></tr>
+  <tr><td>Kiểu ghép</td><td>Chỉ 1 kiểu (gần giống Left, lấy 1 kết quả đầu tiên)</td><td>Đủ 6 kiểu Join như Phần 3</td></tr>
+</table>
+
+<h2>5. Fuzzy Matching — minh hoạ bằng biểu đồ độ giống nhau</h2>
+<p>Dùng khi cột khoá của 2 bảng ghi tên hơi khác nhau (viết tắt, dấu câu, khoảng trắng...). Kéo thanh trượt Similarity Threshold để xem cặp nào đủ điểm để Power Query tự ghép — điểm số được tính trực tiếp bằng thuật toán Levenshtein, giống cách Power Query thực hiện.</p>
+<div class="fuzzy-box">
+  <div class="fuzzy-slider-row">
+    <label>Similarity threshold</label>
+    <input type="range" min="0" max="100" value="70" id="fuzzyThreshold">
+    <span id="fuzzyThresholdVal">70%</span>
+  </div>
+  <div id="fuzzyChart"></div>
+  <p class="note" id="fuzzySummary"></p>
+
+  <div class="fuzzy-live">
+    <h4 style="margin:0 0 4px;">Tự thử điểm giống nhau của 2 chuỗi bất kỳ</h4>
+    <div class="fuzzy-live-row">
+      <input type="text" id="fuzzyInputA" value="Công ty TNHH Thương mại ABC">
+      <input type="text" id="fuzzyInputB" value="Cty TNHH TM ABC">
+    </div>
+    <div class="fuzzy-live-result" id="fuzzyLiveResult"></div>
+  </div>
+</div>
+
+<h2>6. Spatial Matching — minh hoạ bằng bản đồ khu vực bán hàng</h2>
+<p>Dùng khi 2 bảng không có cột chung để Merge, phải ghép theo vị trí. Ví dụ: gán khách hàng vào cửa hàng nằm trong bán kính phục vụ (trade area) gần nhất. Bấm "Chạy Spatial Match" để xem animation ghép nối.</p>
+<div class="spatial-box">
+  <div class="demo-row">
+    <button class="btn-primary" id="spatialRunBtn">📍 Chạy Spatial Match</button>
+    <button class="btn-ghost" id="spatialResetBtn">Reset</button>
+  </div>
+  <div class="spatial-legend">
+    <span><i class="dot" style="background:var(--blue-light);border:1px solid var(--blue-mid)"></i> Trade area cửa hàng</span>
+    <span><i class="dot" style="background:var(--green-light);border:1px solid var(--green-mid)"></i> Khách hàng đã gán được store</span>
+    <span><i class="dot" style="background:#FBD9D9;border:1px solid #E29999"></i> Khách hàng ngoài mọi trade area</span>
+  </div>
+  <div class="spatial-svg-wrap">
+    <svg id="spatialSvg" viewBox="0 0 600 320" style="width:100%; max-width:600px; display:block;"></svg>
+  </div>
+  <div id="spatialResultList"></div>
+</div>
+
+<h2>7. Ứng dụng Power BI & AI</h2>
+<div class="ai-grid">
+  <div class="ai-card">
+    <h4>Fuzzy Merge có sẵn trong Power Query</h4>
+    <p>Trong hộp thoại Merge, tick "Use fuzzy matching to perform the merge", kéo thanh Similarity threshold (0–1), có thể thêm Transformation Table để tự map từ đồng nghĩa (vd "Cty" = "Công ty").</p>
+  </div>
+  <div class="ai-card">
+    <h4>Copilot trong Power BI / Fabric</h4>
+    <p>Copilot gợi ý mô tả dữ liệu, tự viết DAX measure, tóm tắt report bằng ngôn ngữ tự nhiên; trong Dataflow Gen2, Copilot còn gợi ý bước Power Query tiếp theo khi làm sạch dữ liệu.</p>
+  </div>
+  <div class="ai-card">
+    <h4>AI / Semantic Matching nâng cao</h4>
+    <p>Khi Levenshtein/Jaro không đủ (khác ngôn ngữ, viết tắt phức tạp), có thể gọi Azure AI (Cognitive Services) hoặc model embedding qua "Invoke Custom Function" / Python script để so khớp theo ngữ nghĩa thay vì ký tự.</p>
+  </div>
+  <div class="ai-card">
+    <h4>Shape Map & Azure Maps cho Spatial</h4>
+    <p>Power BI có visual Shape Map (theo địa giới hành chính) và Azure Maps (theo toạ độ), hoặc dùng Python/R visual (geopy, shapely) để tính point-in-polygon trước khi Load vào Data Model.</p>
+  </div>
+</div>
+
+<h2>8. Checklist trước khi kết thúc Cleansing</h2>
+<div class="checklist-box">
+  <div class="cl-progress-bar-bg"><div class="cl-progress-bar-fill" id="clProgressFill"></div></div>
+  <div id="clList"></div>
+  <div class="cl-done-msg" id="clDoneMsg">Hoàn tất toàn bộ checklist — dữ liệu sẵn sàng để Load vào Data Model!</div>
+</div>
+
+<div class="footer-note">Ý tưởng minh hoạ Join lấy cảm hứng từ "Visualizing Merge Join Types in Power BI" (Fabric Community) và "Say No to Venn Diagrams When Explaining Joins" (jooq.org).</div>
+
+<script>
+(function(){
+
+  /* ================= WORKFLOW JOURNEY ================= */
+  var wfSteps = [
+    {title:"Get Data", desc:"Kết nối nguồn dữ liệu (Excel, CSV, Database, Web, PDF, Folder...) qua Power Query — bước Extract của ETL."},
+    {title:"Understand Structure", desc:"Nhận diện Regular Table hay Cross Table/Pivot Table để biết có cần Unpivot không."},
+    {title:"Basic Transform", desc:"Đổi kiểu dữ liệu, Merge/Split Column, Trim & Clean, Replace Values, Filter Rows."},
+    {title:"Data Shape Formatting", desc:"Transpose Table, Pivot ↔ Unpivot, Aggregation/Group By — đưa dữ liệu về đúng hình dạng."},
+    {title:"Xử lý Dirty Data", desc:"Loại bỏ ký tự lạ (tiền tệ, dấu #, khoảng trắng thừa) trước khi đổi kiểu dữ liệu."},
+    {title:"Xử lý Missing Data", desc:"Chọn Deleting hoặc Imputation tuỳ tỉ lệ và ý nghĩa dữ liệu thiếu."},
+    {title:"Xử lý Outliers", desc:"Phát hiện giá trị bất thường bằng IQR (1.5×IQR), Violin Plot, hoặc Z-score."},
+    {title:"Data Profiling", desc:"Dùng Column Quality / Distribution / Profile để kiểm tra % lỗi, % trống trước khi Load."},
+    {title:"Combine / Blend", desc:"Gộp nhiều bảng bằng Append, Merge, hoặc Combine Files from Folder."},
+    {title:"Checklist trước Load", desc:"Rà lại kiểu dữ liệu, tên cột, cột thừa, Query Folding."}
+  ];
+  var wfStepsEl = document.getElementById('wfSteps');
+  wfSteps.forEach(function(s, i){
+    var el = document.createElement('div');
+    el.className = 'wf-step';
+    el.innerHTML = '<div class="wf-dot">'+(i+1)+'</div><div class="wf-step-label">'+s.title+'</div>';
+    el.addEventListener('click', function(){ setWfStep(i); stopWfPlay(); });
+    wfStepsEl.appendChild(el);
+  });
+  var wfCurrent = 0;
+  var wfPlaying = false;
+  var wfTimer = null;
+
+  function setWfStep(i){
+    wfCurrent = i;
+    var dots = wfStepsEl.querySelectorAll('.wf-step');
+    dots.forEach(function(d, idx){
+      d.classList.remove('active','done');
+      if(idx < i) d.classList.add('done');
+      if(idx === i) d.classList.add('active');
+    });
+    var pct = (i/(wfSteps.length-1))*100;
+    document.getElementById('wfLineFill').style.width = pct+'%';
+    document.getElementById('wfProgressText').textContent = 'Bước '+(i+1)+' / '+wfSteps.length;
+    var panel = document.getElementById('wfPanel');
+    panel.style.animation = 'none';
+    void panel.offsetWidth;
+    panel.style.animation = '';
+    panel.innerHTML = '<div class="wf-panel-head"><div class="wf-panel-num">'+(i+1)+'</div><p class="wf-panel-title">'+wfSteps[i].title+'</p></div><p class="wf-panel-desc">'+wfSteps[i].desc+'</p>';
+  }
+
+  function stopWfPlay(){
+    wfPlaying = false;
+    clearInterval(wfTimer);
+    document.getElementById('wfPlayBtn').textContent = '▶ Chạy hành trình';
+  }
+
+  document.getElementById('wfPlayBtn').addEventListener('click', function(){
+    if(wfPlaying){ stopWfPlay(); return; }
+    wfPlaying = true;
+    this.textContent = '⏸ Đang chạy...';
+    if(wfCurrent >= wfSteps.length-1){ wfCurrent = -1; }
+    var btn = this;
+    wfTimer = setInterval(function(){
+      wfCurrent++;
+      if(wfCurrent >= wfSteps.length){
+        stopWfPlay();
+        return;
+      }
+      setWfStep(wfCurrent);
+    }, 1400);
+  });
+  document.getElementById('wfResetBtn').addEventListener('click', function(){
+    stopWfPlay();
+    setWfStep(0);
+  });
+  setWfStep(0);
+
+  /* ================= APPEND DEMO ================= */
+  var appendSources = [
+    {name:'Sales_Jan', rows:[['1001','05/01','Áo thun','250,000'],['1002','12/01','Quần jean','450,000']]},
+    {name:'Sales_Feb', rows:[['2001','03/02','Giày sneaker','890,000'],['2002','18/02','Áo thun','260,000']]},
+    {name:'Sales_Mar', rows:[['3001','07/03','Áo khoác','620,000']]}
+  ];
+  function renderMiniTables(){
+    var wrap = document.getElementById('appendMiniTables');
+    wrap.innerHTML = '';
+    appendSources.forEach(function(src){
+      var div = document.createElement('div');
+      div.className = 'mini-table';
+      div.id = 'mini-'+src.name;
+      var html = '<table><tr><th colspan="4">'+src.name+'</th></tr><tr><th>ID</th><th>Date</th><th>Product</th><th>Amount</th></tr>';
+      src.rows.forEach(function(r){ html += '<tr><td>'+r.join('</td><td>')+'</td></tr>'; });
+      html += '</table>';
+      div.innerHTML = html;
+      wrap.appendChild(div);
+    });
+  }
+  renderMiniTables();
+
+  document.getElementById('appendRunBtn').addEventListener('click', function(){
+    appendSources.forEach(function(src){
+      document.getElementById('mini-'+src.name).classList.add('flying');
+    });
+    var resultWrap = document.getElementById('appendResultWrap');
+    setTimeout(function(){
+      var allRows = [];
+      appendSources.forEach(function(src){ src.rows.forEach(function(r){ allRows.push(r); }); });
+      var html = '<table><tr><th>OrderID</th><th>Date</th><th>Product</th><th>Amount</th></tr>';
+      allRows.forEach(function(r, i){
+        html += '<tr class="row-in" style="animation-delay:'+(i*0.09)+'s"><td>'+r.join('</td><td>')+'</td></tr>';
+      });
+      html += '</table><p class="note">Append xong: '+allRows.length+' dòng, vẫn 4 cột.</p>';
+      resultWrap.innerHTML = html;
+    }, 450);
+  });
+  document.getElementById('appendResetBtn').addEventListener('click', function(){
+    appendSources.forEach(function(src){
+      document.getElementById('mini-'+src.name).classList.remove('flying');
+    });
+    document.getElementById('appendResultWrap').innerHTML = '';
+  });
+
+  /* ================= FOLDER DEMO ================= */
+  var folderBase = [
+    ['1001','05/01/2026','Áo thun','250,000','Sales_Jan.xlsx'],
+    ['2001','03/02/2026','Giày sneaker','890,000','Sales_Feb.xlsx'],
+    ['3001','07/03/2026','Áo khoác','620,000','Sales_Mar.xlsx']
+  ];
+  var folderNewRow = ['4001','15/04/2026','Balo laptop','480,000','Sales_Apr.xlsx'];
+  var folderRefreshed = false;
+
+  function renderFolderTable(includeNew){
+    var rows = folderBase.slice();
+    if(includeNew) rows.push(folderNewRow);
+    var html = '<table><tr><th>OrderID</th><th>Date</th><th>Product</th><th>Amount</th><th>Source.Name</th></tr>';
+    rows.forEach(function(r, i){
+      var isNew = includeNew && i === rows.length-1;
+      html += '<tr class="row-in'+(isNew?' row-new':'')+'" style="animation-delay:'+(i*0.07)+'s"><td>'+r.join('</td><td>')+'</td></tr>';
+    });
+    html += '</table>';
+    if(includeNew) html += '<p class="note">Đã phát hiện file mới Sales_Apr.xlsx trong folder — tự động thêm vào, không cần sửa query.</p>';
+    document.getElementById('folderResultWrap').innerHTML = html;
+  }
+  renderFolderTable(false);
+
+  document.getElementById('folderRefreshBtn').addEventListener('click', function(){
+    if(folderRefreshed) return;
+    folderRefreshed = true;
+    renderFolderTable(true);
+  });
+  document.getElementById('folderResetBtn').addEventListener('click', function(){
+    folderRefreshed = false;
+    renderFolderTable(false);
+  });
+
+  /* ================= JOIN VISUALIZER ================= */
+  var VENN_REGIONS = {
+    left:      {left:'blue',  overlap:'green', right:'gray'},
+    right:     {left:'gray',  overlap:'green', right:'orange'},
+    full:      {left:'blue',  overlap:'green', right:'orange'},
+    inner:     {left:'gray',  overlap:'green', right:'gray'},
+    leftanti:  {left:'blue',  overlap:'gray',  right:'gray'},
+    rightanti: {left:'gray',  overlap:'gray',  right:'orange'}
+  };
+  function vennSVG(joinKey){
+    var w=240, h=140, cx=82, cy=68, r=54, bx=158;
+    var BLUE='#2E5AAC', ORANGE='#D97B29', GREEN='#2E8B57', GRAY='#dfe2e8', GRAYLINE='#b9bec9';
+    var regions = VENN_REGIONS[joinKey];
+    var defs = '<defs>'
+      + '<mask id="vmLo"><rect width="'+w+'" height="'+h+'" fill="white"/><circle cx="'+bx+'" cy="'+cy+'" r="'+r+'" fill="black"/></mask>'
+      + '<mask id="vmRo"><rect width="'+w+'" height="'+h+'" fill="white"/><circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="black"/></mask>'
+      + '<clipPath id="vcL"><circle cx="'+cx+'" cy="'+cy+'" r="'+r+'"/></clipPath>'
+      + '<clipPath id="vcR"><circle cx="'+bx+'" cy="'+cy+'" r="'+r+'"/></clipPath>'
+      + '</defs>';
+    var base = '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+GRAY+'" stroke="'+GRAYLINE+'" stroke-width="1.5"/>'
+      + '<circle cx="'+bx+'" cy="'+cy+'" r="'+r+'" fill="'+GRAY+'" stroke="'+GRAYLINE+'" stroke-width="1.5"/>';
+    var overlays = '';
+    if(regions.left === 'blue'){
+      overlays += '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+BLUE+'" fill-opacity="0.8" mask="url(#vmLo)"/>'
+        + '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+BLUE+'" stroke-width="1.5"/>';
+    }
+    if(regions.right === 'orange'){
+      overlays += '<circle cx="'+bx+'" cy="'+cy+'" r="'+r+'" fill="'+ORANGE+'" fill-opacity="0.8" mask="url(#vmRo)"/>'
+        + '<circle cx="'+bx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+ORANGE+'" stroke-width="1.5"/>';
+    }
+    if(regions.overlap === 'green'){
+      overlays += '<circle cx="'+bx+'" cy="'+cy+'" r="'+r+'" fill="'+GREEN+'" fill-opacity="0.85" clip-path="url(#vcL)"/>';
+    }
+    var labelA = '<text x="'+(cx-r*0.55)+'" y="'+(h-10)+'" fill="'+BLUE+'" font-size="12" font-weight="700" font-family="inherit">Sales</text>';
+    var labelB = '<text x="'+(bx+r*0.12)+'" y="'+(h-10)+'" fill="'+ORANGE+'" font-size="12" font-weight="700" font-family="inherit">Customer</text>';
+    return '<svg viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg">'+defs+base+overlays+labelA+labelB+'</svg>';
+  }
+
+  var leftData = [
+    {id:'s1', label:'O1 · C01'}, {id:'s2', label:'O2 · C02'}, {id:'s3', label:'O3 · C03'},
+    {id:'s4', label:'O4 · C05'}, {id:'s5', label:'O5 · C01'}
+  ];
+  var rightData = [
+    {id:'c1', label:'C01'}, {id:'c2', label:'C02'}, {id:'c3', label:'C03'}, {id:'c4', label:'C04'}
+  ];
+
+  function rowHtml(cells, cls){
+    return '<tr'+(cls?(' class="'+cls+'"'):'')+'>'+cells.map(function(c){return '<td>'+c+'</td>';}).join('')+'</tr>';
+  }
+
+  var joinDefs = {
+    left: {
+      title:'Left Outer Join', pq:'Left Outer (all from first, matching from second)',
+      desc:'Giữ TOÀN BỘ Sales, chỉ lấy Customer khớp. O4 vẫn còn nhưng thông tin khách hàng để trống.',
+      leftIn:['s1','s2','s3','s4','s5'], rightIn:['c1','c2','c3'],
+      count:5,
+      table:function(){
+        var head='<tr><th>OrderID</th><th>CustomerID</th><th>Amount</th><th>CustomerName</th><th>City</th></tr>';
+        var rows=[
+          rowHtml(['O1','C01','500,000','Nguyễn Văn A','Hà Nội']),
+          rowHtml(['O2','C02','300,000','Trần Thị B','TP.HCM']),
+          rowHtml(['O3','C03','700,000','Lê Văn C','Đà Nẵng']),
+          rowHtml(['O4','C05','200,000','<i>null</i>','<i>null</i>'],'row-orphan'),
+          rowHtml(['O5','C01','150,000','Nguyễn Văn A','Hà Nội'])
+        ];
+        return '<table>'+head+rows.join('')+'</table>';
+      }
+    },
+    right: {
+      title:'Right Outer Join', pq:'Right Outer (all from second, matching from first)',
+      desc:'Giữ TOÀN BỘ Customer, chỉ lấy Sales khớp. C04 vẫn còn, O4 (không có KH) bị loại.',
+      leftIn:['s1','s2','s3','s5'], rightIn:['c1','c2','c3','c4'],
+      count:5,
+      table:function(){
+        var head='<tr><th>CustomerID</th><th>CustomerName</th><th>City</th><th>OrderID</th><th>Amount</th></tr>';
+        var rows=[
+          rowHtml(['C01','Nguyễn Văn A','Hà Nội','O1','500,000']),
+          rowHtml(['C01','Nguyễn Văn A','Hà Nội','O5','150,000']),
+          rowHtml(['C02','Trần Thị B','TP.HCM','O2','300,000']),
+          rowHtml(['C03','Lê Văn C','Đà Nẵng','O3','700,000']),
+          rowHtml(['C04','Phạm Thị D','Cần Thơ','<i>null</i>','<i>null</i>'],'row-nosales')
+        ];
+        return '<table>'+head+rows.join('')+'</table>';
+      }
+    },
+    full: {
+      title:'Full Outer Join', pq:'Full Outer (all rows from both)',
+      desc:'Giữ TẤT CẢ mọi dòng của cả 2 bảng — kể cả O4 lẫn C04. Dùng để soát toàn bộ dữ liệu lệch.',
+      leftIn:['s1','s2','s3','s4','s5'], rightIn:['c1','c2','c3','c4'],
+      count:6,
+      table:function(){
+        var head='<tr><th>OrderID</th><th>CustomerID</th><th>Amount</th><th>CustomerName</th><th>City</th></tr>';
+        var rows=[
+          rowHtml(['O1','C01','500,000','Nguyễn Văn A','Hà Nội']),
+          rowHtml(['O2','C02','300,000','Trần Thị B','TP.HCM']),
+          rowHtml(['O3','C03','700,000','Lê Văn C','Đà Nẵng']),
+          rowHtml(['O4','C05','200,000','<i>null</i>','<i>null</i>'],'row-orphan'),
+          rowHtml(['O5','C01','150,000','Nguyễn Văn A','Hà Nội']),
+          rowHtml(['<i>null</i>','C04','<i>null</i>','Phạm Thị D','Cần Thơ'],'row-nosales')
+        ];
+        return '<table>'+head+rows.join('')+'</table>';
+      }
+    },
+    inner: {
+      title:'Inner Join', pq:'Inner (only matching rows)',
+      desc:'Chỉ giữ dòng khớp ở cả 2 bảng. O4 và C04 đều bị loại — chỉ còn đơn hàng "sạch".',
+      leftIn:['s1','s2','s3','s5'], rightIn:['c1','c2','c3'],
+      count:4,
+      table:function(){
+        var head='<tr><th>OrderID</th><th>CustomerID</th><th>Amount</th><th>CustomerName</th><th>City</th></tr>';
+        var rows=[
+          rowHtml(['O1','C01','500,000','Nguyễn Văn A','Hà Nội']),
+          rowHtml(['O2','C02','300,000','Trần Thị B','TP.HCM']),
+          rowHtml(['O3','C03','700,000','Lê Văn C','Đà Nẵng']),
+          rowHtml(['O5','C01','150,000','Nguyễn Văn A','Hà Nội'])
+        ];
+        return '<table>'+head+rows.join('')+'</table>';
+      }
+    },
+    leftanti: {
+      title:'Left Anti Join', pq:'Left Anti (rows only in first)',
+      desc:'Chỉ giữ Sales KHÔNG khớp Customer nào — tìm nhanh các đơn hàng bị "mã khách hàng ma".',
+      leftIn:['s4'], rightIn:[],
+      count:1,
+      table:function(){
+        var head='<tr><th>OrderID</th><th>CustomerID</th><th>Amount</th></tr>';
+        var rows=[ rowHtml(['O4','C05','200,000'],'row-orphan') ];
+        return '<table>'+head+rows.join('')+'</table>';
+      }
+    },
+    rightanti: {
+      title:'Right Anti Join', pq:'Right Anti (rows only in second)',
+      desc:'Chỉ giữ Customer KHÔNG khớp Sales nào — tìm khách hàng chưa từng mua hàng.',
+      leftIn:[], rightIn:['c4'],
+      count:1,
+      table:function(){
+        var head='<tr><th>CustomerID</th><th>CustomerName</th><th>City</th></tr>';
+        var rows=[ rowHtml(['C04','Phạm Thị D','Cần Thơ'],'row-nosales') ];
+        return '<table>'+head+rows.join('')+'</table>';
+      }
+    }
+  };
+  var joinOrder = ['left','right','full','inner','leftanti','rightanti'];
+
+  var btnRow = document.getElementById('joinBtnRow');
+  joinOrder.forEach(function(key){
+    var b = document.createElement('button');
+    b.className = 'join-btn';
+    b.textContent = joinDefs[key].title;
+    b.dataset.key = key;
+    b.addEventListener('click', function(){ renderJoin(key); });
+    btnRow.appendChild(b);
+  });
+
+  function renderJoin(key){
+    var def = joinDefs[key];
+    btnRow.querySelectorAll('.join-btn').forEach(function(b){
+      b.classList.toggle('active', b.dataset.key === key);
+    });
+    document.getElementById('joinTitle').textContent = def.title;
+    document.getElementById('joinPqLabel').textContent = def.pq;
+    document.getElementById('joinDesc').textContent = def.desc;
+
+    var vennWrap = document.getElementById('joinVennWrap');
+    vennWrap.style.opacity = 0;
+    setTimeout(function(){
+      vennWrap.innerHTML = vennSVG(key);
+      vennWrap.style.opacity = 1;
+    }, 120);
+
+    var leftEl = document.getElementById('leftBlocks');
+    leftEl.innerHTML = '';
+    leftData.forEach(function(item){
+      var d = document.createElement('div');
+      d.className = 'block ' + (def.leftIn.indexOf(item.id) > -1 ? 'left-in' : 'left-out');
+      d.textContent = item.label;
+      leftEl.appendChild(d);
+    });
+
+    var rightEl = document.getElementById('rightBlocks');
+    rightEl.innerHTML = '';
+    rightData.forEach(function(item){
+      var d = document.createElement('div');
+      d.className = 'block ' + (def.rightIn.indexOf(item.id) > -1 ? 'right-in' : 'right-out');
+      d.textContent = item.label;
+      rightEl.appendChild(d);
+    });
+
+    var arrow = document.getElementById('joinArrow');
+    arrow.classList.remove('pulse');
+    void arrow.offsetWidth;
+    arrow.classList.add('pulse');
+
+    var countEl = document.getElementById('joinResultCount');
+    countEl.textContent = 'Kết quả: ' + def.count + ' dòng';
+    countEl.classList.remove('bump');
+    void countEl.offsetWidth;
+    countEl.classList.add('bump');
+
+    var tableWrap = document.getElementById('joinResultTable');
+    tableWrap.style.opacity = 0;
+    setTimeout(function(){
+      tableWrap.innerHTML = def.table();
+      var rows = tableWrap.querySelectorAll('tr');
+      rows.forEach(function(r, i){ r.style.animation = 'rowIn .3s forwards'; r.style.animationDelay = (i*0.06)+'s'; r.style.opacity = 0; });
+      tableWrap.style.opacity = 1;
+    }, 180);
+  }
+  renderJoin('left');
+
+  /* ================= VLOOKUP vs MERGE ================= */
+  function vlkPanelHtml(mode){
+    if(mode === 'vlookup'){
+      return ''
+        + '<p style="margin:0 0 10px; font-size:13.5px;"><b>Cách làm:</b> viết công thức ở ô C2 và D2, rồi kéo (fill handle) xuống hết 5 dòng của bảng Sales. Bảng Sales vẫn giữ nguyên 5 dòng — VLOOKUP không thể tự thêm dòng.</p>'
+        + '<div class="vlk-formula">C2: =VLOOKUP(B2, Customer!$A:$C, 2, FALSE)&nbsp;&nbsp;// lấy CustomerName<br>D2: =VLOOKUP(B2, Customer!$A:$C, 3, FALSE)&nbsp;&nbsp;// lấy City</div>'
+        + '<table style="margin-top:14px;"><tr><th>OrderID</th><th>CustomerID</th><th>Amount</th><th>CustomerName (VLOOKUP)</th><th>City (VLOOKUP)</th></tr>'
+        + '<tr class="row-dupkey"><td>O1</td><td>C01</td><td>500,000</td><td>Nguyễn Văn A</td><td>Hà Nội</td></tr>'
+        + '<tr><td>O2</td><td>C02</td><td>300,000</td><td>Trần Thị B</td><td>TP.HCM</td></tr>'
+        + '<tr><td>O3</td><td>C03</td><td>700,000</td><td>Lê Văn C</td><td>Đà Nẵng</td></tr>'
+        + '<tr class="row-orphan"><td>O4</td><td>C05</td><td>200,000</td><td class="cell-error">#N/A</td><td class="cell-error">#N/A</td></tr>'
+        + '<tr class="row-dupkey"><td>O5</td><td>C01</td><td>150,000</td><td>Nguyễn Văn A</td><td>Hà Nội</td></tr></table>'
+        + '<p class="note" style="margin-top:10px;"><b>Vẫn đúng 5 dòng, y hệt Sales gốc</b> — dù C01 lặp ở cả 2 bảng, VLOOKUP không hề nhân dòng. O1 và O5 chỉ lấy đúng bản ghi "Hà Nội" — bản ghi trùng "Nguyễn Văn A - CN2 / Hải Phòng" bị VLOOKUP <b>âm thầm bỏ qua</b>, không có cảnh báo gì. Người dùng Excel sẽ không bao giờ biết Customer đang bị trùng khoá. O4 báo lỗi #N/A vì C05 không tồn tại, phải tự bọc IFERROR để che lỗi. VLOOKUP cũng không thể liệt kê C04 (khách chưa mua hàng) vì công thức luôn lấy Sales làm gốc.</p>';
+    }
+    return ''
+      + '<p style="margin:0 0 10px; font-size:13.5px;"><b>Cách làm:</b> Home → Merge Queries → chọn Sales + Customer → chọn cột khoá CustomerID ở cả 2 bảng → chọn Join Kind → Expand các cột cần lấy.</p>'
+      + '<ol class="vlk-steps"><li>Chọn bảng Sales, vào <b>Home → Merge Queries</b></li>'
+      + '<li>Chọn bảng Customer, click vào cột <code>CustomerID</code> ở cả 2 bảng để làm khoá</li>'
+      + '<li>Chọn <b>Join Kind</b> (Left Outer / Right Outer / Full / Inner / Anti...) — đổi được bất kỳ lúc nào</li>'
+      + '<li>Bấm nút mở rộng cột, tick <code>CustomerName</code> và <code>City</code> — lấy 2 cột cùng lúc</li>'
+      + '<li>Xong — mỗi lần <b>Refresh</b>, bước Merge tự chạy lại toàn bộ, không cần sửa gì thêm</li></ol>'
+      + '<table style="margin-top:14px;"><tr><th>OrderID</th><th>CustomerID</th><th>Amount</th><th>CustomerName</th><th>City</th></tr>'
+      + '<tr class="row-dupkey"><td>O1</td><td>C01</td><td>500,000</td><td>Nguyễn Văn A</td><td>Hà Nội</td></tr>'
+      + '<tr class="row-dupkey"><td>O1</td><td>C01</td><td>500,000</td><td>Nguyễn Văn A - CN2</td><td>Hải Phòng</td></tr>'
+      + '<tr><td>O2</td><td>C02</td><td>300,000</td><td>Trần Thị B</td><td>TP.HCM</td></tr>'
+      + '<tr><td>O3</td><td>C03</td><td>700,000</td><td>Lê Văn C</td><td>Đà Nẵng</td></tr>'
+      + '<tr class="row-orphan"><td>O4</td><td>C05</td><td>200,000</td><td><i>null</i></td><td><i>null</i></td></tr>'
+      + '<tr class="row-dupkey"><td>O5</td><td>C01</td><td>150,000</td><td>Nguyễn Văn A</td><td>Hà Nội</td></tr>'
+      + '<tr class="row-dupkey"><td>O5</td><td>C01</td><td>150,000</td><td>Nguyễn Văn A - CN2</td><td>Hải Phòng</td></tr></table>'
+      + '<p class="note" style="margin-top:10px;"><b>Nhảy từ 5 lên 7 dòng!</b> C01 xuất hiện <b>2 lần ở Sales</b> (O1, O5) <b>× 2 lần ở Customer</b> (Hà Nội, Hải Phòng) = <b>4 dòng</b> chỉ riêng C01, cộng thêm O2, O3, O4 (null) = 7 dòng. Merge <b>nhân chéo đúng theo toán học</b> và phơi bày ngay lỗi trùng khoá mà VLOOKUP đã âm thầm giấu đi. Đây chính là lúc cần quay lại bảng Customer để xoá/gộp bản ghi trùng. Đổi Join Kind sang Right Outer sẽ liệt kê được cả C04.</p>';
+  }
+  function setVlkMode(mode){
+    document.getElementById('vlkBtnVlookup').classList.toggle('active', mode==='vlookup');
+    document.getElementById('vlkBtnMerge').classList.toggle('active', mode==='merge');
+    var panel = document.getElementById('vlkPanel');
+    panel.classList.remove('vlk-fade');
+    void panel.offsetWidth;
+    panel.innerHTML = vlkPanelHtml(mode);
+    panel.classList.add('vlk-fade');
+  }
+  document.getElementById('vlkBtnVlookup').addEventListener('click', function(){ setVlkMode('vlookup'); });
+  document.getElementById('vlkBtnMerge').addEventListener('click', function(){ setVlkMode('merge'); });
+  setVlkMode('vlookup');
+
+  /* ================= FUZZY MATCHING ================= */
+  function levenshtein(a, b){
+    a = a.toLowerCase(); b = b.toLowerCase();
+    var m = a.length, n = b.length;
+    var dp = [];
+    for(var i=0;i<=m;i++){ dp.push([i]); }
+    for(var j=0;j<=n;j++){ dp[0][j] = j; }
+    for(i=1;i<=m;i++){
+      for(j=1;j<=n;j++){
+        var cost = a[i-1] === b[j-1] ? 0 : 1;
+        dp[i][j] = Math.min(dp[i-1][j]+1, dp[i][j-1]+1, dp[i-1][j-1]+cost);
+      }
+    }
+    return dp[m][n];
+  }
+  function similarityPct(a, b){
+    var dist = levenshtein(a, b);
+    var maxLen = Math.max(a.length, b.length, 1);
+    return Math.round((1 - dist/maxLen) * 100);
+  }
+
+  var fuzzyPairs = [
+    {a:'Công ty TNHH Thương mại ABC', b:'Cty TNHH TM ABC'},
+    {a:'Nguyen Van Hung', b:'Nguyễn Văn Hùng'},
+    {a:'Sieu Thi Mini Mart So 2', b:'Minimart So 2'},
+    {a:'Cong ty CP Xay dung Song Hong', b:'Công ty CP Xây Dựng Sông Hồng'},
+    {a:'Tran Thi Bich', b:'Le Thi Bich'}
+  ];
+  var fuzzyChartEl = document.getElementById('fuzzyChart');
+  var fuzzyScores = fuzzyPairs.map(function(p){ return similarityPct(p.a, p.b); });
+  fuzzyPairs.forEach(function(p, i){
+    var row = document.createElement('div');
+    row.className = 'fuzzy-bar-row';
+    row.innerHTML = '<div class="fuzzy-bar-label">"'+p.a+'" ↔ "'+p.b+'"</div>'
+      + '<div class="fuzzy-bar-track"><div class="fuzzy-bar-fill" id="fuzzyBar'+i+'"></div></div>'
+      + '<div class="fuzzy-bar-score" id="fuzzyScore'+i+'"></div>';
+    fuzzyChartEl.appendChild(row);
+  });
+  function renderFuzzy(){
+    var threshold = parseInt(document.getElementById('fuzzyThreshold').value, 10);
+    document.getElementById('fuzzyThresholdVal').textContent = threshold + '%';
+    var matchedCount = 0;
+    fuzzyScores.forEach(function(score, i){
+      var pass = score >= threshold;
+      if(pass) matchedCount++;
+      var fill = document.getElementById('fuzzyBar'+i);
+      fill.style.width = score + '%';
+      fill.style.background = pass ? 'var(--green-mid)' : 'var(--gray)';
+      var scoreEl = document.getElementById('fuzzyScore'+i);
+      scoreEl.textContent = score + '%';
+      scoreEl.style.color = pass ? 'var(--green)' : 'var(--gray)';
+    });
+    document.getElementById('fuzzySummary').textContent = matchedCount + ' / ' + fuzzyScores.length + ' cặp sẽ được Power Query tự động Merge ở ngưỡng ' + threshold + '%.';
+  }
+  document.getElementById('fuzzyThreshold').addEventListener('input', renderFuzzy);
+  renderFuzzy();
+
+  function renderFuzzyLive(){
+    var a = document.getElementById('fuzzyInputA').value || '';
+    var b = document.getElementById('fuzzyInputB').value || '';
+    var score = similarityPct(a, b);
+    var threshold = parseInt(document.getElementById('fuzzyThreshold').value, 10);
+    var pass = score >= threshold;
+    var el = document.getElementById('fuzzyLiveResult');
+    el.textContent = 'Độ giống nhau: ' + score + '% — ' + (pass ? 'ĐỦ điều kiện Merge ở ngưỡng hiện tại' : 'CHƯA đủ điều kiện Merge ở ngưỡng hiện tại');
+    el.style.color = pass ? 'var(--green)' : '#B23A3A';
+  }
+  document.getElementById('fuzzyInputA').addEventListener('input', renderFuzzyLive);
+  document.getElementById('fuzzyInputB').addEventListener('input', renderFuzzyLive);
+  document.getElementById('fuzzyThreshold').addEventListener('input', renderFuzzyLive);
+  renderFuzzyLive();
+
+  /* ================= SPATIAL MATCHING ================= */
+  var svgNS = 'http://www.w3.org/2000/svg';
+  var spatialStores = [
+    {id:'stA', name:'Store Quận 1', cx:160, cy:160, r:90},
+    {id:'stB', name:'Store Quận 7', cx:440, cy:180, r:70}
+  ];
+  var spatialCustomers = [
+    {id:'k1', name:'KH01', cx:120, cy:120},
+    {id:'k2', name:'KH02', cx:250, cy:150},
+    {id:'k3', name:'KH03', cx:430, cy:200},
+    {id:'k4', name:'KH04', cx:480, cy:230},
+    {id:'k5', name:'KH05', cx:80, cy:260}
+  ];
+  var svgEl = document.getElementById('spatialSvg');
+
+  function buildSpatialSvg(){
+    svgEl.innerHTML = '';
+    spatialStores.forEach(function(s){
+      var c = document.createElementNS(svgNS, 'circle');
+      c.setAttribute('cx', s.cx); c.setAttribute('cy', s.cy); c.setAttribute('r', s.r);
+      c.setAttribute('fill', 'rgba(46,90,172,0.08)'); c.setAttribute('stroke', '#7FA6E0'); c.setAttribute('stroke-width', '1.5');
+      svgEl.appendChild(c);
+      var dot = document.createElementNS(svgNS, 'circle');
+      dot.setAttribute('cx', s.cx); dot.setAttribute('cy', s.cy); dot.setAttribute('r', 6);
+      dot.setAttribute('fill', '#2E5AAC');
+      svgEl.appendChild(dot);
+      var label = document.createElementNS(svgNS, 'text');
+      label.setAttribute('x', s.cx); label.setAttribute('y', s.cy - s.r - 8);
+      label.setAttribute('text-anchor', 'middle'); label.setAttribute('font-size', '12'); label.setAttribute('fill', '#2E5AAC'); label.setAttribute('font-weight', '700');
+      label.textContent = s.name;
+      svgEl.appendChild(label);
+    });
+    spatialCustomers.forEach(function(k){
+      var dot = document.createElementNS(svgNS, 'circle');
+      dot.setAttribute('id', 'dot-'+k.id);
+      dot.setAttribute('cx', k.cx); dot.setAttribute('cy', k.cy); dot.setAttribute('r', 7);
+      dot.setAttribute('fill', '#9195a0'); dot.setAttribute('stroke', '#fff'); dot.setAttribute('stroke-width', '1.5');
+      svgEl.appendChild(dot);
+      var label = document.createElementNS(svgNS, 'text');
+      label.setAttribute('x', k.cx); label.setAttribute('y', k.cy - 12);
+      label.setAttribute('text-anchor', 'middle'); label.setAttribute('font-size', '11'); label.setAttribute('fill', '#5b6270'); label.setAttribute('font-weight', '600');
+      label.textContent = k.name;
+      svgEl.appendChild(label);
+    });
+  }
+  buildSpatialSvg();
+
+  function runSpatialMatch(){
+    var resultRows = [];
+    spatialCustomers.forEach(function(k){
+      var matched = null, minDist = Infinity;
+      spatialStores.forEach(function(s){
+        var dist = Math.sqrt(Math.pow(k.cx-s.cx,2) + Math.pow(k.cy-s.cy,2));
+        if(dist <= s.r && dist < minDist){ minDist = dist; matched = s; }
+      });
+      var dotEl = document.getElementById('dot-'+k.id);
+      if(matched){
+        dotEl.setAttribute('fill', '#2E8B57');
+        var line = document.createElementNS(svgNS, 'line');
+        line.setAttribute('x1', k.cx); line.setAttribute('y1', k.cy);
+        line.setAttribute('x2', matched.cx); line.setAttribute('y2', matched.cy);
+        line.setAttribute('stroke', '#2E8B57'); line.setAttribute('stroke-width', '2');
+        line.setAttribute('class', 'spatial-line');
+        var len = Math.sqrt(Math.pow(k.cx-matched.cx,2)+Math.pow(k.cy-matched.cy,2));
+        line.setAttribute('stroke-dasharray', len);
+        line.setAttribute('stroke-dashoffset', len);
+        svgEl.insertBefore(line, svgEl.firstChild.nextSibling);
+        setTimeout(function(){ line.style.strokeDashoffset = 0; }, 30);
+        resultRows.push('<div class="sp-row"><span>'+k.name+'</span><span class="sp-tag-ok">→ '+matched.name+'</span></div>');
+      } else {
+        dotEl.setAttribute('fill', '#E24B4A');
+        dotEl.setAttribute('r', 8);
+        resultRows.push('<div class="sp-row"><span>'+k.name+'</span><span class="sp-tag-no">Chưa gán được store</span></div>');
+      }
+    });
+    document.getElementById('spatialResultList').innerHTML = resultRows.join('');
+  }
+  document.getElementById('spatialRunBtn').addEventListener('click', runSpatialMatch);
+  document.getElementById('spatialResetBtn').addEventListener('click', function(){
+    buildSpatialSvg();
+    document.getElementById('spatialResultList').innerHTML = '';
+  });
+
+  /* ================= CHECKLIST ================= */
+  var clItems = [
+    'Kiểu dữ liệu (Data Type) của từng cột đã đúng chưa?',
+    'Đã xử lý xong Dirty Data trước khi convert type chưa?',
+    'Missing Data: đã quyết định Delete hay Imputation, ghi lại lý do chưa?',
+    'Outliers: đã kiểm tra bằng IQR/Z-score và xử lý chưa?',
+    'Data Shape: bảng đã ở dạng Regular Table chưa?',
+    'Đã chọn đúng kỹ thuật gộp — Append, Merge (đúng kiểu Join), hay Combine from Folder?',
+    'Query Folding còn hoạt động không?'
+  ];
+  var clListEl = document.getElementById('clList');
+  clItems.forEach(function(text, i){
+    var el = document.createElement('div');
+    el.className = 'cl-item';
+    el.innerHTML = '<div class="cl-check"></div><div class="cl-text">'+text+'</div>';
+    el.addEventListener('click', function(){
+      el.classList.toggle('checked');
+      if(el.classList.contains('checked')) el.querySelector('.cl-check').textContent = '✓';
+      else el.querySelector('.cl-check').textContent = '';
+      updateClProgress();
+    });
+    clListEl.appendChild(el);
+  });
+  function updateClProgress(){
+    var total = clListEl.querySelectorAll('.cl-item').length;
+    var done = clListEl.querySelectorAll('.cl-item.checked').length;
+    document.getElementById('clProgressFill').style.width = (done/total*100)+'%';
+    document.getElementById('clDoneMsg').classList.toggle('show', done === total);
+  }
+
+})();
+</script>
+
+</body>
+</html>

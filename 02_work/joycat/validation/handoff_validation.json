@@ -1,73 +1,248 @@
 {
+  "generated_at": "2026-09-11T07:12:10.702887+00:00",
+  "workspace_root": "D:\\Meta Agentic BA",
+  "validator": "D:\\Meta Agentic BA\\02_work\\joycat\\validation\\validate_handoff.py",
   "required_files": {
+    "AGENTS.md": true,
     "context/WORKSPACE_CONTEXT.md": true,
     "context/CURRENT_INTENT.md": true,
+    "01_inputs/project/KPI_TREE.md": true,
+    "01_inputs/project/KPI_TREE.mm": true,
     "01_inputs/joycat/context.md": true,
-    "03_outputs/joycat/KPI_TREE.md": true,
-    "03_outputs/joycat/KPI_TREE.mm": true,
-    "03_outputs/joycat/METRIC_TREE.md": true,
-    "03_outputs/joycat/METRIC_TREE.mm": true,
-    "03_outputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.md": true,
-    "03_outputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.mm": true,
-    "03_outputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.md": true,
-    "03_outputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.mm": true,
+    "01_inputs/joycat/DATA_DICTIONARY_JOYCAT.md": true,
+    "01_inputs/joycat/Ad_Cost_GMV_all_platform v3.md": true,
+    "01_inputs/joycat/Ad_Cost_GMV_all_platform v3.mm": true,
+    "01_inputs/joycat/METRIC_TREE.md": true,
+    "01_inputs/joycat/METRIC_TREE.mm": true,
+    "01_inputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.md": true,
+    "01_inputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.mm": true,
+    "01_inputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.md": true,
+    "01_inputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.mm": true,
+    "02_work/joycat/GATE_2_CHECKLIST.md": true,
     "02_work/joycat/coverage_audit/coverage_6_pairs_detail.csv": true,
     "02_work/joycat/coverage_audit/coverage_audit_summary.json": true,
-    "02_work/joycat/archive/2026-09-05_logic_tree_rebuild_before/03_outputs/joycat/KHUNG_PHAN_TICH_CONG_THUC_VA_MAPPING_JOYCAT.md": true
+    "04_reference/META_ALL_METRICS.mm": true
   },
-  "xml": {
-    "03_outputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.mm": {
+  "markdown": {
+    "files_checked": 14,
+    "broken_links": []
+  },
+  "mindmaps": {
+    "01_inputs\\joycat\\Ad_Cost_GMV_all_platform v3.mm": {
       "parse_ok": true,
-      "node_count": 428,
-      "duplicate_ids": []
+      "node_count": 159,
+      "duplicate_ids": [],
+      "broken_links": []
     },
-    "03_outputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.mm": {
+    "01_inputs\\joycat\\CONG_THUC_5_METRICS_JOYCAT_v3.mm": {
       "parse_ok": true,
-      "node_count": 187,
-      "duplicate_ids": []
+      "node_count": 277,
+      "duplicate_ids": [],
+      "broken_links": []
     },
-    "03_outputs/joycat/METRIC_TREE.mm": {
+    "01_inputs\\joycat\\DATA_MAPPING_COVERAGE_JOYCAT.mm": {
       "parse_ok": true,
-      "node_count": 127,
-      "duplicate_ids": []
+      "node_count": 439,
+      "duplicate_ids": [],
+      "broken_links": []
     },
-    "03_outputs/joycat/KPI_TREE.mm": {
+    "01_inputs\\joycat\\METRIC_TREE.mm": {
       "parse_ok": true,
-      "node_count": 41,
-      "duplicate_ids": []
+      "node_count": 121,
+      "duplicate_ids": [],
+      "broken_links": []
+    },
+    "01_inputs\\project\\KPI_TREE.mm": {
+      "parse_ok": true,
+      "node_count": 26,
+      "duplicate_ids": [],
+      "broken_links": []
+    },
+    "04_reference\\META_ALL_METRICS.mm": {
+      "parse_ok": true,
+      "node_count": 1614,
+      "duplicate_ids": [],
+      "broken_links": []
     }
   },
-  "mapping_coverage": {
-    "md_exact_16_main_headings": true,
-    "mm_exact_16_main_branches": true,
-    "six_pairs_in_both": true,
-    "required_detail_in_both": true,
-    "sp01_to_sp25_in_both": true,
-    "no_banned_shorthand": true
+  "semantics": {
+    "has_meta_purchases_attributed": true,
+    "has_business_orders_eligible": true,
+    "has_business_gmv": true,
+    "keeps_meta_purchase_value_separate": true
   },
-  "logic_tree": {
-    "status_postponed": true
-  },
-  "coverage": {
-    "row_count_279": true,
-    "all_six_pairs_present": true,
-    "platform_rows_blocked_and_blank": true,
-    "mapped_pairs_reconcile_to_demo": true,
-    "april_difference_9252": true
-  },
-  "contexts": {
-    "versions_updated": true,
-    "mapping_artifact_linked": true,
-    "review_not_production": true,
-    "objective_human_mapping_preserved": true,
-    "april_gap_preserved": true,
-    "old_framework_name_removed": true
-  },
-  "raw": {
+  "raw_manifest": {
     "file_count": 33,
-    "xlsx_count": 32,
-    "csv_count": 0,
-    "generated_files_inside_raw": []
+    "files": [
+      {
+        "path": "01_inputs\\joycat\\raw\\archives\\dataset_xlsx.rar",
+        "size_bytes": 169709,
+        "sha256": "d963e6d51d1fc8aca566d41f8e27b90fade6d3892faed89107a330f005c09dce"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\business_workbooks\\AD format.xlsx",
+        "size_bytes": 5423,
+        "sha256": "6c2be05c4997eb41af02b9d5d1bf487a40a4e60501ec5446c818e698f9cf59ff"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\business_workbooks\\Ads_Ads_level_csv.xlsx",
+        "size_bytes": 69745,
+        "sha256": "3c854ef2b05acd5888a031063857e5426ea5921fc099b11761ba39b018cc6530"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\business_workbooks\\CPAS_SHOPEE_Tong_Hop_T3_T4_2026.xlsx",
+        "size_bytes": 73920,
+        "sha256": "cb5394469714a02883c2c60be2587bb44de9e302c669a8fd9afd34994947755e"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\business_workbooks\\CPAS_Ten_Camp_AdSet_Ads_T3_T4.xlsx",
+        "size_bytes": 14755,
+        "sha256": "acad547817a236574bdec56ef4d1e57060fc9a06b97c8fb46c5c6a3e794f562c"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\business_workbooks\\D_SALEDAY.xlsx",
+        "size_bytes": 46495,
+        "sha256": "308e6c1a51d624b98cfadc54389b2cae462dd6a2fb189c9f008eb2d5ceff39a1"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\business_workbooks\\Joycat-CS 032026.xlsx",
+        "size_bytes": 6676,
+        "sha256": "f856eeb28547e05135f14d140e70c421da707cb07a95633037e6af2881168edf"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\business_workbooks\\Joycat-CS 042026.xlsx",
+        "size_bytes": 8619,
+        "sha256": "4884ed80169a03c57c11b3b479e34a9ee2b7889b674a05b91c9bf3ce4eed0357"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\business_workbooks\\joycatvn_2026-05-30-03-56-50.xlsx",
+        "size_bytes": 10308,
+        "sha256": "381f72a6fb6cb52bb167f788a67b458d742cc932a2a611a79cbb72431c931cb8"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\business_workbooks\\joycatvn_2026-05-30-03-58-26.xlsx",
+        "size_bytes": 10308,
+        "sha256": "6b1d7097909c4be31d72525aac0a01cac57d3526fc01392ebc764e8b6543524a"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\preferred_candidate\\CPAS-SHOPEE-Ad-sets-1-Apr-2026-30-Apr-2026.xlsx",
+        "size_bytes": 18034,
+        "sha256": "5d1a859652970f4957b808b50b07274eb3b0bff5176243feea0e1520817fe9a8"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\preferred_candidate\\CPAS-SHOPEE-Ad-sets-1-Mar-2026-31-Mar-2026.xlsx",
+        "size_bytes": 15982,
+        "sha256": "af34b44e269346b38135af7d709ca50f8655da64147912e067d3a7c429a6a15b"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\preferred_candidate\\CPAS-SHOPEE-Ad-sets-1-May-2026-31-May-2026.xlsx",
+        "size_bytes": 18651,
+        "sha256": "e247601028d64b8de43c9c26b107bf46f1eda8f33b92ddc591373ae7e84f7423"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\preferred_candidate\\CPAS-SHOPEE-Ads-1-Apr-2026-30-Apr-2026.xlsx",
+        "size_bytes": 17829,
+        "sha256": "7b2832a9fb876b1f0171f059454e83a8a48ba8fbb4467845d9033f86cca2cff6"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\preferred_candidate\\CPAS-SHOPEE-Ads-1-Mar-2026-31-Mar-2026.xlsx",
+        "size_bytes": 14520,
+        "sha256": "0afc445d734018a8380420a1d6a7910e2af07a83a6c1c8c0a10fe45c920c698f"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\preferred_candidate\\CPAS-SHOPEE-Ads-1-May-2026-31-May-2026.xlsx",
+        "size_bytes": 17641,
+        "sha256": "3ec493bdab1837ad849bd9e7d46deaf6a2b841ff135d47958993cfda1a00e81d"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\preferred_candidate\\CPAS-SHOPEE-Campaigns-1-Apr-2026-30-Apr-2026.xlsx",
+        "size_bytes": 13780,
+        "sha256": "a521db556077b64090f3062e5fb31a09e3943b6d6d44d695a3e65855b5890518"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\preferred_candidate\\CPAS-SHOPEE-Campaigns-1-Mar-2026-31-Mar-2026.xlsx",
+        "size_bytes": 11469,
+        "sha256": "982e4db2a13d54394f6c184318f9622ae3fdf01c05f48a89d5cac46ebbe4e582"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\preferred_candidate\\CPAS-SHOPEE-Campaigns-1-May-2026-31-May-2026.xlsx",
+        "size_bytes": 13481,
+        "sha256": "9a7f9cc9ddfe027ed9f0141497e947fa19b2ba210c3eef8cde324a392ccb2ec5"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\variants\\dataset_xlsx\\Ads\\CPAS-SHOPEE-Ads-1-Apr-2026-30-Apr-2026.xlsx",
+        "size_bytes": 23385,
+        "sha256": "d8a0b3a9ac16ff5f263ba1b099479447d9053c5623db7106b80b066dce12da16"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\variants\\dataset_xlsx\\Ads\\CPAS-SHOPEE-Ads-1-Mar-2026-31-Mar-2026.xlsx",
+        "size_bytes": 16630,
+        "sha256": "9cb2a634174b98f8a006db2bcc8b8e5778751be641254a7dcd954380048c03a1"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\variants\\dataset_xlsx\\Ads\\CPAS-SHOPEE-Ads-1-May-2026-31-May-2026.xlsx",
+        "size_bytes": 22240,
+        "sha256": "6523e3af44c834c9a2e901117d9a2ac2dde8d32c259218fcafde9acf31ccc323"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\variants\\dataset_xlsx\\Adset\\CPAS-SHOPEE-Ad-sets-1-Apr-2026-30-Apr-2026.xlsx",
+        "size_bytes": 22680,
+        "sha256": "070645576c9eb14d5093722b21289c3e26cd9b0198cbf35f14652d949febc3be"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\variants\\dataset_xlsx\\Adset\\CPAS-SHOPEE-Ad-sets-1-Mar-2026-31-Mar-2026.xlsx",
+        "size_bytes": 17076,
+        "sha256": "45c88d18b5559f9d4c91637d6d8a64e675c5cf22b85912b851c49a3a9da7dd6e"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\variants\\dataset_xlsx\\Adset\\CPAS-SHOPEE-Ad-sets-1-May-2026-31-May-2026.xlsx",
+        "size_bytes": 23712,
+        "sha256": "b1a03011b0102f255633cdae3414701957d930e4297147e981a7160a15346c0f"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\variants\\dataset_xlsx\\Campaign\\CPAS-SHOPEE-Campaigns-1-Apr-2026-30-Apr-2026.xlsx",
+        "size_bytes": 17133,
+        "sha256": "3cdf22c36d79ba6d7f74ad1fddaea10a28da3a6e08a592eb73c0d247685e96db"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\variants\\dataset_xlsx\\Campaign\\CPAS-SHOPEE-Campaigns-1-Mar-2026-31-Mar-2026.xlsx",
+        "size_bytes": 14081,
+        "sha256": "8783c71ebc90510df79fecc485d875f0eb123d0abc43853e4a013f989cc2e9bd"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\variants\\dataset_xlsx\\Campaign\\CPAS-SHOPEE-Campaigns-1-May-2026-31-May-2026.xlsx",
+        "size_bytes": 16601,
+        "sha256": "b69f0effb0481856e880f43055678f6ad57e2b091e288d31645b5557ef44ecee"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\variants\\dataset_xlsx\\Joycat Data mapping 4-5-6_2026 - overview.xlsx",
+        "size_bytes": 20294,
+        "sha256": "8648b6ed47060b924a2418c4e216a0a5b501df7aecf5d098ff0d48aa2fddcf6e"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\variants\\legacy_dataset\\Ads\\CPAS-SHOPEE-Ads-1-Apr-2026-30-Apr-2026.xlsx",
+        "size_bytes": 21145,
+        "sha256": "71409ba1b7625052983d4aab983af95f6fc1bb284c65c0089055b624290ec62a"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\variants\\legacy_dataset\\Ads\\CPAS-SHOPEE-Ads-1-Mar-2026-31-Mar-2026.xlsx",
+        "size_bytes": 16845,
+        "sha256": "0e39d4c94f303990008298f7c8bed8e571e3473bc4c2a34793e7bbb923f3c7d1"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\variants\\legacy_dataset\\Adset\\CPAS-SHOPEE-Ad-sets-1-Apr-2026-30-Apr-2026.xlsx",
+        "size_bytes": 21548,
+        "sha256": "f18d8dac4b5dbdf854faa03f669f2fc55ae484721727301eaf8b43e5bdeb7344"
+      },
+      {
+        "path": "01_inputs\\joycat\\raw\\meta_ads\\variants\\legacy_dataset\\Adset\\CPAS-SHOPEE-Ad-sets-1-Mar-2026-31-Mar-2026.xlsx",
+        "size_bytes": 16956,
+        "sha256": "4c7a80aaede02fe40898e234cc2e70e34a403df22845968fb44d3fc316f1400b"
+      }
+    ]
   },
-  "overall_pass": true
+  "errors": [],
+  "technical_pass": true,
+  "gate_2_status": "WAITING_FOR_SINH_REVIEW",
+  "note": "Technical PASS does not approve Gate 2 or authorize ETL/Power BI."
 }

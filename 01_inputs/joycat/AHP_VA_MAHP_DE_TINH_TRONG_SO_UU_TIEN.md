@@ -1,5 +1,7 @@
 ## AHP và MAHP — Phương pháp phân tích thứ bậc để tính trọng số ưu tiên
 
+> **Vị trí trong workspace:** Đây là phương pháp hỗ trợ xác định trọng số; không phải KPI Tree, raw data hay bằng chứng rằng một nền tảng hiệu quả hơn. Đọc [Workspace Context](../../context/WORKSPACE_CONTEXT.md), [Current Intent](../../context/CURRENT_INTENT.md) và [Context Joycat](../../01_inputs/joycat/context.md) trước. KPI hiện hành nằm tại [Ad_Cost_GMV_all_platform v3](Ad_Cost_GMV_all_platform%20v3.md); bài toán phân bổ nằm tại [Trọng số Ads Cost](TRONG_SO_PHAN_BO_ADS_COST_THEO_NEN_TANG.md).
+
 ## 1\. Tài liệu này giúp mình làm gì?
 
 Tài liệu này giải thích cách dùng:

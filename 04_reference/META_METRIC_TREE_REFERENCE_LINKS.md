@@ -8,6 +8,8 @@
 
 ## 1. Cách dùng trong phase hiện tại
 
+Bản catalog mindmap 395 trường được lưu cùng khu vực tham khảo tại [META_ALL_METRICS.mm](META_ALL_METRICS.mm). Catalog giúp tra tên trường; không thay Context Joycat, Data dictionary hoặc bằng chứng từ raw.
+
 1. Đọc định nghĩa/chức năng của metric trên Meta.
 2. Kiểm tra raw Joycat có field và kỳ dữ liệu tương ứng hay không.
 3. Ghi công thức hoặc quan hệ toán học, cấp dữ liệu, attribution và giới hạn vào Metric Tree.

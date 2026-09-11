@@ -1,194 +1,207 @@
-from pathlib import Path
-import csv
+from __future__ import annotations
+
+import argparse
+import hashlib
 import json
 import re
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+from urllib.parse import unquote
 import xml.etree.ElementTree as ET
 
 
-ROOT = Path(r"D:\Meta Agentic BA")
-OUT = ROOT / "02_work" / "joycat" / "validation" / "handoff_validation.json"
-
 REQUIRED = [
-    "context/WORKSPACE_CONTEXT.md", "context/CURRENT_INTENT.md", "01_inputs/joycat/context.md",
-    "03_outputs/joycat/KPI_TREE.md", "03_outputs/joycat/KPI_TREE.mm",
-    "03_outputs/joycat/METRIC_TREE.md", "03_outputs/joycat/METRIC_TREE.mm",
-    "03_outputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.md", "03_outputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.mm",
-    "03_outputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.md", "03_outputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.mm",
+    "AGENTS.md",
+    "context/WORKSPACE_CONTEXT.md",
+    "context/CURRENT_INTENT.md",
+    "01_inputs/project/KPI_TREE.md",
+    "01_inputs/project/KPI_TREE.mm",
+    "01_inputs/joycat/context.md",
+    "01_inputs/joycat/DATA_DICTIONARY_JOYCAT.md",
+    "01_inputs/joycat/Ad_Cost_GMV_all_platform v3.md",
+    "01_inputs/joycat/Ad_Cost_GMV_all_platform v3.mm",
+    "01_inputs/joycat/METRIC_TREE.md",
+    "01_inputs/joycat/METRIC_TREE.mm",
+    "01_inputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.md",
+    "01_inputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.mm",
+    "01_inputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.md",
+    "01_inputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.mm",
+    "02_work/joycat/GATE_2_CHECKLIST.md",
     "02_work/joycat/coverage_audit/coverage_6_pairs_detail.csv",
     "02_work/joycat/coverage_audit/coverage_audit_summary.json",
-    "02_work/joycat/archive/2026-09-05_logic_tree_rebuild_before/03_outputs/joycat/KHUNG_PHAN_TICH_CONG_THUC_VA_MAPPING_JOYCAT.md",
+    "04_reference/META_ALL_METRICS.mm",
 ]
 
-MAPPING_HEADINGS = [
-    "1. Đọc nhanh cho Duy và cậu Sinh", "2. Hợp đồng Context và bằng chứng",
-    "3. Kiểm soát Tổng Ads Cost", "4. Chiều Nền tảng", "5. Chiều Sản phẩm",
-    "6. Chiều Phễu", "7. Chiều Campaign objective",
-    "8. Sáu cặp: công thức, nguồn và cách đối soát", "9. Coverage từng tổ hợp đã kiểm tra",
-    "10. Đường phân tích các nhóm metric", "11. Quan hệ toán học và giới hạn diễn giải",
-    "12. Funnel, drill-down và đường tới recommendation", "13. Hợp đồng ETL, modeling và report",
-    "14. Ví dụ xuyên suốt bằng Campaign thật", "15. Nguồn, phần còn thiếu và kiểm định",
-    "16. Phụ lục — 25 listing Joycat",
-]
-
-LOGIC_HEADINGS = [
-    "1. Đọc nhanh", "2. Cổng vào trước khi phân tích",
-    "3. TOFU — tạo độ phủ và tín hiệu đầu phễu",
-    "4. MOFU — biến quan tâm thành click, tương tác sâu hoặc hội thoại",
-    "5. BOFU — kiểm tra chuyển đổi thành đơn và GMV business",
-    "6. Điều tra xuyên phễu và nhiều chiều", "7. Cây bằng chứng và recommendation",
-    "8. Trạng thái nguồn và điểm dừng hiện tại", "9. Bản nói ngắn để Duy trình bày",
-]
-
-PAIR_NAMES = [
-    "Nền tảng × Sản phẩm", "Nền tảng × Phễu", "Nền tảng × Campaign objective",
-    "Phễu × Sản phẩm", "Sản phẩm × Campaign objective", "Phễu × Campaign objective",
-]
+ACTIVE_MD_DIRS = ["context", "01_inputs/project", "01_inputs/joycat"]
+ACTIVE_MM_DIRS = ["01_inputs/project", "01_inputs/joycat"]
+LINK_RE = re.compile(r"(?<!!)\[[^\]]+\]\(([^)]+)\)")
 
 
-def parse_mm(rel):
-    entry = {"parse_ok": False, "node_count": 0, "duplicate_ids": []}
-    parsed = None
-    try:
-        parsed = ET.parse(ROOT / rel).getroot()
-        ids = [node.get("ID") for node in parsed.iter("node") if node.get("ID")]
-        seen, duplicates = set(), []
-        for item in ids:
-            if item in seen and item not in duplicates:
-                duplicates.append(item)
-            seen.add(item)
-        entry.update(parse_ok=True, node_count=len(ids), duplicate_ids=duplicates)
-    except Exception as exc:
-        entry["error"] = str(exc)
-    return entry, parsed
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
-def mm_content(root):
-    if root is None:
-        return [], ""
-    map_root = root.find("node")
-    if map_root is None:
-        return [], ""
-    main = [child.get("TEXT", "") for child in map_root.findall("node")]
-    text = "\n".join(node.get("TEXT", "") for node in map_root.iter("node"))
-    return main, text
+def active_files(root: Path, folders: list[str], suffix: str) -> list[Path]:
+    files: list[Path] = []
+    for folder in folders:
+        base = root / folder
+        if base.exists():
+            files.extend(path for path in base.glob(f"*{suffix}") if path.is_file())
+    return sorted(set(files), key=lambda path: str(path).casefold())
 
 
-result = {"required_files": {}, "xml": {}, "mapping_coverage": {}, "logic_tree": {}, "coverage": {}, "contexts": {}, "raw": {}}
-for rel in REQUIRED:
-    result["required_files"][rel] = (ROOT / rel).exists()
+def validate_links(root: Path, markdown_files: list[Path]) -> list[dict[str, str | int]]:
+    broken: list[dict[str, str | int]] = []
+    for source in markdown_files:
+        text = source.read_text(encoding="utf-8")
+        for line_number, line in enumerate(text.splitlines(), start=1):
+            for match in LINK_RE.finditer(line):
+                raw_target = match.group(1).strip()
+                if not raw_target or raw_target.startswith(("#", "http://", "https://", "mailto:")):
+                    continue
+                target_text = raw_target.split("#", 1)[0]
+                if not target_text:
+                    continue
+                target = (source.parent / unquote(target_text)).resolve()
+                if not target.exists():
+                    broken.append(
+                        {
+                            "source": str(source.relative_to(root)),
+                            "line": line_number,
+                            "target": raw_target,
+                        }
+                    )
+    return broken
 
-xml_roots = {}
-for rel in [
-    "03_outputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.mm",
-    "03_outputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.mm",
-    "03_outputs/joycat/METRIC_TREE.mm", "03_outputs/joycat/KPI_TREE.mm",
-]:
-    entry, parsed = parse_mm(rel)
-    result["xml"][rel] = entry
-    xml_roots[rel] = parsed
 
-mapping_md = (ROOT / "03_outputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.md").read_text(encoding="utf-8")
-mapping_headings = re.findall(r"^## (.+)$", mapping_md, flags=re.M)
-mapping_mm_main, mapping_mm_text = mm_content(xml_roots["03_outputs/joycat/DATA_MAPPING_COVERAGE_JOYCAT.mm"])
-mapping_tokens = [
-    "Ads Cost (Facebook, SP01)", "Ads Cost (Facebook, TOFU)",
-    "Ads Cost (Facebook, Engagement - Messaging)", "Ads Cost (TOFU, SP01)",
-    "Ads Cost (SP01, Engagement - Messaging)", "Ads Cost (TOFU, Engagement - Messaging)",
-    "Campaign objective gốc", "Optimization/Performance goal", "Result indicator", "Objective suy luận",
-    "64.834.557 VND", "9.252 VND", "dòng 15", "dòng 6",
-]
-result["mapping_coverage"] = {
-    "md_exact_16_main_headings": mapping_headings == MAPPING_HEADINGS,
-    "mm_exact_16_main_branches": mapping_mm_main == MAPPING_HEADINGS,
-    "six_pairs_in_both": all(name in mapping_md and name in mapping_mm_text for name in PAIR_NAMES),
-    "required_detail_in_both": all(token in mapping_md and token in mapping_mm_text for token in mapping_tokens),
-    "sp01_to_sp25_in_both": all(f"SP{i:02d}" in mapping_md and f"SP{i:02d}" in mapping_mm_text for i in range(1, 26)),
-    "no_banned_shorthand": not any(token in mapping_md or token in mapping_mm_text for token in [
-        "Facebook Messaging", "SP01 Messaging", "TOFU Messaging", "AS CO", "AS SP", "AS TOF",
-    ]),
-}
+def validate_mm(root: Path, mm_files: list[Path]) -> dict[str, dict[str, object]]:
+    result: dict[str, dict[str, object]] = {}
+    for path in mm_files:
+        record: dict[str, object] = {
+            "parse_ok": False,
+            "node_count": 0,
+            "duplicate_ids": [],
+            "broken_links": [],
+        }
+        try:
+            parsed = ET.parse(path).getroot()
+            ids = [node.get("ID") for node in parsed.iter("node") if node.get("ID")]
+            seen: set[str] = set()
+            duplicates: list[str] = []
+            for value in ids:
+                if value in seen and value not in duplicates:
+                    duplicates.append(value)
+                seen.add(value)
+            broken_links: list[str] = []
+            for node in parsed.iter("node"):
+                raw_link = (node.get("LINK") or "").strip()
+                if not raw_link or raw_link.startswith(("#", "http://", "https://", "mailto:")):
+                    continue
+                target_text = unquote(raw_link.split("#", 1)[0])
+                if not target_text:
+                    continue
+                candidate = Path(target_text)
+                target = candidate if candidate.is_absolute() else (path.parent / candidate).resolve()
+                if not target.exists() and raw_link not in broken_links:
+                    broken_links.append(raw_link)
+            record.update(
+                parse_ok=True,
+                node_count=len(ids),
+                duplicate_ids=duplicates,
+                broken_links=broken_links,
+            )
+        except Exception as exc:  # validator must report the file, not hide the failure
+            record["error"] = str(exc)
+        result[str(path.relative_to(root))] = record
+    return result
 
-logic_file = ROOT / "03_outputs/joycat/LOGIC_TREE.md"
-logic_mm_file = ROOT / "03_outputs/joycat/LOGIC_TREE.mm"
-if logic_file.exists() and logic_mm_file.exists():
-    logic_md = logic_file.read_text(encoding="utf-8")
-    logic_headings = re.findall(r"^## (.+)$", logic_md, flags=re.M)
-    logic_mm_main, logic_mm_text = mm_content(xml_roots["03_outputs/joycat/LOGIC_TREE.mm"])
-    logic_tokens = [
-        "TOFU", "MOFU", "BOFU", "Comparator", "Data gate", "Campaign → Ad set → Ad",
-        "bằng chứng hỗ trợ", "bằng chứng phản bác", "decision gate", "Objective suy luận",
-        "Reach chất lượng", "CPR Messaging bằng 5–10% giá trị sản phẩm", "Messaging bằng 1–2% Reach",
-        "DATA_MAPPING_COVERAGE_JOYCAT.md", "METRIC_TREE.md",
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Validate the active Joycat handoff in any workspace location.")
+    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[3])
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+
+    root = args.root.expanduser().resolve()
+    output = (args.output or root / "02_work/joycat/validation/handoff_validation.json").resolve()
+
+    required = {relative: (root / relative).is_file() for relative in REQUIRED}
+    markdown_files = active_files(root, ACTIVE_MD_DIRS, ".md")
+    mm_files = active_files(root, ACTIVE_MM_DIRS, ".mm")
+    reference_mm = root / "04_reference/META_ALL_METRICS.mm"
+    if reference_mm.is_file():
+        mm_files.append(reference_mm)
+
+    broken_links = validate_links(root, markdown_files)
+    xml = validate_mm(root, sorted(set(mm_files), key=lambda path: str(path).casefold()))
+
+    raw_root = root / "01_inputs/joycat/raw"
+    raw_files = sorted((path for path in raw_root.rglob("*") if path.is_file()), key=lambda p: str(p).casefold())
+    raw_manifest = [
+        {
+            "path": str(path.relative_to(root)),
+            "size_bytes": path.stat().st_size,
+            "sha256": sha256(path),
+        }
+        for path in raw_files
     ]
-    result["logic_tree"] = {
-        "md_exact_9_main_headings": logic_headings == LOGIC_HEADINGS,
-        "mm_exact_9_main_branches": logic_mm_main == LOGIC_HEADINGS,
-        "required_logic_in_both": all(token.lower() in logic_md.lower() and token.lower() in logic_mm_text.lower() for token in logic_tokens),
-        "no_unconditional_roas_arrow": not bool(re.search(r"ROAS\s*[↑↓]|→\s*ROAS\s*(tăng|giảm)", logic_md, flags=re.I)),
-        "not_formula_inventory": len(re.findall(r"^```", logic_md, flags=re.M)) <= 14,
-        "owner_assumptions_not_facts": all(token in logic_md for token in [
-            "objective dự kiến/owner mapping", "Giả định chưa xác minh", "Chưa có decision gate",
-        ]),
+
+    semantic_files = [
+        root / "01_inputs/joycat/DATA_DICTIONARY_JOYCAT.md",
+        root / "01_inputs/joycat/METRIC_TREE.md",
+        root / "01_inputs/joycat/CONG_THUC_5_METRICS_JOYCAT_v3.md",
+    ]
+    semantic_text = "\n".join(path.read_text(encoding="utf-8") for path in semantic_files if path.is_file())
+    semantics = {
+        "has_meta_purchases_attributed": "meta_purchases_attributed" in semantic_text,
+        "has_business_orders_eligible": "business_orders_eligible" in semantic_text,
+        "has_business_gmv": "GMV_business" in semantic_text,
+        "keeps_meta_purchase_value_separate": "Purchases conversion value" in semantic_text,
     }
-else:
-    result["logic_tree"] = {"status_postponed": True}
 
-summary = json.loads((ROOT / "02_work/joycat/coverage_audit/coverage_audit_summary.json").read_text(encoding="utf-8"))
-with (ROOT / "02_work/joycat/coverage_audit/coverage_6_pairs_detail.csv").open(encoding="utf-8-sig", newline="") as handle:
-    rows = list(csv.DictReader(handle))
-platform_rows = [row for row in rows if row["Cặp phân tích"].startswith("Nền tảng")]
-reconciles = [
-    values["mapped_rows"] == values["demo_rows"] and values["mapped_spend"] == values["demo_spend"]
-    for periods in summary["pair_reconciliation"].values() for values in periods.values()
-]
-result["coverage"] = {
-    "row_count_279": len(rows) == summary.get("coverage_row_count") == 279,
-    "all_six_pairs_present": set(row["Cặp phân tích"] for row in rows) == set(PAIR_NAMES),
-    "platform_rows_blocked_and_blank": bool(platform_rows) and all(
-        row["Trạng thái coverage"] == "Thiếu nguồn/thiếu chiều" and row["Ads Cost (VND)"] == ""
-        for row in platform_rows
-    ),
-    "mapped_pairs_reconcile_to_demo": all(reconciles),
-    "april_difference_9252": summary["demo_control"]["2026-04"]["spend"] - summary["raw_control"]["2026-04"]["sum_positive_campaign_spend"] == 9252.0,
-}
+    errors: list[str] = []
+    missing = [path for path, exists in required.items() if not exists]
+    if missing:
+        errors.append(f"Missing required files: {len(missing)}")
+    if broken_links:
+        errors.append(f"Broken active Markdown links: {len(broken_links)}")
+    bad_xml = [
+        name
+        for name, value in xml.items()
+        if not value["parse_ok"] or value["duplicate_ids"] or value["broken_links"]
+    ]
+    if bad_xml:
+        errors.append(f"Invalid mindmaps: {len(bad_xml)}")
+    if not raw_files:
+        errors.append("Raw folder is missing or empty")
+    if not all(semantics.values()):
+        errors.append("Purchase/GMV semantic contract is incomplete")
 
-contexts = {
-    rel: (ROOT / rel).read_text(encoding="utf-8")
-    for rel in ["context/WORKSPACE_CONTEXT.md", "context/CURRENT_INTENT.md", "01_inputs/joycat/context.md"]
-}
-context_all = "\n".join(contexts.values())
-result["contexts"] = {
-    "versions_updated": all(token in text for token, text in [
-        ("Phiên bản: 12.0", contexts["context/WORKSPACE_CONTEXT.md"]),
-        ("Phiên bản: 17.", contexts["context/CURRENT_INTENT.md"]),
-        ("Phiên bản: 13.0", contexts["01_inputs/joycat/context.md"]),
-    ]),
-    "mapping_artifact_linked": all(
-        "DATA_MAPPING_COVERAGE_JOYCAT.md" in text for text in contexts.values()
-    ),
-    "review_not_production": all("review" in text.lower() and "production" in text.lower() for text in contexts.values()),
-    "objective_human_mapping_preserved": "Objective suy luận" in context_all and "human-curated" in context_all,
-    "april_gap_preserved": "9.252 VND" in context_all,
-    "old_framework_name_removed": "KHUNG_PHAN_TICH_CONG_THUC_VA_MAPPING_JOYCAT" not in context_all,
-}
+    result = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "workspace_root": str(root),
+        "validator": str(Path(__file__).resolve()),
+        "required_files": required,
+        "markdown": {"files_checked": len(markdown_files), "broken_links": broken_links},
+        "mindmaps": xml,
+        "semantics": semantics,
+        "raw_manifest": {"file_count": len(raw_manifest), "files": raw_manifest},
+        "errors": errors,
+        "technical_pass": not errors,
+        "gate_2_status": "WAITING_FOR_SINH_REVIEW",
+        "note": "Technical PASS does not approve Gate 2 or authorize ETL/Power BI.",
+    }
 
-raw_files = [path for path in (ROOT / "01_inputs/joycat/raw").rglob("*") if path.is_file()]
-result["raw"] = {
-    "file_count": len(raw_files), "xlsx_count": sum(path.suffix.lower() == ".xlsx" for path in raw_files),
-    "csv_count": sum(path.suffix.lower() == ".csv" for path in raw_files),
-    "generated_files_inside_raw": [str(path.relative_to(ROOT)) for path in raw_files if path.name in {
-        "LOGIC_TREE.md", "LOGIC_TREE.mm", "DATA_MAPPING_COVERAGE_JOYCAT.md", "DATA_MAPPING_COVERAGE_JOYCAT.mm",
-    }],
-}
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+    return 0 if result["technical_pass"] else 1
 
-result["overall_pass"] = (
-    all(result["required_files"].values())
-    and all(item["parse_ok"] and not item["duplicate_ids"] for item in result["xml"].values())
-    and all(result["mapping_coverage"].values()) and all(result["logic_tree"].values())
-    and all(result["coverage"].values()) and all(result["contexts"].values())
-    and not result["raw"]["generated_files_inside_raw"]
-)
 
-OUT.parent.mkdir(parents=True, exist_ok=True)
-OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-print(json.dumps(result, ensure_ascii=False, indent=2))
+if __name__ == "__main__":
+    sys.exit(main())

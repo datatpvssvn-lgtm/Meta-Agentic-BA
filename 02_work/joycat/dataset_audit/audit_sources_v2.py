@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import argparse
 from collections import Counter, defaultdict
 from datetime import date, datetime
 from pathlib import Path
@@ -10,9 +11,9 @@ from typing import Any
 from openpyxl import load_workbook
 
 
-WORKSPACE = Path(r"D:\Meta Agentic BA")
+WORKSPACE = Path(__file__).resolve().parents[3]
 RAW_ROOT = WORKSPACE / "01_inputs" / "joycat" / "raw"
-OUTPUT_ROOT = WORKSPACE / "03_outputs" / "joycat"
+OUTPUT_ROOT = WORKSPACE / "01_inputs" / "joycat"
 WORK_ROOT = WORKSPACE / "02_work" / "joycat" / "dataset_audit"
 OUTPUT_JSON = WORK_ROOT / "source_audit_v2.json"
 
@@ -381,6 +382,21 @@ def build_summary(records: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def main() -> None:
+    global WORKSPACE, RAW_ROOT, OUTPUT_ROOT, WORK_ROOT, OUTPUT_JSON, SELECTED_OUTPUTS
+    parser = argparse.ArgumentParser(description="Audit Joycat sources from a portable workspace root.")
+    parser.add_argument("--root", type=Path, default=WORKSPACE)
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+    WORKSPACE = args.root.expanduser().resolve()
+    RAW_ROOT = WORKSPACE / "01_inputs" / "joycat" / "raw"
+    OUTPUT_ROOT = WORKSPACE / "01_inputs" / "joycat"
+    WORK_ROOT = WORKSPACE / "02_work" / "joycat" / "dataset_audit"
+    OUTPUT_JSON = (args.output or WORK_ROOT / "source_audit_v2.json").resolve()
+    SELECTED_OUTPUTS = [
+        OUTPUT_ROOT / "JOYCAT_CAMPAIGN_3_THANG_CO_CHI_PHI.xlsx",
+        OUTPUT_ROOT / "JOYCAT_CAMPAIGN_3_THANG_CO_CHI_PHI_OBJECTIVE_DEMO.xlsx",
+        OUTPUT_ROOT / "JOYCAT_SHOPEE_PRODUCTS_2026-08-25.xlsx",
+    ]
     raw_files = sorted(RAW_ROOT.rglob("*.xlsx"), key=lambda path: str(path).casefold())
     records = [inspect_workbook(path, "raw") for path in raw_files]
     records.extend(inspect_workbook(path, "output") for path in SELECTED_OUTPUTS)

@@ -14,3 +14,6 @@ __pycache__/
 Thumbs.db
 ehthumbs.db
 [Dd]esktop.ini
+
+# Generated PDF render/cache files (kept locally in 02_work, not source artifacts)
+02_work/joycat/pdf_build/render_cache_*/

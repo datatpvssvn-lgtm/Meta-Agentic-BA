@@ -10,9 +10,9 @@ import re
 import xml.etree.ElementTree as ET
 
 
-ROOT = Path(r"D:\Meta Agentic BA")
-DEFAULT_SOURCE = ROOT / "03_outputs" / "joycat" / "DATA_MAPPING_COVERAGE_JOYCAT.md"
-DEFAULT_OUT = ROOT / "03_outputs" / "joycat" / "DATA_MAPPING_COVERAGE_JOYCAT.mm"
+ROOT = Path(__file__).resolve().parents[3]
+DEFAULT_SOURCE = ROOT / "01_inputs" / "joycat" / "DATA_MAPPING_COVERAGE_JOYCAT.md"
+DEFAULT_OUT = ROOT / "01_inputs" / "joycat" / "DATA_MAPPING_COVERAGE_JOYCAT.mm"
 ID_PREFIX = "MINDMAP_"
 
 

@@ -1,5 +1,7 @@
 # Bộ câu hỏi xác nhận AHP với cậu Sinh
 
+> **Vị trí trong workspace:** Đây là tài liệu hỗ trợ cho bài toán trọng số, không phải KPI Tree hoặc dữ liệu nguồn. Đọc [Workspace Context](../../context/WORKSPACE_CONTEXT.md), [Current Intent](../../context/CURRENT_INTENT.md) và [Context Joycat](../../01_inputs/joycat/context.md) trước. KPI hiện hành nằm tại [Ad_Cost_GMV_all_platform v3](Ad_Cost_GMV_all_platform%20v3.md); phương pháp tính trọng số nằm tại [AHP/MAHP](AHP_VA_MAHP_DE_TINH_TRONG_SO_UU_TIEN.md).
+
 ## 1. Mục đích của buổi hỏi
 
 Buổi trao đổi này chưa nhằm xin ngay ba trọng số Facebook, Instagram và WhatsApp.

@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Power Query – Hướng dẫn đầy đủ</title>
+<style>
+:root {
+  --pbi-yellow:#F2C811; --pbi-dark:#252423; --pbi-panel:#1E1E1E;
+  --pbi-blue:#0078D4;   --pbi-blue2:#118DFF; --pbi-green:#107C10;
+  --pbi-red:#D13438;    --pbi-orange:#CA5010; --pbi-purple:#8764B8;
+  --pbi-teal:#038387;   --pbi-text:#323130;   --pbi-gray:#605E5C;
+  --pbi-light:#F3F2F1;  --pbi-border:#EDEBE9; --white:#FFFFFF;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--pbi-light);color:var(--pbi-text);font-size:14px;line-height:1.6;}
+
+/* ═══ TOPBAR ═══ */
+.topbar{background:var(--pbi-panel);color:#fff;display:flex;align-items:center;padding:0 20px;height:44px;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.5);}
+.logo{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;}
+.logo-icon{width:26px;height:26px;background:var(--pbi-yellow);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:var(--pbi-panel);}
+.topbar-right{margin-left:auto;display:flex;gap:6px;}
+.tbadge{background:var(--pbi-blue);color:#fff;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;}
+
+/* ═══ RIBBON ═══ */
+.ribbon{background:#fff;border-bottom:2px solid var(--pbi-border);position:sticky;top:44px;z-index:190;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+.ribbon-tabs{display:flex;padding:0 16px;gap:0;}
+.rtab{padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;color:var(--pbi-gray);transition:all .15s;user-select:none;display:flex;align-items:center;gap:6px;}
+.rtab:hover{color:var(--pbi-text);background:var(--pbi-light);}
+.rtab.active{color:var(--pbi-blue);border-bottom-color:var(--pbi-blue);}
+.rtab.t-transform.active{color:var(--pbi-teal);border-bottom-color:var(--pbi-teal);}
+.rtab.t-addcol.active{color:var(--pbi-green);border-bottom-color:var(--pbi-green);}
+.rtab.t-compare.active{color:var(--pbi-orange);border-bottom-color:var(--pbi-orange);}
+
+/* ribbon sub-groups preview */
+.ribbon-groups{background:#FAFAF9;border-bottom:1px solid var(--pbi-border);display:flex;padding:6px 16px;gap:4px;flex-wrap:wrap;overflow:hidden;transition:max-height .2s;}
+.rgrp{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 10px;border-right:1px solid var(--pbi-border);min-width:80px;}
+.rgrp:last-child{border-right:none;}
+.rgrp-label{font-size:10px;color:var(--pbi-gray);text-transform:uppercase;letter-spacing:.5px;font-weight:600;}
+.rgrp-btns{display:flex;gap:3px;flex-wrap:wrap;justify-content:center;}
+.rgrp-btn{background:#fff;border:1px solid var(--pbi-border);padding:2px 7px;border-radius:3px;font-size:10px;color:var(--pbi-text);cursor:pointer;white-space:nowrap;}
+.rgrp-btn:hover{background:var(--pbi-blue);color:#fff;border-color:var(--pbi-blue);}
+.rgrp-btn.hl{background:var(--pbi-yellow);color:var(--pbi-dark);border-color:var(--pbi-yellow);font-weight:700;}
+
+/* ═══ HERO ═══ */
+.hero{background:linear-gradient(135deg,var(--pbi-panel) 0%,#3B3A39 100%);color:#fff;padding:36px 40px 28px;border-bottom:4px solid var(--pbi-yellow);}
+.hero h1{font-size:28px;font-weight:700;margin-bottom:8px;}
+.hero h1 span{color:var(--pbi-yellow);}
+.hero p{color:#C8C6C4;font-size:14px;max-width:700px;}
+.hero-chips{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;}
+.hchip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);padding:3px 12px;border-radius:14px;font-size:11px;color:#C8C6C4;}
+.hchip b{color:var(--pbi-yellow);}
+
+/* ═══ LAYOUT ═══ */
+.layout{display:flex;min-height:calc(100vh - 120px);}
+
+/* ═══ SIDEBAR ═══ */
+.sidebar{width:220px;min-width:220px;background:#fff;border-right:1px solid var(--pbi-border);padding:16px 0;position:sticky;top:108px;height:calc(100vh - 108px);overflow-y:auto;}
+.sb-group{padding:5px 14px;font-size:10px;font-weight:700;color:var(--pbi-gray);text-transform:uppercase;letter-spacing:.8px;margin-top:10px;}
+.sb-link{display:flex;align-items:center;gap:7px;padding:6px 14px 6px 18px;color:var(--pbi-text);text-decoration:none;font-size:12px;border-left:3px solid transparent;transition:all .12s;cursor:pointer;}
+.sb-link:hover{background:var(--pbi-light);border-left-color:var(--pbi-blue2);color:var(--pbi-blue);}
+.sb-link .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+/* ═══ MAIN ═══ */
+.main{flex:1;padding:28px 36px;max-width:980px;}
+
+/* ═══ TAB PAGES ═══ */
+.tab-page{display:none;}
+.tab-page.active{display:block;}
+
+/* ═══ SECTION CARD ═══ */
+.card{background:#fff;border-radius:6px;border:1px solid var(--pbi-border);margin-bottom:20px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.card-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--pbi-border);background:linear-gradient(to right,#FAFAF9,#fff);}
+.card-icon{width:34px;height:34px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.card-head h2{font-size:16px;font-weight:600;}
+.card-head .tag{margin-left:auto;font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px;white-space:nowrap;}
+.card-body{padding:18px;}
+.card-body p{color:#3B3A39;margin-bottom:12px;font-size:13.5px;}
+
+/* ═══ RIBBON GROUP TAG ═══ */
+.ribbon-badge{display:inline-flex;align-items:center;gap:5px;background:var(--pbi-light);border:1px solid var(--pbi-border);padding:3px 10px;border-radius:4px;font-size:11px;color:var(--pbi-gray);margin-bottom:12px;font-weight:600;}
+.ribbon-badge span{background:var(--pbi-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;}
+
+/* ═══ STEPS ═══ */
+.steps{display:flex;flex-direction:column;gap:8px;margin:12px 0;}
+.step{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;background:var(--pbi-light);border-radius:4px;border-left:3px solid var(--pbi-blue);}
+.sc{width:22px;height:22px;background:var(--pbi-blue);color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.st{font-size:13px;}
+.st strong{color:#004E8C;}
+
+/* ═══ BEFORE/AFTER ═══ */
+.ba{display:grid;grid-template-columns:1fr 36px 1fr;gap:8px;align-items:start;margin:12px 0;}
+.ba-arr{display:flex;align-items:center;justify-content:center;padding-top:30px;color:var(--pbi-blue);font-size:20px;font-weight:700;}
+.ba-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 9px;border-radius:3px 3px 0 0;display:inline-block;margin-bottom:-1px;}
+.lbl-b{background:var(--pbi-red);color:#fff;}
+.lbl-a{background:var(--pbi-green);color:#fff;}
+
+/* ═══ DATA TABLE ═══ */
+.dt{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0;}
+.dt th{background:var(--pbi-dark);color:var(--pbi-yellow);padding:7px 11px;text-align:left;font-weight:600;font-size:11px;letter-spacing:.4px;}
+.dt td{padding:6px 11px;border-bottom:1px solid var(--pbi-border);}
+.dt tr:nth-child(even) td{background:#FAFAF9;}
+.dt tr:hover td{background:#EFF6FF;}
+.null{color:#A19F9D;font-style:italic;}
+.err{color:var(--pbi-red);font-weight:600;}
+.ok{color:var(--pbi-green);font-weight:600;}
+.dup{background:#FFF4CE !important;}
+.hi{background:#EFF6FF !important;color:var(--pbi-blue);font-weight:600;}
+
+/* ═══ CODE ═══ */
+.code{background:#1E1E1E;color:#D4D4D4;padding:12px 14px;border-radius:5px;font-family:'Consolas','Courier New',monospace;font-size:12px;line-height:1.7;margin:10px 0;overflow-x:auto;position:relative;}
+.code .kw{color:#569CD6;} .code .fn{color:#DCDCAA;} .code .str{color:#CE9178;} .code .cm{color:#6A9955;} .code .num{color:#B5CEA8;} .code .op{color:#D4D4D4;}
+.code-lbl{position:absolute;top:6px;right:10px;font-size:9px;color:#858585;font-family:'Segoe UI',sans-serif;text-transform:uppercase;letter-spacing:.5px;}
+
+/* ═══ NOTE ═══ */
+.note{display:flex;gap:9px;padding:10px 13px;border-radius:4px;margin:10px 0;font-size:13px;}
+.note.tip{background:#E8F5E9;border-left:3px solid var(--pbi-green);}
+.note.warn{background:#FFF4CE;border-left:3px solid #CA8A04;}
+.note.info{background:#EFF6FF;border-left:3px solid var(--pbi-blue);}
+.note i{font-size:15px;flex-shrink:0;margin-top:1px;}
+
+/* ═══ GRID ═══ */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:12px 0;}
+.mini{background:var(--pbi-light);border-radius:4px;border:1px solid var(--pbi-border);padding:12px;}
+.mini h4{font-size:11px;text-transform:uppercase;color:var(--pbi-gray);letter-spacing:.5px;margin-bottom:6px;}
+.mini p{font-size:12.5px;color:var(--pbi-text);}
+.mini code{font-size:11px;color:var(--pbi-blue);font-family:'Consolas',monospace;display:block;margin-top:4px;}
+
+/* ═══ PQ MOCKUP ═══ */
+.pqw{background:#2B2B2B;border-radius:5px;overflow:hidden;margin:14px 0;box-shadow:0 3px 12px rgba(0,0,0,.25);font-family:'Segoe UI',sans-serif;}
+.pq-tb{background:#1A1A1A;color:#D4D4D4;padding:5px 10px;font-size:11px;display:flex;align-items:center;gap:7px;border-bottom:1px solid #3C3C3C;}
+.pq-tb .dots{display:flex;gap:4px;}
+.pq-tb .dot{width:9px;height:9px;border-radius:50%;}
+.pq-rb{background:#252526;border-bottom:1px solid #3C3C3C;padding:5px 10px;display:flex;gap:5px;flex-wrap:wrap;}
+.pq-rb .b{background:#3C3C3C;color:#D4D4D4;border:1px solid #4C4C4C;padding:2px 8px;border-radius:2px;font-size:10px;}
+.pq-rb .b.on{background:var(--pbi-blue);border-color:var(--pbi-blue);color:#fff;}
+.pq-body{display:flex;height:180px;}
+.pq-qlist{width:140px;background:#1E1E1E;border-right:1px solid #3C3C3C;padding:6px 0;font-size:10px;color:#C8C6C4;overflow-y:auto;}
+.pq-qlist .qi{padding:3px 10px;cursor:pointer;display:flex;align-items:center;gap:5px;}
+.pq-qlist .qi.on{background:#094771;color:#fff;}
+.pq-grid{flex:1;overflow:auto;background:#1A1A1A;}
+.pq-grid table{width:100%;border-collapse:collapse;font-size:10.5px;}
+.pq-grid th{background:#252526;color:#9CDCFE;padding:4px 9px;text-align:left;border-right:1px solid #3C3C3C;border-bottom:1px solid #3C3C3C;white-space:nowrap;font-weight:600;}
+.pq-grid td{color:#D4D4D4;padding:3px 9px;border-right:1px solid #2A2A2A;border-bottom:1px solid #2A2A2A;white-space:nowrap;}
+.pq-grid td.nv{color:#858585;font-style:italic;}
+.pq-grid td.ev{color:#F48771;}
+.pq-grid td.yv{color:var(--pbi-yellow);}
+.pq-grid td.gv{color:#4EC9B0;}
+.pq-grid tr:hover td{background:rgba(255,255,255,.04);}
+.pq-steps{width:150px;background:#252526;border-left:1px solid #3C3C3C;padding:7px;overflow-y:auto;}
+.pq-steps .sh{color:#9CDCFE;font-size:10px;font-weight:700;margin-bottom:5px;}
+.pq-steps .si{padding:3px 5px;border-radius:2px;font-size:10px;color:#C8C6C4;cursor:pointer;display:flex;align-items:center;gap:4px;margin-bottom:1px;}
+.pq-steps .si:hover{background:#094771;}
+.pq-steps .si.on{background:#0E639C;color:#fff;}
+.pq-steps .sd{width:5px;height:5px;background:#4EC9B0;border-radius:50%;flex-shrink:0;}
+
+/* ═══ COMPARE TABLE ═══ */
+.cmp{width:100%;border-collapse:collapse;font-size:12.5px;margin:12px 0;}
+.cmp th{padding:10px 14px;text-align:left;font-weight:700;font-size:12px;}
+.cmp th.fc{background:var(--pbi-dark);color:var(--pbi-yellow);}
+.cmp th.dc{background:var(--pbi-blue);color:#fff;}
+.cmp th.sc{background:var(--pbi-green);color:#fff;}
+.cmp td{padding:8px 14px;border-bottom:1px solid var(--pbi-border);vertical-align:top;}
+.cmp tr:nth-child(even) td{background:#FAFAF9;}
+.yes{color:var(--pbi-green);font-weight:600;}
+.no{color:var(--pbi-red);}
+.par{color:var(--pbi-orange);font-weight:600;}
+
+/* ═══ FORMULA BOX ═══ */
+.fbox{background:#F5F5F5;border:1px solid var(--pbi-border);border-left:3px solid var(--pbi-blue);padding:10px 14px;border-radius:0 4px 4px 0;margin:10px 0;font-size:13px;}
+.fbox .label{font-size:10px;text-transform:uppercase;color:var(--pbi-gray);font-weight:700;letter-spacing:.5px;margin-bottom:4px;}
+.fbox code{font-family:'Consolas',monospace;font-size:12.5px;color:var(--pbi-blue-dark,#004E8C);}
+
+/* ═══ SECTION DIVIDER ═══ */
+.sdiv{display:flex;align-items:center;gap:0;margin:20px 0 14px;border-radius:4px;overflow:hidden;}
+.sdiv-num{background:var(--pbi-blue);color:#fff;padding:8px 14px;font-size:16px;font-weight:700;flex-shrink:0;}
+.sdiv-title{flex:1;padding:8px 14px;font-size:15px;font-weight:700;background:#EFF6FF;color:var(--pbi-blue);}
+.sdiv-num.t{background:var(--pbi-teal);}   .sdiv-title.t{background:#E0F7F9;color:var(--pbi-teal);}
+.sdiv-num.g{background:var(--pbi-green);}  .sdiv-title.g{background:#E8F5E9;color:var(--pbi-green);}
+.sdiv-num.r{background:var(--pbi-red);}    .sdiv-title.r{background:#FFECEC;color:var(--pbi-red);}
+.sdiv-num.o{background:var(--pbi-orange);} .sdiv-title.o{background:#FFF0E8;color:var(--pbi-orange);}
+.sdiv-num.p{background:var(--pbi-purple);} .sdiv-title.p{background:#F0EAFF;color:var(--pbi-purple);}
+
+/* ═══ CONDITIONAL VISUAL ═══ */
+.cond-flow{display:flex;flex-direction:column;gap:0;margin:12px 0;}
+.cf-row{display:flex;align-items:stretch;gap:0;}
+.cf-kw{background:var(--pbi-dark);color:var(--pbi-yellow);padding:8px 14px;font-weight:700;font-size:12px;min-width:80px;display:flex;align-items:center;}
+.cf-cond{background:#EFF6FF;border:1px solid #BDD6F8;padding:8px 12px;flex:1;font-size:12.5px;display:flex;align-items:center;border-left:none;}
+.cf-val{background:#E8F5E9;border:1px solid #B7DFB7;padding:8px 12px;min-width:160px;font-size:12.5px;display:flex;align-items:center;font-weight:600;color:var(--pbi-green);border-left:none;}
+.cf-row.else .cf-kw{background:#605E5C;}
+.cf-row.else .cf-cond{background:#FAFAF9;border-color:var(--pbi-border);}
+.cf-row.else .cf-val{background:#FFF4CE;border-color:#F0D58C;color:var(--pbi-orange);}
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-thumb{background:#C8C6C4;border-radius:3px;}
+
+/* ═══ FOOTER ═══ */
+footer{background:var(--pbi-dark);color:#605E5C;text-align:center;padding:18px;font-size:11.5px;margin-top:20px;}
+footer span{color:var(--pbi-yellow);}
+
+@media(max-width:768px){
+  .sidebar{display:none;} .main{padding:14px;} .g2,.g3{grid-template-columns:1fr;} .ba{grid-template-columns:1fr;} .ba-arr{display:none;} .hero{padding:20px 14px;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<nav class="topbar">
+  <div class="logo"><div class="logo-icon">⚡</div>Power Query Editor</div>
+  <div class="topbar-right">
+    <span class="tbadge">Home</span>
+    <span class="tbadge" style="background:var(--pbi-teal)">Transform</span>
+    <span class="tbadge" style="background:var(--pbi-green)">Add Column</span>
+  </div>
+</nav>
+
+<!-- RIBBON (sticky, mimic Power Query) -->
+<div class="ribbon">
+  <div class="ribbon-tabs">
+    <div class="rtab active" onclick="switchTab('home',this)">🏠 Home</div>
+    <div class="rtab t-transform" onclick="switchTab('transform',this)">🔄 Transform</div>
+    <div class="rtab t-addcol" onclick="switchTab('addcol',this)">➕ Add Column</div>
+    <div class="rtab t-compare" onclick="switchTab('compare',this)">⚖️ Desktop vs Service</div>
+  </div>
+  <!-- Ribbon group preview -->
+  <div class="ribbon-groups" id="rg-home">
+    <div class="rgrp"><div class="rgrp-label">Close</div><div class="rgrp-btns"><span class="rgrp-btn hl">Close &amp; Apply</span></div></div>
+    <div class="rgrp"><div class="rgrp-label">New Query</div><div class="rgrp-btns"><span class="rgrp-btn">New Source</span><span class="rgrp-btn">Enter Data</span></div></div>
+    <div class="rgrp"><div class="rgrp-label">Manage Columns</div><div class="rgrp-btns"><span class="rgrp-btn">Choose Columns</span><span class="rgrp-btn">Remove Columns</span></div></div>
+    <div class="rgrp"><div class="rgrp-label">Reduce Rows</div><div class="rgrp-btns"><span class="rgrp-btn">Keep Rows</span><span class="rgrp-btn">Remove Rows</span></div></div>
+    <div class="rgrp"><div class="rgrp-label">Sort</div><div class="rgrp-btns"><span class="rgrp-btn">↑ Sort Asc</span><span class="rgrp-btn">↓ Sort Desc</span></div></div>
+    <div class="rgrp"><div class="rgrp-label">Transform</div><div class="rgrp-btns"><span class="rgrp-btn">Split Column</span><span class="rgrp-btn">Group By</span><span class="rgrp-btn">Data Type</span><span class="rgrp-btn">Replace Values</span></div></div>
+    <div class="rgrp"><div class="rgrp-label">Combine</div><div class="rgrp-btns"><span class="rgrp-btn">Merge Queries</span><span class="rgrp-btn">Append Queries</span></div></div>
+  </div>
+  <div class="ribbon-groups" id="rg-transform" style="display:none;">
+    <div class="rgrp"><div class="rgrp-label">Table</div><div class="rgrp-btns"><span class="rgrp-btn">Transpose</span><span class="rgrp-btn">Reverse Rows</span><span class="rgrp-btn">Count Rows</span></div></div>
+    <div class="rgrp"><div class="rgrp-label">Any Column</div><div class="rgrp-btns"><span class="rgrp-btn">Data Type</span><span class="rgrp-btn">Rename</span><span class="rgrp-btn">Fill ↓↑</span><span class="rgrp-btn">Pivot</span><span class="rgrp-btn">Unpivot</span></div></div>
+    <div class="rgrp"><div class="rgrp-label">Text Column</div><div class="rgrp-btns"><span class="rgrp-btn">Split Column</span><span class="rgrp-btn">Format</span><span class="rgrp-btn">Extract</span><span class="rgrp-btn">Parse</span></div></div>
+    <div class="rgrp"><div class="rgrp-label">Number Column</div><div class="rgrp-btns"><span class="rgrp-btn">Statistics</span><span class="rgrp-btn">Standard</span><span class="rgrp-btn">Rounding</span></div></div>
+    <div class="rgrp"><div class="rgrp-label">Date &amp; Time</div><div class="rgrp-btns"><span class="rgrp-btn">Date</span><span class="rgrp-btn">Time</span><span class="rgrp-btn">Duration</span><span class="rgrp-btn">Age</span></div></div>
+    <div class="rgrp"><div class="rgrp-label">Structured</div><div class="rgrp-btns"><span class="rgrp-btn">Expand</span><span class="rgrp-btn">Aggregate</span></div></div>
+  </div>
+  <div class="ribbon-groups" id="rg-addcol" style="display:none;">
+    <div class="rgrp"><div class="rgrp-label">General</div><div class="rgrp-btns"><span class="rgrp-btn">Column from Examples</span><span class="rgrp-btn">Custom Column</span><span class="rgrp-btn">Conditional Column</span><span class="rgrp-btn">Index Column</span></div></div>
+    <div class="rgrp"><div class="rgrp-label">From Text</div><div class="rgrp-btns"><span class="rgrp-btn">Format</span><span class="rgrp-btn">Extract</span><span class="rgrp-btn">Parse</span></div></div>
+    <div class="rgrp"><div class="rgrp-label">From Number</div><div class="rgrp-btns"><span class="rgrp-btn">Statistics</span><span class="rgrp-btn">Standard</span><span class="rgrp-btn">Rounding</span></div></div>
+    <div class="rgrp"><div class="rgrp-label">From Date &amp; Time</div><div class="rgrp-btns"><span class="rgrp-btn">Date</span><span class="rgrp-btn">Time</span><span class="rgrp-btn">Duration</span><span class="rgrp-btn">Earliest/Latest</span></div></div>
+  </div>
+  <div class="ribbon-groups" id="rg-compare" style="display:none;">
+    <div class="rgrp"><div class="rgrp-label">So sánh</div><div class="rgrp-btns"><span class="rgrp-btn">💻 Desktop</span><span class="rgrp-btn">🌐 Service</span></div></div>
+  </div>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <h1>Hướng dẫn <span>Power Query</span> — Đầy đủ theo Ribbon Menu</h1>
+  <p>Tổng hợp tất cả kỹ thuật biến đổi dữ liệu được tổ chức theo đúng các tab trên thanh ribbon của Power Query Editor. Dễ tra cứu, dễ áp dụng.</p>
+  <div class="hero-chips">
+    <div class="hchip"><b>Home</b> – Làm sạch cơ bản</div>
+    <div class="hchip"><b>Transform</b> – Biến đổi dữ liệu</div>
+    <div class="hchip"><b>Add Column</b> – Tạo cột mới</div>
+    <div class="hchip">Ví dụ thực tế + M Language</div>
+  </div>
+</header>
+
+<div class="layout">
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <!-- Filled by JS -->
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ╔══════════════════════════════╗
+     ║         HOME TAB            ║
+     ╚══════════════════════════════╝ -->
+<div class="tab-page active" id="tab-home">
+
+  <!-- PQ EDITOR MOCKUP -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon" style="background:#FFF4CE">⚡</div>
+      <h2>Giao diện Power Query Editor</h2>
+    </div>
+    <div class="card-body">
+      <p>Mỗi thao tác bạn thực hiện sẽ tạo ra một <strong>bước (Applied Step)</strong> ở bảng bên phải. Bạn có thể click vào bất kỳ bước nào để xem lại dữ liệu tại thời điểm đó.</p>
+      <div class="pqw">
+        <div class="pq-tb"><div class="dots"><div class="dot" style="background:#FF5F57"></div><div class="dot" style="background:#FFBD2E"></div><div class="dot" style="background:#28C840"></div></div><span style="margin-left:8px;color:#9CDCFE;">Power Query Editor</span></div>
+        <div class="pq-rb"><span class="b on">Home</span><span class="b">Transform</span><span class="b">Add Column</span><span class="b">View</span></div>
+        <div class="pq-body">
+          <div class="pq-qlist"><div class="qi on">📋 KhachHang</div><div class="qi">📋 DonHang</div><div class="qi">📋 SanPham</div></div>
+          <div class="pq-grid"><table><thead><tr><th>#</th><th>MaKH</th><th>TenKH</th><th>Email</th><th>DoanhThu</th><th>NgayDat</th></tr></thead><tbody>
+            <tr><td>1</td><td>KH001</td><td>Nguyen Van A</td><td>a@email.com</td><td class="gv">5,000,000</td><td>01/01/2024</td></tr>
+            <tr><td>2</td><td class="yv">KH001</td><td class="yv">Nguyen Van A</td><td class="yv">a@email.com</td><td class="yv">5,000,000</td><td class="yv">01/01/2024</td></tr>
+            <tr><td>3</td><td>KH002</td><td>Tran Thi B</td><td class="nv">null</td><td class="ev">Error</td><td>03/01/2024</td></tr>
+            <tr><td>4</td><td>KH003</td><td>&nbsp;&nbsp;Le Van C&nbsp;&nbsp;</td><td>c@email.com</td><td class="gv">3,200,000</td><td>05/01/2024</td></tr>
+          </tbody></table></div>
+          <div class="pq-steps"><div class="sh">Applied Steps</div><div class="si on"><div class="sd"></div>Source</div><div class="si"><div class="sd"></div>Navigation</div><div class="si"><div class="sd"></div>Changed Type</div></div>
+        </div>
+      </div>
+      <div class="note info"><i>💡</i><div>Hàng màu vàng = dữ liệu trùng, ô <span style="color:var(--pbi-red);font-weight:700">Error</span> = có lỗi, ô <span style="color:#858585;font-style:italic">null</span> = trống. Đây là những vấn đề cần xử lý trong tab Home.</div></div>
+    </div>
+  </div>
+
+  <!-- H1: REMOVE DUPLICATES -->
+  <div class="card" id="h1">
+    <div class="card-head"><div class="card-icon" style="background:#DDEEFF">🔁</div><h2>1. Xóa trùng lặp — Remove Duplicates</h2><span class="tag" style="background:#EFF6FF;color:var(--pbi-blue)">Reduce Rows</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Home</span> Reduce Rows → Remove Rows → Remove Duplicates</div>
+      <p>Giữ hàng đầu tiên, xóa các hàng trùng phía sau dựa trên cột bạn chọn.</p>
+      <div class="ba">
+        <div><span class="ba-lbl lbl-b">❌ Trước</span><table class="dt"><thead><tr><th>MaKH</th><th>TenKH</th></tr></thead><tbody><tr><td>KH001</td><td>Nguyen A</td></tr><tr class="dup"><td>KH001</td><td>Nguyen A</td></tr><tr><td>KH002</td><td>Tran B</td></tr><tr class="dup"><td>KH002</td><td>Tran B</td></tr></tbody></table></div>
+        <div class="ba-arr">→</div>
+        <div><span class="ba-lbl lbl-a">✅ Sau</span><table class="dt"><thead><tr><th>MaKH</th><th>TenKH</th></tr></thead><tbody><tr><td class="ok">KH001</td><td>Nguyen A</td></tr><tr><td class="ok">KH002</td><td>Tran B</td></tr></tbody></table></div>
+      </div>
+      <div class="code"><span class="code-lbl">M</span>= <span class="fn">Table.Distinct</span>(Source, {<span class="str">"MaKH"</span>})</div>
+    </div>
+  </div>
+
+  <!-- H2: ERRORS -->
+  <div class="card" id="h2">
+    <div class="card-head"><div class="card-icon" style="background:#FFE8E8">⚠️</div><h2>2. Xóa / Thay thế lỗi — Remove / Replace Errors</h2><span class="tag" style="background:#FFECEC;color:var(--pbi-red)">Reduce Rows</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Home</span> Reduce Rows → Remove Rows → Remove Errors &nbsp;|&nbsp; hoặc Right-click → Replace Errors</div>
+      <p>Lỗi xuất hiện khi ô dữ liệu không thể đọc đúng (chia cho 0, kiểu sai...). Có 2 lựa chọn: <strong>xóa hàng lỗi</strong> hoặc <strong>thay bằng giá trị mặc định</strong>.</p>
+      <div class="g2">
+        <div class="mini"><h4>🗑️ Remove Errors</h4><p>Xóa toàn bộ hàng chứa lỗi</p><code>Table.RemoveRowsWithErrors(Source, {"DoanhThu"})</code></div>
+        <div class="mini"><h4>🔄 Replace Errors</h4><p>Thay lỗi bằng giá trị khác (ví dụ 0)</p><code>Table.ReplaceErrorValues(Source, {{"DoanhThu", 0}})</code></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- H3: FILL DOWN -->
+  <div class="card" id="h3">
+    <div class="card-head"><div class="card-icon" style="background:#E8F5E9">🔽</div><h2>3. Điền giá trị null — Fill Down / Fill Up</h2><span class="tag" style="background:#E8F5E9;color:var(--pbi-green)">Transform</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Home</span> Transform → Replace Values → Use First Row as Headers &nbsp;|&nbsp; hoặc tab <span>Transform</span> → Fill → Down</div>
+      <p>Khi dữ liệu nhập kiểu ô gộp từ Excel, các ô bên dưới bị null. Fill Down sao chép giá trị trên xuống liên tiếp.</p>
+      <div class="ba">
+        <div><span class="ba-lbl lbl-b">❌ Trước</span><table class="dt"><thead><tr><th>KhuVuc</th><th>TenKH</th></tr></thead><tbody><tr><td>Mien Bac</td><td>Nguyen A</td></tr><tr><td class="null">null</td><td>Tran B</td></tr><tr><td class="null">null</td><td>Le C</td></tr><tr><td>Mien Nam</td><td>Pham D</td></tr><tr><td class="null">null</td><td>Hoang E</td></tr></tbody></table></div>
+        <div class="ba-arr">→</div>
+        <div><span class="ba-lbl lbl-a">✅ Sau</span><table class="dt"><thead><tr><th>KhuVuc</th><th>TenKH</th></tr></thead><tbody><tr><td class="ok">Mien Bac</td><td>Nguyen A</td></tr><tr><td class="ok">Mien Bac</td><td>Tran B</td></tr><tr><td class="ok">Mien Bac</td><td>Le C</td></tr><tr><td class="ok">Mien Nam</td><td>Pham D</td></tr><tr><td class="ok">Mien Nam</td><td>Hoang E</td></tr></tbody></table></div>
+      </div>
+      <div class="code"><span class="code-lbl">M</span>= <span class="fn">Table.FillDown</span>(Source, {<span class="str">"KhuVuc"</span>})</div>
+    </div>
+  </div>
+
+  <!-- H4: DATA TYPE -->
+  <div class="card" id="h4">
+    <div class="card-head"><div class="card-icon" style="background:#FFF4E0">🔢</div><h2>4. Đổi kiểu dữ liệu — Change Data Type</h2><span class="tag" style="background:#FFF4E0;color:var(--pbi-orange)">Transform</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Home</span> Transform → Data Type: … &nbsp;|&nbsp; hoặc click biểu tượng đầu cột</div>
+      <p>Click vào biểu tượng kiểu dữ liệu ở đầu cột (ABC, 123, 📅...) rồi chọn kiểu phù hợp.</p>
+      <table class="dt"><thead><tr><th>Icon</th><th>Kiểu dữ liệu</th><th>Dùng khi nào</th></tr></thead><tbody>
+        <tr><td><b>123</b></td><td>Whole Number</td><td>Số lượng, năm, tuổi</td></tr>
+        <tr><td><b>1.2</b></td><td>Decimal Number</td><td>Giá tiền, tỷ lệ %</td></tr>
+        <tr><td><b>ABC</b></td><td>Text</td><td>Tên, mã, địa chỉ</td></tr>
+        <tr><td><b>📅</b></td><td>Date</td><td>Ngày giao dịch</td></tr>
+        <tr><td><b>TRUE</b></td><td>True/False</td><td>Cờ trạng thái</td></tr>
+      </tbody></table>
+      <div class="code"><span class="code-lbl">M</span>= <span class="fn">Table.TransformColumnTypes</span>(Source, {{<span class="str">"DoanhThu"</span>, <span class="kw">type</span> number}, {<span class="str">"NgayDat"</span>, <span class="kw">type</span> date}})</div>
+    </div>
+  </div>
+
+  <!-- H5: TRIM CLEAN -->
+  <div class="card" id="h5">
+    <div class="card-head"><div class="card-icon" style="background:#F3E8FF">✂️</div><h2>5. Xóa khoảng trắng — Trim &amp; Clean</h2><span class="tag" style="background:#F3E8FF;color:var(--pbi-purple)">Text Column</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Transform</span> Text Column → Format → Trim / Clean</div>
+      <p><strong>Trim</strong> = xóa khoảng trắng đầu/cuối. <strong>Clean</strong> = xóa ký tự ẩn không in được. Nên dùng cả hai cùng lúc.</p>
+      <div class="code"><span class="code-lbl">M</span>= <span class="fn">Table.TransformColumns</span>(Source, {{<span class="str">"TenKH"</span>, <span class="kw">each</span> <span class="fn">Text.Trim</span>(<span class="fn">Text.Clean</span>(_)), <span class="kw">type</span> text}})</div>
+    </div>
+  </div>
+
+  <!-- H6: REPLACE VALUES -->
+  <div class="card" id="h6">
+    <div class="card-head"><div class="card-icon" style="background:#E0F7F9">🔄</div><h2>6. Thay thế giá trị — Replace Values</h2><span class="tag" style="background:#E0F7F9;color:var(--pbi-teal)">Transform</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Home</span> Transform → Replace Values &nbsp;|&nbsp; hoặc Right-click cột → Replace Values</div>
+      <p>Đổi giá trị cũ thành giá trị mới trong cột. Ví dụ: chuẩn hóa tên vùng "HN" → "Ha Noi".</p>
+      <div class="code"><span class="code-lbl">M</span>= <span class="fn">Table.ReplaceValue</span>(Source, <span class="str">"HN"</span>, <span class="str">"Ha Noi"</span>, <span class="fn">Replacer.ReplaceText</span>, {<span class="str">"KhuVuc"</span>})</div>
+    </div>
+  </div>
+
+  <!-- H7: FILTER -->
+  <div class="card" id="h7">
+    <div class="card-head"><div class="card-icon" style="background:#FFFDE7">🔍</div><h2>7. Lọc hàng — Filter Rows</h2><span class="tag" style="background:#FFFDE7;color:#CA8A04">Reduce Rows</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Home</span> Reduce Rows → Keep Rows / Remove Rows &nbsp;|&nbsp; hoặc click ▼ đầu cột</div>
+      <p>Click ▼ ở đầu cột để lọc. Bỏ tick <strong>(null)</strong> để loại hàng trống, hoặc dùng Number/Text/Date Filters cho điều kiện phức tạp.</p>
+      <div class="code"><span class="code-lbl">M</span>= <span class="fn">Table.SelectRows</span>(Source, <span class="kw">each</span> [DoanhThu] > <span class="num">0</span> <span class="kw">and</span> [KhuVuc] &lt;&gt; <span class="kw">null</span>)</div>
+    </div>
+  </div>
+
+  <!-- H8: SPLIT -->
+  <div class="card" id="h8">
+    <div class="card-head"><div class="card-icon" style="background:#FCE4EC">✂️</div><h2>8. Tách cột — Split Column</h2><span class="tag" style="background:#FCE4EC;color:var(--pbi-red)">Transform</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Home</span> Transform → Split Column → By Delimiter / By Number of Characters</div>
+      <p>Tách một cột thành nhiều cột theo ký tự phân cách (dấu phẩy, dấu cách...) hoặc theo số ký tự cố định.</p>
+      <div class="ba">
+        <div><span class="ba-lbl lbl-b">❌ Trước</span><table class="dt"><thead><tr><th>DiaChi</th></tr></thead><tbody><tr><td>123 Le Loi, Ha Noi</td></tr><tr><td>45 Nguyen Hue, HCM</td></tr></tbody></table></div>
+        <div class="ba-arr">→</div>
+        <div><span class="ba-lbl lbl-a">✅ Sau (By Delimiter ",")</span><table class="dt"><thead><tr><th>SoNha</th><th>ThanhPho</th></tr></thead><tbody><tr><td class="ok">123 Le Loi</td><td class="ok">Ha Noi</td></tr><tr><td class="ok">45 Nguyen Hue</td><td class="ok">HCM</td></tr></tbody></table></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- H9: MERGE + H10: FORMAT TEXT (compact) -->
+  <div class="card" id="h9">
+    <div class="card-head"><div class="card-icon" style="background:#E0F2F1">🔗</div><h2>9. Ghép cột — Merge Columns</h2><span class="tag" style="background:#E0F2F1;color:var(--pbi-teal)">Text Column</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Transform</span> Text Column → Merge Columns &nbsp;|&nbsp; hoặc Right-click chọn nhiều cột</div>
+      <p>Giữ Ctrl + click chọn nhiều cột → Right-click → Merge Columns. Chọn separator và đặt tên cột mới.</p>
+      <div class="code"><span class="code-lbl">M</span>= <span class="fn">Table.CombineColumns</span>(Source, {<span class="str">"Ho"</span>, <span class="str">"Ten"</span>}, <span class="fn">Combiner.CombineTextByDelimiter</span>(<span class="str">" "</span>), <span class="str">"HoTen"</span>)</div>
+    </div>
+  </div>
+
+  <div class="card" id="h10">
+    <div class="card-head"><div class="card-icon" style="background:#E8F5E9">🔤</div><h2>10. Chuẩn hóa Text — Format (UPPER / lower / Proper)</h2><span class="tag" style="background:#E8F5E9;color:var(--pbi-green)">Text Column</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Transform</span> Text Column → Format → UPPERCASE / lowercase / Capitalize Each Word</div>
+      <div class="g3">
+        <div class="mini"><h4>UPPERCASE</h4><p>Chuyển toàn bộ thành chữ HOA</p><code>Text.Upper([col])</code></div>
+        <div class="mini"><h4>lowercase</h4><p>Chuyển toàn bộ thành chữ thường</p><code>Text.Lower([col])</code></div>
+        <div class="mini"><h4>Proper Case</h4><p>Chữ đầu mỗi từ viết hoa</p><code>Text.Proper([col])</code></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end tab-home -->
+
+<!-- ╔══════════════════════════════╗
+     ║       TRANSFORM TAB         ║
+     ╚══════════════════════════════╝ -->
+<div class="tab-page" id="tab-transform">
+
+  <div class="note info" style="margin-bottom:16px;"><i>💡</i><div>Tab <strong>Transform</strong> thay đổi dữ liệu trực tiếp trên cột/bảng hiện có — khác với Add Column là tạo cột mới. Tất cả thay đổi đều được ghi lại thành Applied Steps.</div></div>
+
+  <!-- T1: GROUP BY -->
+  <div class="card" id="t1">
+    <div class="card-head"><div class="card-icon" style="background:#E0F7F9">📊</div><h2>T1. Nhóm dữ liệu — Group By</h2><span class="tag" style="background:#E0F7F9;color:var(--pbi-teal)">Table</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Home</span> hoặc <span>Transform</span> → Table → Group By</div>
+      <p>Tương tự hàm <strong>SUMIF / COUNTIF</strong> trong Excel — gộp nhiều hàng thành một dựa trên giá trị của cột nhóm, rồi tính tổng, đếm, trung bình...</p>
+      <div class="steps">
+        <div class="step"><div class="sc">1</div><div class="st">Vào <strong>Home</strong> → Group By (hoặc tab Transform → Group By)</div></div>
+        <div class="step"><div class="sc">2</div><div class="st"><strong>Group by column</strong>: chọn cột muốn nhóm (ví dụ: KhuVuc)</div></div>
+        <div class="step"><div class="sc">3</div><div class="st"><strong>New column name</strong>: đặt tên cột kết quả, chọn <strong>Operation</strong> (Sum, Count, Average, Min, Max...)</div></div>
+      </div>
+      <div class="ba">
+        <div><span class="ba-lbl lbl-b">❌ Trước</span><table class="dt"><thead><tr><th>KhuVuc</th><th>TenKH</th><th>DoanhThu</th></tr></thead><tbody><tr><td>Mien Bac</td><td>Nguyen A</td><td>5,000,000</td></tr><tr><td>Mien Bac</td><td>Tran B</td><td>3,000,000</td></tr><tr><td>Mien Nam</td><td>Le C</td><td>7,000,000</td></tr><tr><td>Mien Nam</td><td>Pham D</td><td>2,000,000</td></tr></tbody></table></div>
+        <div class="ba-arr">→</div>
+        <div><span class="ba-lbl lbl-a">✅ Sau (Group By KhuVuc → Sum)</span><table class="dt"><thead><tr><th>KhuVuc</th><th>TongDoanhThu</th><th>SoKhachHang</th></tr></thead><tbody><tr><td class="ok">Mien Bac</td><td class="ok">8,000,000</td><td class="ok">2</td></tr><tr><td class="ok">Mien Nam</td><td class="ok">9,000,000</td><td class="ok">2</td></tr></tbody></table></div>
+      </div>
+      <div class="code"><span class="code-lbl">M</span>= <span class="fn">Table.Group</span>(Source, {<span class="str">"KhuVuc"</span>}, {<br>&nbsp;&nbsp;{<span class="str">"TongDoanhThu"</span>, <span class="kw">each</span> <span class="fn">List.Sum</span>([DoanhThu]), <span class="kw">type</span> number},<br>&nbsp;&nbsp;{<span class="str">"SoKhachHang"</span>, <span class="kw">each</span> <span class="fn">Table.RowCount</span>(_), <span class="kw">type</span> number}<br>})</div>
+    </div>
+  </div>
+
+  <!-- T2: PIVOT COLUMN -->
+  <div class="card" id="t2">
+    <div class="card-head"><div class="card-icon" style="background:#DDEEFF">🔀</div><h2>T2. Pivot Column — Chuyển giá trị thành cột</h2><span class="tag" style="background:#EFF6FF;color:var(--pbi-blue)">Any Column</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Transform</span> Any Column → Pivot Column</div>
+      <p>Pivot biến các <strong>giá trị trong một cột thành tiêu đề cột mới</strong>. Dùng khi bạn có dữ liệu dạng "dọc" muốn chuyển sang dạng "ngang" để dễ so sánh.</p>
+      <div class="ba">
+        <div><span class="ba-lbl lbl-b">❌ Dạng dọc (Unpivoted)</span><table class="dt"><thead><tr><th>ThangNam</th><th>SanPham</th><th>DoanhThu</th></tr></thead><tbody><tr><td>T1/2024</td><td>San Pham A</td><td>10,000,000</td></tr><tr><td>T1/2024</td><td>San Pham B</td><td>5,000,000</td></tr><tr><td>T2/2024</td><td>San Pham A</td><td>12,000,000</td></tr><tr><td>T2/2024</td><td>San Pham B</td><td>8,000,000</td></tr></tbody></table></div>
+        <div class="ba-arr">→</div>
+        <div><span class="ba-lbl lbl-a">✅ Dạng ngang (Pivoted)</span><table class="dt"><thead><tr><th>ThangNam</th><th>San Pham A</th><th>San Pham B</th></tr></thead><tbody><tr><td>T1/2024</td><td class="ok">10,000,000</td><td class="ok">5,000,000</td></tr><tr><td>T2/2024</td><td class="ok">12,000,000</td><td class="ok">8,000,000</td></tr></tbody></table></div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="sc">1</div><div class="st">Chọn cột chứa giá trị muốn thành tiêu đề (ví dụ: cột SanPham)</div></div>
+        <div class="step"><div class="sc">2</div><div class="st">Tab <strong>Transform</strong> → <strong>Pivot Column</strong></div></div>
+        <div class="step"><div class="sc">3</div><div class="st">Chọn <strong>Values Column</strong> = cột DoanhThu, chọn <strong>Aggregate Function</strong> = Sum</div></div>
+      </div>
+      <div class="note tip"><i>💡</i><div>Nếu bạn muốn làm ngược lại (cột → hàng), dùng <strong>Unpivot Columns</strong> ở bên dưới (T3).</div></div>
+    </div>
+  </div>
+
+  <!-- T3: UNPIVOT -->
+  <div class="card" id="t3">
+    <div class="card-head"><div class="card-icon" style="background:#E8F5E9">🔃</div><h2>T3. Unpivot Columns — Chuyển cột thành hàng</h2><span class="tag" style="background:#E8F5E9;color:var(--pbi-green)">Any Column</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Transform</span> Any Column → Unpivot Columns / Unpivot Other Columns</div>
+      <p>Ngược lại với Pivot — chuyển dữ liệu dạng "ngang" (nhiều cột tháng/quý) thành dạng "dọc". Đây là bước cần thiết để Power BI có thể tính toán theo thời gian.</p>
+      <div class="ba">
+        <div><span class="ba-lbl lbl-b">❌ Dạng ngang</span><table class="dt"><thead><tr><th>SanPham</th><th>T1</th><th>T2</th><th>T3</th></tr></thead><tbody><tr><td>San Pham A</td><td>10tr</td><td>12tr</td><td>9tr</td></tr><tr><td>San Pham B</td><td>5tr</td><td>8tr</td><td>6tr</td></tr></tbody></table></div>
+        <div class="ba-arr">→</div>
+        <div><span class="ba-lbl lbl-a">✅ Dạng dọc (chuẩn cho Power BI)</span><table class="dt"><thead><tr><th>SanPham</th><th>Thang</th><th>DoanhThu</th></tr></thead><tbody><tr><td>San Pham A</td><td class="ok">T1</td><td class="ok">10tr</td></tr><tr><td>San Pham A</td><td class="ok">T2</td><td class="ok">12tr</td></tr><tr><td>San Pham B</td><td class="ok">T1</td><td class="ok">5tr</td></tr><tr><td>San Pham B</td><td class="ok">T2</td><td class="ok">8tr</td></tr></tbody></table></div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="sc">1</div><div class="st">Chọn các cột <strong>không</strong> muốn unpivot (ví dụ: cột SanPham)</div></div>
+        <div class="step"><div class="sc">2</div><div class="st">Right-click → <strong>Unpivot Other Columns</strong> (Power Query tự xử lý phần còn lại)</div></div>
+        <div class="step"><div class="sc">3</div><div class="st">Đổi tên 2 cột mới: <strong>Attribute</strong> → "Thang", <strong>Value</strong> → "DoanhThu"</div></div>
+      </div>
+      <div class="code"><span class="code-lbl">M</span>= <span class="fn">Table.UnpivotOtherColumns</span>(Source, {<span class="str">"SanPham"</span>}, <span class="str">"Thang"</span>, <span class="str">"DoanhThu"</span>)</div>
+    </div>
+  </div>
+
+  <!-- T4: TRANSPOSE -->
+  <div class="card" id="t4">
+    <div class="card-head"><div class="card-icon" style="background:#FFF4E0">↔️</div><h2>T4. Đổi chỗ hàng và cột — Transpose</h2><span class="tag" style="background:#FFF4E0;color:var(--pbi-orange)">Table</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Transform</span> Table → Transpose</div>
+      <p>Chuyển <strong>hàng thành cột</strong> và <strong>cột thành hàng</strong>. Thường dùng khi dữ liệu từ nguồn bị thiết kế ngược (tiêu đề ở cột thay vì hàng).</p>
+      <div class="note warn"><i>⚠️</i><div>Sau khi Transpose, thường cần bấm thêm <strong>Use First Row as Headers</strong> để đặt hàng đầu tiên làm tiêu đề cột.</div></div>
+      <div class="steps">
+        <div class="step"><div class="sc">1</div><div class="st">Tab <strong>Transform</strong> → nhóm Table → <strong>Transpose</strong></div></div>
+        <div class="step"><div class="sc">2</div><div class="st">Tab <strong>Transform</strong> → <strong>Use First Row as Headers</strong> (nếu cần)</div></div>
+      </div>
+      <div class="code"><span class="code-lbl">M</span>= <span class="fn">Table.Transpose</span>(Source)</div>
+    </div>
+  </div>
+
+  <!-- T5: TEXT EXTRACT -->
+  <div class="card" id="t5">
+    <div class="card-head"><div class="card-icon" style="background:#F3E8FF">📝</div><h2>T5. Trích xuất text — Extract</h2><span class="tag" style="background:#F3E8FF;color:var(--pbi-purple)">Text Column</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Transform</span> Text Column → Extract</div>
+      <p>Lấy một phần của chuỗi: N ký tự đầu/cuối, ký tự theo vị trí, phần text trước/sau một ký tự phân cách.</p>
+      <div class="g2">
+        <div class="mini"><h4>First Characters</h4><p>Lấy N ký tự đầu</p><code>Text.Start([col], 3)</code></div>
+        <div class="mini"><h4>Last Characters</h4><p>Lấy N ký tự cuối</p><code>Text.End([col], 4)</code></div>
+        <div class="mini"><h4>Range</h4><p>Lấy từ vị trí X, lấy N ký tự</p><code>Text.Middle([col], 2, 5)</code></div>
+        <div class="mini"><h4>Text Before Delimiter</h4><p>Lấy phần trước ký tự phân cách</p><code>Text.BeforeDelimiter([col], "@")</code></div>
+        <div class="mini"><h4>Text After Delimiter</h4><p>Lấy phần sau ký tự phân cách</p><code>Text.AfterDelimiter([col], "@")</code></div>
+        <div class="mini"><h4>Text Between Delimiters</h4><p>Lấy phần giữa 2 ký tự</p><code>Text.BetweenDelimiters([col],"(","")")</code></div>
+      </div>
+      <div class="ba">
+        <div><span class="ba-lbl lbl-b">❌ Email gốc</span><table class="dt"><thead><tr><th>Email</th></tr></thead><tbody><tr><td>nguyen.a@gmail.com</td></tr><tr><td>tran.b@company.vn</td></tr></tbody></table></div>
+        <div class="ba-arr">→</div>
+        <div><span class="ba-lbl lbl-a">✅ Lấy phần trước @</span><table class="dt"><thead><tr><th>Username</th></tr></thead><tbody><tr><td class="ok">nguyen.a</td></tr><tr><td class="ok">tran.b</td></tr></tbody></table></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- T6: NUMBER ROUNDING -->
+  <div class="card" id="t6">
+    <div class="card-head"><div class="card-icon" style="background:#DDEEFF">🔢</div><h2>T6. Làm tròn số — Rounding &amp; Statistics</h2><span class="tag" style="background:#EFF6FF;color:var(--pbi-blue)">Number Column</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Transform</span> Number Column → Rounding / Statistics</div>
+      <div class="g2">
+        <div>
+          <p style="font-weight:700;font-size:13px;margin-bottom:8px;">🔵 Rounding (Làm tròn)</p>
+          <table class="dt"><thead><tr><th>Chức năng</th><th>Ý nghĩa</th><th>M Function</th></tr></thead><tbody>
+            <tr><td>Round</td><td>Làm tròn tới N chữ số thập phân</td><td>Number.Round([col], 2)</td></tr>
+            <tr><td>Round Up</td><td>Luôn làm tròn lên</td><td>Number.RoundUp([col], 0)</td></tr>
+            <tr><td>Round Down</td><td>Luôn làm tròn xuống</td><td>Number.RoundDown([col], 0)</td></tr>
+          </tbody></table>
+        </div>
+        <div>
+          <p style="font-weight:700;font-size:13px;margin-bottom:8px;">🟢 Statistics (Thống kê)</p>
+          <table class="dt"><thead><tr><th>Chức năng</th><th>Ý nghĩa</th></tr></thead><tbody>
+            <tr><td>Sum</td><td>Tổng toàn cột</td></tr>
+            <tr><td>Minimum / Maximum</td><td>Giá trị nhỏ/lớn nhất</td></tr>
+            <tr><td>Average</td><td>Trung bình</td></tr>
+            <tr><td>Count Values</td><td>Đếm số hàng có giá trị</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+      <div class="note info"><i>💡</i><div>Statistics trong Transform trả về <strong>một giá trị duy nhất</strong> (không phải cột). Dùng để kiểm tra nhanh. Nếu muốn tính theo nhóm, hãy dùng <strong>Group By</strong> (T1).</div></div>
+    </div>
+  </div>
+
+  <!-- T7: DATE PARTS -->
+  <div class="card" id="t7">
+    <div class="card-head"><div class="card-icon" style="background:#E8F5E9">📅</div><h2>T7. Trích xuất thành phần ngày — Date Parts</h2><span class="tag" style="background:#E8F5E9;color:var(--pbi-green)">Date &amp; Time Column</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Transform</span> Date &amp; Time Column → Date → Year / Month / Quarter / Week / Day</div>
+      <p>Từ một cột ngày, tách ra <strong>Năm, Quý, Tháng, Tuần, Ngày trong tuần</strong>... để phân tích theo thời gian trong Power BI.</p>
+      <div class="ba">
+        <div><span class="ba-lbl lbl-b">❌ Cột ngày gốc</span><table class="dt"><thead><tr><th>NgayDat</th></tr></thead><tbody><tr><td>15/03/2024</td></tr><tr><td>28/07/2024</td></tr><tr><td>05/11/2024</td></tr></tbody></table></div>
+        <div class="ba-arr">→</div>
+        <div><span class="ba-lbl lbl-a">✅ Sau khi trích xuất</span><table class="dt"><thead><tr><th>NgayDat</th><th>Nam</th><th>Quy</th><th>Thang</th><th>Ngay</th></tr></thead><tbody><tr><td>15/03/2024</td><td class="ok">2024</td><td class="ok">Q1</td><td class="ok">3</td><td class="ok">15</td></tr><tr><td>28/07/2024</td><td class="ok">2024</td><td class="ok">Q3</td><td class="ok">7</td><td class="ok">28</td></tr><tr><td>05/11/2024</td><td class="ok">2024</td><td class="ok">Q4</td><td class="ok">11</td><td class="ok">5</td></tr></tbody></table></div>
+      </div>
+      <div class="g2">
+        <div class="mini"><h4>Year (Năm)</h4><code>Date.Year([NgayDat])</code></div>
+        <div class="mini"><h4>Quarter (Quý)</h4><code>Date.QuarterOfYear([NgayDat])</code></div>
+        <div class="mini"><h4>Month (Tháng)</h4><code>Date.Month([NgayDat])</code></div>
+        <div class="mini"><h4>Month Name</h4><code>Date.MonthName([NgayDat])</code></div>
+        <div class="mini"><h4>Day of Week</h4><code>Date.DayOfWeekName([NgayDat])</code></div>
+        <div class="mini"><h4>Week of Year</h4><code>Date.WeekOfYear([NgayDat])</code></div>
+      </div>
+      <div class="note tip"><i>💡</i><div>Thay vì dùng Transform để sửa cột gốc, hãy dùng <strong>Add Column → Date</strong> để tạo cột mới — giữ nguyên cột NgayDat ban đầu. Xem tab Add Column → AC5.</div></div>
+    </div>
+  </div>
+
+  <!-- T8: USE FIRST ROW AS HEADERS -->
+  <div class="card" id="t8">
+    <div class="card-head"><div class="card-icon" style="background:#FFF4CE">📌</div><h2>T8. Dòng đầu làm tiêu đề — Use First Row as Headers</h2><span class="tag" style="background:#FFF4CE;color:#CA8A04">Table</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Home</span> Transform → Use First Row as Headers</div>
+      <p>Khi dữ liệu nguồn không nhận ra hàng tiêu đề, Power Query gán tên Column1, Column2... Bấm nút này để dùng hàng đầu tiên làm tên cột.</p>
+      <div class="steps">
+        <div class="step"><div class="sc">1</div><div class="st">Tab <strong>Home</strong> → nhóm Transform → <strong>Use First Row as Headers</strong></div></div>
+        <div class="step"><div class="sc">2</div><div class="st">Ngược lại, <strong>Use Headers as First Row</strong> để hạ tiêu đề xuống thành dữ liệu</div></div>
+      </div>
+      <div class="code"><span class="code-lbl">M</span>= <span class="fn">Table.PromoteHeaders</span>(Source, [PromoteAllScalars=<span class="kw">true</span>])</div>
+    </div>
+  </div>
+
+</div><!-- end tab-transform -->
+
+<!-- ╔══════════════════════════════╗
+     ║       ADD COLUMN TAB        ║
+     ╚══════════════════════════════╝ -->
+<div class="tab-page" id="tab-addcol">
+
+  <div class="note info" style="margin-bottom:16px;"><i>💡</i><div>Tab <strong>Add Column</strong> <em>luôn tạo cột mới</em>, không thay đổi cột gốc. Đây là sự khác biệt quan trọng so với tab Transform.</div></div>
+
+  <!-- AC1: CUSTOM COLUMN -->
+  <div class="card" id="ac1">
+    <div class="card-head"><div class="card-icon" style="background:#EFF6FF">✏️</div><h2>AC1. Tạo cột bằng công thức — Custom Column</h2><span class="tag" style="background:#EFF6FF;color:var(--pbi-blue)">General</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Add Column</span> General → Custom Column</div>
+      <p>Viết công thức M tùy ý để tạo cột mới. Đây là tính năng linh hoạt nhất trong Add Column — bạn có thể tính toán, nối chuỗi, xử lý điều kiện phức tạp.</p>
+      <div class="steps">
+        <div class="step"><div class="sc">1</div><div class="st">Tab <strong>Add Column</strong> → <strong>Custom Column</strong></div></div>
+        <div class="step"><div class="sc">2</div><div class="st">Đặt tên cột mới, viết công thức trong ô <strong>Custom column formula</strong></div></div>
+        <div class="step"><div class="sc">3</div><div class="st">Tham chiếu đến cột khác bằng cú pháp: <code>[TenCot]</code></div></div>
+      </div>
+      <div class="g2">
+        <div>
+          <p style="font-weight:700;font-size:13px;margin-bottom:8px;">Ví dụ 1: Tính doanh thu sau thuế</p>
+          <div class="fbox"><div class="label">Custom column formula</div><code>= [DoanhThu] * 0.9</code></div>
+        </div>
+        <div>
+          <p style="font-weight:700;font-size:13px;margin-bottom:8px;">Ví dụ 2: Nối họ tên</p>
+          <div class="fbox"><div class="label">Custom column formula</div><code>= [Ho] &amp; " " &amp; [Ten]</code></div>
+        </div>
+        <div>
+          <p style="font-weight:700;font-size:13px;margin-bottom:8px;">Ví dụ 3: Phân loại theo điều kiện</p>
+          <div class="fbox"><div class="label">Custom column formula</div><code>= if [DoanhThu] >= 10000000 then "VIP" else "Thuong"</code></div>
+        </div>
+        <div>
+          <p style="font-weight:700;font-size:13px;margin-bottom:8px;">Ví dụ 4: Tính số ngày từ ngày đặt</p>
+          <div class="fbox"><div class="label">Custom column formula</div><code>= Duration.Days(DateTime.LocalNow() - [NgayDat])</code></div>
+        </div>
+      </div>
+      <div class="note tip"><i>💡</i><div>Trong hộp thoại Custom Column, bên phải có danh sách <strong>Available columns</strong> — double-click để chèn tên cột vào công thức thay vì gõ tay.</div></div>
+    </div>
+  </div>
+
+  <!-- AC2: CONDITIONAL COLUMN -->
+  <div class="card" id="ac2">
+    <div class="card-head"><div class="card-icon" style="background:#E8F5E9">🔀</div><h2>AC2. Cột điều kiện — Conditional Column</h2><span class="tag" style="background:#E8F5E9;color:var(--pbi-green)">General</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Add Column</span> General → Conditional Column</div>
+      <p>Tạo cột mới dựa trên điều kiện IF/THEN/ELSE — giống như hàm <strong>IFS</strong> trong Excel nhưng có giao diện trực quan, không cần gõ công thức.</p>
+      <div class="steps">
+        <div class="step"><div class="sc">1</div><div class="st">Tab <strong>Add Column</strong> → <strong>Conditional Column</strong></div></div>
+        <div class="step"><div class="sc">2</div><div class="st">Đặt tên cột mới, thêm các điều kiện <strong>If... Then... Else...</strong></div></div>
+        <div class="step"><div class="sc">3</div><div class="st">Bấm <strong>Add Clause</strong> để thêm điều kiện (tương đương ELSE IF)</div></div>
+      </div>
+      <!-- Visual Conditional Flow -->
+      <p style="font-weight:700;font-size:13px;margin:12px 0 6px;">Ví dụ: Phân hạng khách hàng theo doanh thu</p>
+      <div class="cond-flow">
+        <div class="cf-row"><div class="cf-kw">IF</div><div class="cf-cond">DoanhThu >= 50,000,000</div><div class="cf-val">→ "Bạch Kim"</div></div>
+        <div class="cf-row"><div class="cf-kw">ELSE IF</div><div class="cf-cond">DoanhThu >= 20,000,000</div><div class="cf-val">→ "Vàng"</div></div>
+        <div class="cf-row"><div class="cf-kw">ELSE IF</div><div class="cf-cond">DoanhThu >= 5,000,000</div><div class="cf-val">→ "Bạc"</div></div>
+        <div class="cf-row else"><div class="cf-kw">ELSE</div><div class="cf-cond">(không thỏa điều kiện nào)</div><div class="cf-val">→ "Thường"</div></div>
+      </div>
+      <div class="ba" style="margin-top:12px;">
+        <div><span class="ba-lbl lbl-b">❌ Trước</span><table class="dt"><thead><tr><th>TenKH</th><th>DoanhThu</th></tr></thead><tbody><tr><td>Nguyen A</td><td>55,000,000</td></tr><tr><td>Tran B</td><td>22,000,000</td></tr><tr><td>Le C</td><td>7,000,000</td></tr><tr><td>Pham D</td><td>1,500,000</td></tr></tbody></table></div>
+        <div class="ba-arr">→</div>
+        <div><span class="ba-lbl lbl-a">✅ Sau (thêm cột HangKH)</span><table class="dt"><thead><tr><th>TenKH</th><th>DoanhThu</th><th>HangKH</th></tr></thead><tbody><tr><td>Nguyen A</td><td>55,000,000</td><td class="ok">Bach Kim</td></tr><tr><td>Tran B</td><td>22,000,000</td><td class="ok">Vang</td></tr><tr><td>Le C</td><td>7,000,000</td><td class="ok">Bac</td></tr><tr><td>Pham D</td><td>1,500,000</td><td>Thuong</td></tr></tbody></table></div>
+      </div>
+      <div class="code"><span class="code-lbl">M</span>= <span class="fn">Table.AddColumn</span>(Source, <span class="str">"HangKH"</span>, <span class="kw">each</span><br>&nbsp;&nbsp;<span class="kw">if</span> [DoanhThu] >= <span class="num">50000000</span> <span class="kw">then</span> <span class="str">"Bach Kim"</span><br>&nbsp;&nbsp;<span class="kw">else if</span> [DoanhThu] >= <span class="num">20000000</span> <span class="kw">then</span> <span class="str">"Vang"</span><br>&nbsp;&nbsp;<span class="kw">else if</span> [DoanhThu] >= <span class="num">5000000</span> <span class="kw">then</span> <span class="str">"Bac"</span><br>&nbsp;&nbsp;<span class="kw">else</span> <span class="str">"Thuong"</span>)</div>
+    </div>
+  </div>
+
+  <!-- AC3: COLUMN FROM EXAMPLES -->
+  <div class="card" id="ac3">
+    <div class="card-head"><div class="card-icon" style="background:#FFF4CE">🤖</div><h2>AC3. Tạo cột từ ví dụ — Column from Examples</h2><span class="tag" style="background:#FFF4CE;color:#CA8A04">General</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Add Column</span> General → Column from Examples → From All Columns</div>
+      <p>Bạn chỉ cần <strong>gõ ví dụ kết quả mong muốn</strong>, Power Query tự đoán công thức và áp dụng cho toàn bộ. Không cần biết cú pháp M Language!</p>
+      <div class="steps">
+        <div class="step"><div class="sc">1</div><div class="st">Tab <strong>Add Column</strong> → <strong>Column from Examples</strong> → From All Columns</div></div>
+        <div class="step"><div class="sc">2</div><div class="st">Một cột mới trống xuất hiện bên phải. Gõ ví dụ vào ô đầu tiên (ví dụ: "2024" từ cột ngày "15/03/2024")</div></div>
+        <div class="step"><div class="sc">3</div><div class="st">Power Query tự <strong>đề xuất công thức</strong> và điền toàn bộ. Nếu đúng, bấm OK.</div></div>
+      </div>
+      <div class="note tip"><i>💡</i><div>Đây là tính năng mạnh nhất cho người mới — không cần nhớ hàm M. Thử gõ ví dụ như "Tháng 3/2024", "NGUYEN VAN A", "nguyen.a" (từ email) và xem Power Query đề xuất gì.</div></div>
+    </div>
+  </div>
+
+  <!-- AC4: INDEX COLUMN -->
+  <div class="card" id="ac4">
+    <div class="card-head"><div class="card-icon" style="background:#DDEEFF">🔢</div><h2>AC4. Đánh số thứ tự — Index Column</h2><span class="tag" style="background:#EFF6FF;color:var(--pbi-blue)">General</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Add Column</span> General → Index Column → From 0 / From 1 / Custom</div>
+      <p>Thêm cột số thứ tự tự động. Hữu ích khi bảng không có khóa chính (primary key) hoặc cần đánh số lại sau khi lọc.</p>
+      <div class="g3">
+        <div class="mini"><h4>From 0</h4><p>Bắt đầu từ 0, 1, 2...</p><code>Table.AddIndexColumn(Source, "Index", 0, 1)</code></div>
+        <div class="mini"><h4>From 1</h4><p>Bắt đầu từ 1, 2, 3...</p><code>Table.AddIndexColumn(Source, "Index", 1, 1)</code></div>
+        <div class="mini"><h4>Custom</h4><p>Tự chọn điểm bắt đầu và bước nhảy</p><code>Table.AddIndexColumn(Source, "STT", 100, 10)</code></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AC5: DATE PARTS (ADD) -->
+  <div class="card" id="ac5">
+    <div class="card-head"><div class="card-icon" style="background:#E8F5E9">📅</div><h2>AC5. Thêm cột từ ngày — Add Column from Date</h2><span class="tag" style="background:#E8F5E9;color:var(--pbi-green)">From Date &amp; Time</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Add Column</span> From Date &amp; Time → Date → Year / Month / Quarter / Day of Week...</div>
+      <p>Giữ nguyên cột ngày gốc và <strong>tạo thêm cột mới</strong> chứa thành phần ngày (năm, quý, tháng...). Đây là cách đúng hơn so với Transform vì không mất cột gốc.</p>
+      <div class="ba">
+        <div><span class="ba-lbl lbl-b">❌ Chỉ có NgayDat</span><table class="dt"><thead><tr><th>NgayDat</th><th>DoanhThu</th></tr></thead><tbody><tr><td>15/03/2024</td><td>5,000,000</td></tr><tr><td>28/07/2024</td><td>7,000,000</td></tr></tbody></table></div>
+        <div class="ba-arr">→</div>
+        <div><span class="ba-lbl lbl-a">✅ Thêm cột Nam, Quy, Thang</span><table class="dt"><thead><tr><th>NgayDat</th><th>Nam</th><th>Quy</th><th>Thang</th></tr></thead><tbody><tr><td>15/03/2024</td><td class="ok">2024</td><td class="ok">1</td><td class="ok">3</td></tr><tr><td>28/07/2024</td><td class="ok">2024</td><td class="ok">3</td><td class="ok">7</td></tr></tbody></table></div>
+      </div>
+      <div class="g2">
+        <div class="mini"><h4>Year</h4><code>Date.Year([NgayDat])</code></div>
+        <div class="mini"><h4>Quarter of Year</h4><code>Date.QuarterOfYear([NgayDat])</code></div>
+        <div class="mini"><h4>Month</h4><code>Date.Month([NgayDat])</code></div>
+        <div class="mini"><h4>Day of Week Name</h4><code>Date.DayOfWeekName([NgayDat])</code></div>
+        <div class="mini"><h4>Age (số ngày đã qua)</h4><code>Duration.Days(DateTime.LocalNow()-[NgayDat])</code></div>
+        <div class="mini"><h4>Start of Month</h4><code>Date.StartOfMonth([NgayDat])</code></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AC6: DUPLICATE COLUMN -->
+  <div class="card" id="ac6">
+    <div class="card-head"><div class="card-icon" style="background:#FCE4EC">📋</div><h2>AC6. Nhân bản cột — Duplicate Column</h2><span class="tag" style="background:#FCE4EC;color:var(--pbi-red)">General</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge">Right-click vào tên cột → Duplicate Column</div>
+      <p>Tạo bản sao của cột để chỉnh sửa mà không làm mất dữ liệu gốc. Ví dụ: duplicate cột TenKH rồi áp dụng Trim/Clean, sau đó xóa cột gốc.</p>
+      <div class="note tip"><i>💡</i><div>Quy trình hay dùng: <strong>Duplicate → Transform cột copy → Xóa cột gốc → Rename cột copy.</strong> Cách này an toàn hơn Transform thẳng vào cột gốc.</div></div>
+    </div>
+  </div>
+
+  <!-- AC7: FROM NUMBER -->
+  <div class="card" id="ac7">
+    <div class="card-head"><div class="card-icon" style="background:#DDEEFF">🧮</div><h2>AC7. Tính toán số — Add Column from Number</h2><span class="tag" style="background:#EFF6FF;color:var(--pbi-blue)">From Number</span></div>
+    <div class="card-body">
+      <div class="ribbon-badge"><span>Add Column</span> From Number → Standard / Rounding / Scientific / Statistics</div>
+      <div class="g2">
+        <div>
+          <p style="font-weight:700;font-size:13px;margin-bottom:8px;">📐 Standard (Tính toán cơ bản)</p>
+          <table class="dt"><thead><tr><th>Chức năng</th><th>M Function</th></tr></thead><tbody>
+            <tr><td>Absolute Value (|x|)</td><td>Number.Abs([col])</td></tr>
+            <tr><td>Power (x^n)</td><td>Number.Power([col], 2)</td></tr>
+            <tr><td>Square Root (√x)</td><td>Number.Sqrt([col])</td></tr>
+            <tr><td>Modulo (x mod n)</td><td>Number.Mod([col], 10)</td></tr>
+          </tbody></table>
+        </div>
+        <div>
+          <p style="font-weight:700;font-size:13px;margin-bottom:8px;">🔢 Rounding (Làm tròn)</p>
+          <table class="dt"><thead><tr><th>Chức năng</th><th>M Function</th></tr></thead><tbody>
+            <tr><td>Round (chuẩn)</td><td>Number.Round([col], 2)</td></tr>
+            <tr><td>Round Up</td><td>Number.RoundUp([col], 0)</td></tr>
+            <tr><td>Round Down</td><td>Number.RoundDown([col], 0)</td></tr>
+            <tr><td>Ceiling</td><td>Number.RoundUp([col], 0)</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end tab-addcol -->
+
+<!-- ╔══════════════════════════════╗
+     ║      COMPARE TAB            ║
+     ╚══════════════════════════════╝ -->
+<div class="tab-page" id="tab-compare">
+  <div class="card">
+    <div class="card-head"><div class="card-icon" style="background:#FFF4CE">⚖️</div><h2>Power BI Desktop vs Power BI Service</h2></div>
+    <div class="card-body">
+      <p>Power BI có 2 môi trường chính. Hiểu rõ sự khác biệt để biết nên làm gì ở đâu.</p>
+
+      <div class="g2" style="margin-bottom:20px;">
+        <div style="border:2px solid var(--pbi-blue);border-radius:6px;overflow:hidden;">
+          <div style="background:var(--pbi-blue);color:#fff;padding:10px 14px;font-weight:700;display:flex;align-items:center;gap:8px;">💻 Power BI Desktop</div>
+          <div style="padding:12px 14px;font-size:13px;line-height:1.8;">
+            <div>✅ Kết nối nhiều nguồn dữ liệu</div>
+            <div>✅ Làm sạch & transform bằng Power Query</div>
+            <div>✅ Tạo Data Model, Relationship</div>
+            <div>✅ Viết DAX (Measure, Calculated Column)</div>
+            <div>✅ Thiết kế báo cáo đầy đủ tính năng</div>
+            <div>❌ Không chia sẻ được trực tiếp</div>
+            <div>❌ Không refresh tự động</div>
+          </div>
+        </div>
+        <div style="border:2px solid var(--pbi-green);border-radius:6px;overflow:hidden;">
+          <div style="background:var(--pbi-green);color:#fff;padding:10px 14px;font-weight:700;display:flex;align-items:center;gap:8px;">🌐 Power BI Service</div>
+          <div style="padding:12px 14px;font-size:13px;line-height:1.8;">
+            <div>✅ Chia sẻ & phân quyền xem báo cáo</div>
+            <div>✅ Lên lịch refresh dữ liệu tự động</div>
+            <div>✅ Tạo Dashboard từ nhiều report</div>
+            <div>✅ Cảnh báo qua email khi dữ liệu thay đổi</div>
+            <div>✅ Truy cập trên điện thoại (app mobile)</div>
+            <div>⚡ Chỉnh sửa Power Query rất hạn chế</div>
+            <div>⚡ Tạo báo cáo phức tạp bị giới hạn</div>
+          </div>
+        </div>
+      </div>
+
+      <table class="cmp"><thead><tr><th class="fc">Tính năng</th><th class="dc">💻 Desktop</th><th class="sc">🌐 Service</th></tr></thead><tbody>
+        <tr><td><b>Cách truy cập</b></td><td>Cài phần mềm PC (Windows)</td><td>Trình duyệt: app.powerbi.com</td></tr>
+        <tr><td><b>Tạo báo cáo</b></td><td class="yes">✅ Đầy đủ</td><td class="par">⚡ Giới hạn</td></tr>
+        <tr><td><b>Power Query</b></td><td class="yes">✅ Đầy đủ</td><td class="no">❌ Chỉ xem</td></tr>
+        <tr><td><b>Viết DAX</b></td><td class="yes">✅ Đầy đủ</td><td class="par">⚡ Cơ bản</td></tr>
+        <tr><td><b>Chia sẻ báo cáo</b></td><td class="no">❌ Cần publish</td><td class="yes">✅ Trực tiếp</td></tr>
+        <tr><td><b>Xem trên mobile</b></td><td class="no">❌ Không</td><td class="yes">✅ Có app</td></tr>
+        <tr><td><b>Auto refresh</b></td><td class="no">❌ Thủ công</td><td class="yes">✅ Lên lịch</td></tr>
+        <tr><td><b>Dashboard</b></td><td class="no">❌ Không có</td><td class="yes">✅ Tạo được</td></tr>
+        <tr><td><b>Email Alerts</b></td><td class="no">❌ Không</td><td class="yes">✅ Có</td></tr>
+        <tr><td><b>Phí</b></td><td>Miễn phí</td><td>Free / Pro / Premium</td></tr>
+        <tr><td><b>Đối tượng</b></td><td>Analyst, người xây dựng</td><td>Manager, người xem</td></tr>
+      </tbody></table>
+
+      <div class="note tip"><i>🎯</i><div><strong>Quy trình chuẩn:</strong> Xây dựng trên <strong>Desktop</strong> → Publish lên <strong>Service</strong> → Chia sẻ với team → Lên lịch refresh trên Service.</div></div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<footer>
+  <span>Power Query – Hướng dẫn đầy đủ theo Ribbon Menu</span> · Phong cách Power BI · Dành cho người mới bắt đầu
+</footer>
+
+<script>
+const tabData = {
+  home: {
+    color: 'var(--pbi-blue)',
+    groups: [
+      { label:'New Query', items:['#h1','#h2','#h3'] },
+      { label:'Manage Columns', items:['#h4','#h5','#h6'] },
+      { label:'Reduce Rows', items:['#h7','#h8','#h9','#h10'] },
+    ],
+    sidebar: [
+      { group:'🏠 HOME', links:[
+        {id:'h1',dot:'#118DFF',text:'1. Remove Duplicates'},
+        {id:'h2',dot:'#D13438',text:'2. Remove/Replace Errors'},
+        {id:'h3',dot:'#107C10',text:'3. Fill Down / Fill Up'},
+        {id:'h4',dot:'#CA5010',text:'4. Change Data Type'},
+        {id:'h5',dot:'#8764B8',text:'5. Trim & Clean'},
+        {id:'h6',dot:'#038387',text:'6. Replace Values'},
+        {id:'h7',dot:'#C19C00',text:'7. Filter Rows'},
+        {id:'h8',dot:'#E3008C',text:'8. Split Column'},
+        {id:'h9',dot:'#00B7C3',text:'9. Merge Columns'},
+        {id:'h10',dot:'#57A300',text:'10. Format Text'},
+      ]}
+    ]
+  },
+  transform: {
+    color: 'var(--pbi-teal)',
+    sidebar: [
+      { group:'🔄 TRANSFORM', links:[
+        {id:'t1',dot:'#038387',text:'T1. Group By'},
+        {id:'t2',dot:'#0078D4',text:'T2. Pivot Column'},
+        {id:'t3',dot:'#107C10',text:'T3. Unpivot Columns'},
+        {id:'t4',dot:'#CA5010',text:'T4. Transpose'},
+        {id:'t5',dot:'#8764B8',text:'T5. Text Extract'},
+        {id:'t6',dot:'#118DFF',text:'T6. Rounding & Statistics'},
+        {id:'t7',dot:'#57A300',text:'T7. Date Parts (Transform)'},
+        {id:'t8',dot:'#C19C00',text:'T8. Use First Row as Headers'},
+      ]}
+    ]
+  },
+  addcol: {
+    color: 'var(--pbi-green)',
+    sidebar: [
+      { group:'➕ ADD COLUMN', links:[
+        {id:'ac1',dot:'#0078D4',text:'AC1. Custom Column'},
+        {id:'ac2',dot:'#107C10',text:'AC2. Conditional Column'},
+        {id:'ac3',dot:'#C19C00',text:'AC3. Column from Examples'},
+        {id:'ac4',dot:'#118DFF',text:'AC4. Index Column'},
+        {id:'ac5',dot:'#57A300',text:'AC5. Add Column from Date'},
+        {id:'ac6',dot:'#E3008C',text:'AC6. Duplicate Column'},
+        {id:'ac7',dot:'#038387',text:'AC7. From Number'},
+      ]}
+    ]
+  },
+  compare: {
+    color: 'var(--pbi-orange)',
+    sidebar: [
+      { group:'⚖️ COMPARE', links:[
+        {id:'compare_main',dot:'#CA5010',text:'Desktop vs Service'},
+      ]}
+    ]
+  }
+};
+
+function buildSidebar(tabKey) {
+  const sb = document.getElementById('sidebar');
+  sb.innerHTML = '';
+  const data = tabData[tabKey];
+  if (!data || !data.sidebar) return;
+  data.sidebar.forEach(section => {
+    const grp = document.createElement('div');
+    grp.className = 'sb-group';
+    grp.textContent = section.group;
+    sb.appendChild(grp);
+    section.links.forEach(lnk => {
+      const a = document.createElement('div');
+      a.className = 'sb-link';
+      a.innerHTML = `<div class="dot" style="background:${lnk.dot}"></div>${lnk.text}`;
+      a.onclick = () => {
+        const el = document.getElementById(lnk.id) || document.querySelector('#tab-compare .card');
+        if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+      };
+      sb.appendChild(a);
+    });
+  });
+}
+
+function switchTab(key, el) {
+  // hide all tab pages
+  document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + key).classList.add('active');
+  // update tab buttons
+  document.querySelectorAll('.rtab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  // show correct ribbon groups
+  document.querySelectorAll('.ribbon-groups').forEach(g => g.style.display = 'none');
+  const rg = document.getElementById('rg-' + key);
+  if (rg) rg.style.display = 'flex';
+  // build sidebar
+  buildSidebar(key);
+  // scroll to top
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// Init
+buildSidebar('home');
+
+// Make ribbon buttons scroll to sections
+document.querySelectorAll('.rgrp-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const cards = document.querySelectorAll('.tab-page.active .card');
+    if (cards.length) cards[0].scrollIntoView({behavior:'smooth'});
+  });
+});
+</script>
+
+</body>
+</html>
