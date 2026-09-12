@@ -1,6 +1,6 @@
 # Ý định hiện tại — Khóa Context, KPI và Data Dictionary trước ETL
 
-> Phiên bản: 21.0  
+> Phiên bản: 21.3  
 > Cập nhật: 2026-09-11  
 > Người thực hiện: Duy, có Codex hỗ trợ  
 > Người review và quyết định chuyển bước: cậu Sinh  
@@ -22,7 +22,7 @@ Joycat là case học đầu tiên. `Ads Cost / GMV = 5–10%` là giả định
 ## 1.1. Bốn việc cậu Sinh giao đang được thực hiện
 
 1. **Tổ chức lại workspace:** giữ đúng vai trò `01_inputs`, `02_work`, `03_outputs`, `04_reference`; không tạo thêm source of truth cạnh tranh và không xóa file phụ. Review Gate 2 đã đặt tại `01_inputs\joycat\reviews`; ba tài liệu HTML Power BI đã chuyển khỏi root sang `04_reference\power_bi_interactive`; render cache PDF cũ đã chuyển khỏi root vào `02_work\joycat\pdf_build\render_cache_2026-09-09`.
-2. **Đưa kho AI Agentic Analytics K60 vào luồng tra cứu:** các archive/folder Duy tải đã được hợp nhất tại `D:\AI_Agentic_Analytics_K60_20260909_FULL\AI Agentic Analytics K60`. Việc “tải folder” đã xong; lượt này chỉ sửa source map và chỉ dẫn để AI đọc đúng bộ đầy đủ, không tải lại.
+2. **Đưa kho AI Agentic Analytics K60 vào luồng tra cứu:** các archive/folder Duy tải đã được hợp nhất tại `D:\AI_Agentic_Analytics_K60_20260909_FULL\AI Agentic Analytics K60`. Root `D:\AI_Agentic_Analytics_K60_20260909_FULL` và folder source con đều có `AGENTS.md` + `context.md` để AI tự định tuyến. Theo yêu cầu riêng ngày 11/09, cả ba folder có deck ảnh đã có PDF sibling với page count khớp số ảnh: 12–13 là 148/148, 14–15 là 113/113, 16–18 là 159/159; 8 ảnh lỗi byte từ archive được ghi bằng trang cảnh báo, không tái tạo nội dung. Việc “tải folder” đã xong; không tải lại.
 3. **Bám review của cậu Sinh và kiến thức K60:** rà lại `AGENTS.md`, Workspace Context, Current Intent, Context Joycat và hai KPI Tree để mục tiêu, bằng chứng, cấu trúc Meta và quyền chuyển Gate nhất quán.
 4. **Hoàn thiện Data Dictionary và Pair Readiness:** Duy nêu cặp biến muốn kiểm nghiệm; AI chuyển thành field, formula, grain, period, source, join và báo `Sẵn sàng`, `Có điều kiện` hoặc `Bị chặn` trước khi ETL.
 

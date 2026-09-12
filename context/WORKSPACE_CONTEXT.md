@@ -1,6 +1,6 @@
 # Workspace Context — Meta Agentic BA
 
-> Phiên bản: 16.0  
+> Phiên bản: 16.3  
 > Cập nhật: 2026-09-11  
 > Người chịu trách nhiệm nội dung: Duy  
 > Người đánh giá và quyết định chuyển bước: cậu Sinh  
@@ -8,11 +8,11 @@
 
 ## Nguồn phương pháp K60 và phase lập kế hoạch — 09/09/2026
 
-- Nguồn K60 đầy đủ đã hợp nhất từ ba archive Duy đã tải: `D:\AI_Agentic_Analytics_K60_20260909_FULL\AI Agentic Analytics K60`. Snapshot tài liệu gốc ngày 11/09/2026 có 1.277 file, 5.873.080.087 byte; sau khi thêm hai sidecar `AGENTS.md` và `context.md` để AI định tuyến thì folder có 1.279 file. Bản chỉ dẫn đồng bộ trong workspace nằm tại `04_reference\AI_Agentic_Analytics_K60`.
+- Nguồn K60 đầy đủ đã hợp nhất từ ba archive Duy đã tải: `D:\AI_Agentic_Analytics_K60_20260909_FULL\AI Agentic Analytics K60`. Root `D:\AI_Agentic_Analytics_K60_20260909_FULL` có `AGENTS.md` và `context.md` làm điểm vào; folder source con cũng có hai sidecar chi tiết. Snapshot tài liệu gốc ngày 11/09/2026 có 1.277 file, 5.873.080.087 byte. Bản chỉ dẫn đồng bộ trong workspace nằm tại `04_reference\AI_Agentic_Analytics_K60`.
 - Kho K60 là **nguồn phương pháp học và thiết kế phân tích**, không tự trở thành bằng chứng về cách Joycat vận hành hay kết quả kinh doanh Joycat.
 - Plan hiện hành: [`00_PLAN_HOAN_THIEN_WORKSPACE_THEO_K60_VA_REVIEW_CAU_SINH.md`](../02_work/joycat/00_PLAN_HOAN_THIEN_WORKSPACE_THEO_K60_VA_REVIEW_CAU_SINH.md).
 - Theo yêu cầu mới của Duy, việc tải/hợp nhất folder K60 đã xong. [`AGENTS.md`](../04_reference/AI_Agentic_Analytics_K60/AGENTS.md), [`context.md`](../04_reference/AI_Agentic_Analytics_K60/context.md) và [`SOURCE_INVENTORY.md`](../04_reference/AI_Agentic_Analytics_K60/SOURCE_INVENTORY.md) phải trỏ về bộ đầy đủ này.
-- Sáu PDF reader đã tạo trước đây chỉ bao phủ snapshot cũ một phần; không được hiểu là toàn bộ 1.277 tài liệu gốc đã được chuyển thành PDF. Việc tạo thêm PDF không nằm trong lượt sửa Context/Data Dictionary hiện tại.
+- Sáu PDF reader đã tạo trước đây chỉ bao phủ snapshot cũ một phần; không được hiểu là toàn bộ 1.277 tài liệu gốc đã được chuyển thành PDF. Theo yêu cầu trực tiếp ngày 11/09, cả ba folder có chuỗi slide trong source K60 đã có PDF sibling, không cover: Session 12–13 (148/148), Session 14–15 (113/113), Session 16–18 (159/159). Archive có 3 ảnh lỗi byte ở Session 12–13 và 5 ảnh ở Session 14–15; những vị trí này là trang cảnh báo minh bạch, không phải nội dung được tái tạo. Không tự tạo PDF cho các folder icon/minh họa hoặc tài liệu không phải deck nếu chưa có yêu cầu.
 - K60 cung cấp phương pháp kiểm tra cặp biến: `Categorical × Numerical` dùng thống kê theo nhóm; `Numerical × Numerical` mới xét scatter/correlation; cả hai đều phải khóa grain, kỳ, scope và chất lượng dữ liệu trước. Workspace Joycat vẫn chưa chạy ETL/correlation và chưa được xác nhận pass Gate 2.
 
 ## Cập nhật trực tiếp từ cậu Sinh — 09/09/2026

@@ -1,6 +1,6 @@
 # Context - Kho kiến thức AI Agentic Analytics K60
 
-> Phiên bản: 2.0  
+> Phiên bản: 2.1  
 > Cập nhật: 2026-09-11  
 > Owner sử dụng: Duy  
 > Reviewer phương pháp: cậu Sinh  
@@ -44,6 +44,13 @@ Source gốc đầy đủ hiện ở:
 
 ```text
 D:\AI_Agentic_Analytics_K60_20260909_FULL\AI Agentic Analytics K60
+```
+
+Điểm vào cấp root của kho đầy đủ:
+
+```text
+D:\AI_Agentic_Analytics_K60_20260909_FULL\AGENTS.md
+D:\AI_Agentic_Analytics_K60_20260909_FULL\context.md
 ```
 
 Knowledge pack trong workspace:

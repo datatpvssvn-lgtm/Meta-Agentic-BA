@@ -17,3 +17,5 @@ ehthumbs.db
 
 # Generated PDF render/cache files (kept locally in 02_work, not source artifacts)
 02_work/joycat/pdf_build/render_cache_*/
+02_work/joycat/pdf_build/edge_profile_*/
+02_work/joycat/pdf_build/qa_*/

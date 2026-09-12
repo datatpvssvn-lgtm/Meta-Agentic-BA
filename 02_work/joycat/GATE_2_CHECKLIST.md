@@ -15,7 +15,7 @@
 
 | # | Điều kiện review lại | Bằng chứng hiện tại | Trạng thái |
 |---:|---|---|---|
-| 1 | Current Intent chốt đúng mục tiêu và deliverable | `context/CURRENT_INTENT.md` v21.0 | Đạt kỹ thuật; chờ Sinh review |
+| 1 | Current Intent chốt đúng mục tiêu và deliverable | `context/CURRENT_INTENT.md` v21.1 | Đạt kỹ thuật; chờ Sinh review |
 | 2 | Tách KPI dự án khỏi chỉ số Joycat | `01_inputs/project/KPI_TREE.md/.mm`; `01_inputs/joycat/Ad_Cost_GMV_all_platform v3.md/.mm` | Đạt cấu trúc; target dự án chưa chốt |
 | 3 | AGENTS ngăn AI tự đoán | Trust order, evidence label và phân quyền trong `AGENTS.md` | Đạt kỹ thuật; chờ Sinh review |
 | 4 | Rõ data cần có ở Campaign/Ad set/Ad | Data Dictionary §2.1 | Đạt thiết kế; nhiều field nguồn còn thiếu |
